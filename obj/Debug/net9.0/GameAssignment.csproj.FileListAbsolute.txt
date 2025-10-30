@@ -21,3 +21,4 @@ C:\msys64\home\Asus\GameAssignment\obj\Debug\net9.0\GameAssignment.pdb
 C:\msys64\home\Asus\GameAssignment\obj\Debug\net9.0\GameAssignment.genruntimeconfig.cache
 C:\msys64\home\Asus\GameAssignment\obj\Debug\net9.0\ref\GameAssignment.dll
 C:\msys64\home\Asus\GameAssignment\bin\Debug\net9.0\Newtonsoft.Json.dll
+C:\msys64\home\Asus\GameAssignment\obj\Debug\net9.0\GameAssignment.sourcelink.json

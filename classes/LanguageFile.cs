@@ -8,5 +8,10 @@ namespace Game
         {
             get; set;
         }
+
+        public Dictionary<string, string> ms
+        {
+            get; set;
+        }
     }
 }

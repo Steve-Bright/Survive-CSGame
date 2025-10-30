@@ -1,6 +1,25 @@
 using System;
+using Raylib_cs;
+using static Raylib_cs.Raylib;
 
-public static class RunTime
+namespace Game
 {
-    public static string Langauge{ get; set; }
+    public static class RunTime
+    {
+        static private string gameFont;
+
+        //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
+        public static string Language { get; set; }
+        public static string GameFont
+        {
+            get { return gameFont; }
+            set { gameFont = value;  }
+        }
+
+        public static Font LoadGameFont()
+        {
+            Font actualFont = LoadFont(gameFont);
+            return actualFont;
+        }
+    }
 }

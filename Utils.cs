@@ -7,12 +7,13 @@ public static class Util
     public static Dictionary<string, string> returnJsonFile(string filePath)
     {
         Dictionary<string, string> deserializedDic;
-          using (StreamReader r = new StreamReader(filePath))
+        using (StreamReader r = new StreamReader(filePath))
         {
             string json = r.ReadToEnd();
             deserializedDic = JsonSerializer.Deserialize<Dictionary<string, string>>(json);
         }
         return deserializedDic;
     }
+
 
 }

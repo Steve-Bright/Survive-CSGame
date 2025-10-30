@@ -1,6 +1,6 @@
 ﻿using Raylib_cs;
 using static Raylib_cs.Raylib;
-using Newtonsoft.Json;
+using System.IO;
 
 namespace Game;
 
@@ -11,15 +11,16 @@ internal static class Program
     public static void Main()
     {
         Dictionary<string, string> settings = Util.returnJsonFile("./resources/saved/settings.json");
-        
+        RunTime.Language = settings["language"];
+
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
-        Font myanmarFont = LoadFont("./resources/assets/myanmarfont.ttf");
-        Font englishFont = LoadFont("./resources/assets/englishfont.ttf");
+        RunTime.GameFont = "./resources/assets/englishfont.ttf";
 
         InitWindow(800, 480, "Survive!");
         SetWindowIcon(gameIcon);
         SetWindowState(ConfigFlags.ResizableWindow);
         SetWindowState(ConfigFlags.MaximizedWindow);
+        
 
         while (!Raylib.WindowShouldClose())
         {
@@ -29,6 +30,10 @@ internal static class Program
             MenuScreen menu = new MenuScreen();
             menu.Display();
 
+            // Vector2 testPos;
+            // testPos.X = 100;
+            // testPos.Y = 100;
+            // DrawTextEx(englishFont, "Hello", testPos, 32, 2, Color.White);
             Raylib.EndDrawing();
         }
 
