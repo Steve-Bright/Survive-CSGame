@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using static Raylib_cs.Raylib;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Game;
 
@@ -12,15 +13,20 @@ internal static class Program
     {
         Dictionary<string, string> settings = Util.returnJsonFile("./resources/saved/settings.json");
         RunTime.Language = settings["language"];
+                
+        string menuFile = File.ReadAllText("./resources/texts/menu.json");
+        LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
 
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
         RunTime.GameFont = "./resources/assets/englishfont.ttf";
+        RunTime.LanFile = menuJson;
 
         InitWindow(800, 480, "Survive!");
         SetWindowIcon(gameIcon);
         SetWindowState(ConfigFlags.ResizableWindow);
         SetWindowState(ConfigFlags.MaximizedWindow);
-        
+        SetTraceLogLevel(TraceLogLevel.None);
+        SetTargetFPS(60);
 
         while (!Raylib.WindowShouldClose())
         {

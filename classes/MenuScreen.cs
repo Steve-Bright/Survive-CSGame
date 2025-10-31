@@ -12,9 +12,10 @@ namespace Game
         {
             int screenWidth = GetScreenWidth();
             int screenHeight = GetScreenHeight();
-                
-            string menuFile = File.ReadAllText("./resources/texts/menu.json");
-            LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
+
+            // string menuFile = File.ReadAllText("./resources/texts/menu.json");
+            // LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
+            LanguageFile menuJson = RunTime.LanFile;
 
             Texture2D menuBg = LoadTexture("./resources/assets/menubg.png");
 
@@ -28,32 +29,46 @@ namespace Game
             Dictionary<string, string> language = (RunTime.Language == "english") ? language = menuJson.en : language = menuJson.ms;
 
             int fontSize = 80;
-            String[] menuArrays = { "SURVIVE!", language["play"], language["quit"] };
+            string menuTitle = "SURVIVE!";
+            String[] menuArrays = {menuTitle, language["play"], language["quit"] };
             int moveDown = 0;
-            foreach(string menuText in menuArrays){
+            foreach (string menuText in menuArrays)
+            {
                 string textName = menuText;
 
-                Vector2 textSize = MeasureTextEx(GetFontDefault(), textName, fontSize, 1.0f);
+                MenuText text = new MenuText(menuText, screenWidth, screenHeight, fontSize);
+                if (menuText == menuTitle)
+                {
+                    text.Clickable = false;
+                }
+
                 Vector2 textPos;
-                textPos.X = (textSize.X > 200) ? (screenWidth - textSize.X) / 2.0f : (screenWidth - textSize.X - 50 ) / 2.0f;
-                textPos.Y = (screenHeight / 4.0f) + moveDown;
-                DrawTextEx(RunTime.LoadGameFont(), textName, textPos, fontSize, 2.0f, Color.White);
-                moveDown = moveDown + (int) textSize.Y;
+                textPos.X = (text.LengthSize > 200) ? (float)Math.Round((screenWidth - text.LengthSize) / 2.0f) : (float)Math.Round((screenWidth - text.LengthSize - 50) / 2.0f);
+                textPos.Y = (float)Math.Round((screenHeight / 4.0f) + moveDown);
+                text.PlaceText(textPos, Color.White);
+                text.HoverNClick(GetMousePosition(), Color.Black);
+
+                moveDown = moveDown + (int)text.HeightSize;
             }
 
-            string english = "en";
-            string malaysian = "ms";
-            Vector2 lanTextSize = MeasureTextEx(GetFontDefault(), english, fontSize, 1.0f);
+            MenuText langaugeOne = new MenuText("en", screenWidth, screenHeight, fontSize);
+            MenuText langaugeTwo = new MenuText("ms", screenWidth, screenHeight, fontSize);
+            // string english = "en";
+            // string malaysian = "ms";
+            // Vector2 lanTextSize = MeasureTextEx(GetFontDefault(), english, fontSize, 1.0f);
 
             Vector2 enPos;
-            enPos.X = (screenWidth - lanTextSize.X - 150) / 2.0f;
+            enPos.X = (screenWidth - langaugeOne.LengthSize - 150) / 2.0f;
             enPos.Y = screenHeight - (screenHeight / 7.0f);
 
             Vector2 msPos = enPos;
-            msPos.X = msPos.X + lanTextSize.X; 
+            msPos.X = msPos.X + langaugeOne.LengthSize;
 
-            DrawTextEx(RunTime.LoadGameFont(), english, enPos, fontSize - 10, 2.0f, Color.White);
-            DrawTextEx(RunTime.LoadGameFont(), malaysian, msPos, fontSize-10, 2.0f, Color.White);
+            langaugeOne.PlaceText(enPos, Color.White);
+            langaugeTwo.PlaceText(msPos, Color.White);
+
+            langaugeOne.HoverNClick(GetMousePosition(), Color.Black);
+            langaugeTwo.HoverNClick(GetMousePosition(), Color.Black);
             Shown = true;
         }
     }

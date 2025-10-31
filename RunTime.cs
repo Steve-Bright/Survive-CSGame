@@ -21,5 +21,7 @@ namespace Game
             Font actualFont = LoadFont(gameFont);
             return actualFont;
         }
+
+        public static LanguageFile LanFile { get; set; }
     }
 }
