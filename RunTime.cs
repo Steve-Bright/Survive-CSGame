@@ -23,5 +23,8 @@ namespace Game
         }
 
         public static LanguageFile LanFile { get; set; }
+        public static Type CurrentWindow{
+            get; set;
+        }
     }
 }

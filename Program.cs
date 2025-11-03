@@ -20,6 +20,7 @@ internal static class Program
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
         RunTime.GameFont = "./resources/assets/englishfont.ttf";
         RunTime.LanFile = menuJson;
+        RunTime.CurrentWindow = typeof(MenuScreen);
 
         InitWindow(800, 480, "Survive!");
         SetWindowIcon(gameIcon);
@@ -28,19 +29,15 @@ internal static class Program
         SetTraceLogLevel(TraceLogLevel.None);
         SetTargetFPS(60);
 
-        while (!Raylib.WindowShouldClose())
+        while (!WindowShouldClose())
         {
-            Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.White);
+            BeginDrawing();
+            ClearBackground(Color.White);
 
-            MenuScreen menu = new MenuScreen();
-            menu.Display();
+            ScreenFactory screen = new ScreenFactory();
+            screen.RunScreen(RunTime.CurrentWindow);
 
-            // Vector2 testPos;
-            // testPos.X = 100;
-            // testPos.Y = 100;
-            // DrawTextEx(englishFont, "Hello", testPos, 32, 2, Color.White);
-            Raylib.EndDrawing();
+            EndDrawing();
         }
 
         Raylib.CloseWindow();

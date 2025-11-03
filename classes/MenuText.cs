@@ -18,11 +18,12 @@ namespace Game
         private int screenWidth;
         private int screenHeight;
 
+        private Action method = () => Console.WriteLine("button clicked ");
 
         public MenuText(string menuString, int screenW, int screenH, int fontSize, float txtSpacing = 1.0f)
         {
             text = menuString;
-            clickable = true;
+            clickable = false;
             screenWidth = screenW;
             screenHeight = screenH;
             pxSize = fontSize;
@@ -52,6 +53,11 @@ namespace Game
                         position.X = x;
                         position.Y = y;
                         DrawTextEx(RunTime.LoadGameFont(), text, position, pxSize, spacing, hoverColor);
+                        if (IsMouseButtonPressed(MouseButton.Left))
+                        {
+                            method.Invoke();
+                        }
+
                     }
                 }                   
             }         
@@ -92,6 +98,11 @@ namespace Game
         {
             get { return spacing; }
             set { spacing = value; }
+        }
+
+        public Action Method
+        {
+            set{ method = value; }
         }
     }
 }

@@ -37,9 +37,16 @@ namespace Game
                 string textName = menuText;
 
                 MenuText text = new MenuText(menuText, screenWidth, screenHeight, fontSize);
-                if (menuText == menuTitle)
+                if (menuText != menuTitle)
                 {
-                    text.Clickable = false;
+                    text.Clickable = true;
+                    if(menuText.ToLower() == "play")
+                    {
+                        text.Method = ClearScreen;
+                    }else if(menuText.ToLower() == "quit")
+                    {
+                        text.Method = CloseWindow;
+                    }
                 }
 
                 Vector2 textPos;
@@ -51,25 +58,23 @@ namespace Game
                 moveDown = moveDown + (int)text.HeightSize;
             }
 
-            MenuText langaugeOne = new MenuText("en", screenWidth, screenHeight, fontSize);
-            MenuText langaugeTwo = new MenuText("ms", screenWidth, screenHeight, fontSize);
-            // string english = "en";
-            // string malaysian = "ms";
-            // Vector2 lanTextSize = MeasureTextEx(GetFontDefault(), english, fontSize, 1.0f);
+            // MenuText langaugeOne = new MenuText("en", screenWidth, screenHeight, fontSize);
+            // MenuText langaugeTwo = new MenuText("ms", screenWidth, screenHeight, fontSize);
 
-            Vector2 enPos;
-            enPos.X = (screenWidth - langaugeOne.LengthSize - 150) / 2.0f;
-            enPos.Y = screenHeight - (screenHeight / 7.0f);
+            // Vector2 enPos;
+            // enPos.X = (screenWidth - langaugeOne.LengthSize - 150) / 2.0f;
+            // enPos.Y = screenHeight - (screenHeight / 7.0f);
 
-            Vector2 msPos = enPos;
-            msPos.X = msPos.X + langaugeOne.LengthSize;
+            // Vector2 msPos = enPos;
+            // msPos.X = msPos.X + langaugeOne.LengthSize;
 
-            langaugeOne.PlaceText(enPos, Color.White);
-            langaugeTwo.PlaceText(msPos, Color.White);
+            // langaugeOne.PlaceText(enPos, Color.White);
+            // langaugeTwo.PlaceText(msPos, Color.White);
 
-            langaugeOne.HoverNClick(GetMousePosition(), Color.Black);
-            langaugeTwo.HoverNClick(GetMousePosition(), Color.Black);
+            // langaugeOne.HoverNClick(GetMousePosition(), Color.Black);
+            // langaugeTwo.HoverNClick(GetMousePosition(), Color.Black);
             Shown = true;
         }
     }
+    
 }
