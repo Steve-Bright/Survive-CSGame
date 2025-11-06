@@ -7,7 +7,11 @@ public class GameScreen() : Screen()
 
     override public void Display()
     {
-        //    Camera2D camera = { 0 };
-        //     camera.zoom = 1.0f;
+        Camera2D camera = new Camera2D();
+        camera.Zoom = 1.0f;
+
+        BeginMode2D(camera);
+        DrawRectangle(0, 0, 200, 200, Color.Red);
+        EndMode2D();
     }
 }

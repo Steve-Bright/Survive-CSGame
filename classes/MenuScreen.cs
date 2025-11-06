@@ -42,7 +42,8 @@ namespace Game
                     text.Clickable = true;
                     if(menuText.ToLower() == "play")
                     {
-                        text.Method = ClearScreen;
+                        Action goToGameScreen = () => RunTime.CurrentWindow = typeof(GameScreen);
+                        text.Method = goToGameScreen;
                     }else if(menuText.ToLower() == "quit")
                     {
                         text.Method = CloseWindow;

@@ -14,7 +14,8 @@ class ScreenFactory
             menu.Display();
         }else if(RunTime.CurrentWindow == typeof(GameScreen))
         {
-            DrawText("Nothing at the moment", 0, 0, 10, Color.Black);
+            GameScreen mainGame = new GameScreen();
+            mainGame.Display();
         }else
         {
             DrawText("Nothing at the moment", 0, 0, 10, Color.Black);
