@@ -7,7 +7,7 @@ namespace Game
     {
         private bool shown;
         abstract public void Display();
-
+        abstract public void Unload();
         public bool Shown
         {
             get; set;

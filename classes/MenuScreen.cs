@@ -7,17 +7,14 @@ namespace Game
 {
     public class MenuScreen():Screen()
     {
+        int screenWidth = GetScreenWidth();
+        int screenHeight = GetScreenHeight();
+        Texture2D menuBg;
 
         override public void Display()
         {
-            int screenWidth = GetScreenWidth();
-            int screenHeight = GetScreenHeight();
 
-            // string menuFile = File.ReadAllText("./resources/texts/menu.json");
-            // LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
-            LanguageFile menuJson = RunTime.LanFile;
-
-            Texture2D menuBg = LoadTexture("./resources/assets/menubg.png");
+            menuBg = LoadTexture("./resources/assets/menubg.png");
 
             for (int y = 0; y < screenHeight; y += menuBg.Height)
             {
@@ -26,38 +23,45 @@ namespace Game
                     DrawTexture(menuBg, x, y, Color.White);
                 }
             }
-            Dictionary<string, string> language = (RunTime.Language == "english") ? language = menuJson.en : language = menuJson.ms;
 
             int fontSize = 80;
             string menuTitle = "SURVIVE!";
-            String[] menuArrays = {menuTitle, language["play"], language["quit"] };
+            String[] menuArrays = {"SURVIVE!", "Play", "Quit" };
             int moveDown = 0;
             foreach (string menuText in menuArrays)
             {
                 string textName = menuText;
 
-                MenuText text = new MenuText(menuText, screenWidth, screenHeight, fontSize);
+                MenuText text = new MenuText(menuText, fontSize);
                 if (menuText != menuTitle)
                 {
                     text.Clickable = true;
-                    if(menuText.ToLower() == "play")
+                    if (menuText.ToLower() == "play")
                     {
                         Action goToGameScreen = () => RunTime.CurrentWindow = typeof(GameScreen);
                         text.Method = goToGameScreen;
-                    }else if(menuText.ToLower() == "quit")
+                    }
+                    else if (menuText.ToLower() == "quit")
                     {
                         text.Method = CloseWindow;
                     }
                 }
 
-                Vector2 textPos;
-                textPos.X = (text.LengthSize > 200) ? (float)Math.Round((screenWidth - text.LengthSize) / 2.0f) : (float)Math.Round((screenWidth - text.LengthSize - 50) / 2.0f);
-                textPos.Y = (float)Math.Round((screenHeight / 4.0f) + moveDown);
-                text.PlaceText(textPos, Color.White);
+                // Vector2 textPos;
+                // textPos.X = (text.LengthSize > 200) ? (float)Math.Round((screenWidth - text.LengthSize) / 2.0f) : (float)Math.Round((screenWidth - text.LengthSize - 50) / 2.0f);
+                // textPos.Y = (float)Math.Round((screenHeight / 4.0f) + moveDown);
+                
+                int textWidth = MeasureText(menuText, fontSize);
+                int textPosX = (screenWidth - textWidth) / 2;
+                int textPosY = screenHeight/4 + moveDown;
+                text.Draw(textPosX, textPosY, Color.White);
+                
+                // text.PlaceText(textPos, Color.White);
                 text.HoverNClick(GetMousePosition(), Color.Black);
 
-                moveDown = moveDown + (int)text.HeightSize;
+                moveDown = moveDown + (textPosY / 3);
             }
+
 
             // MenuText langaugeOne = new MenuText("en", screenWidth, screenHeight, fontSize);
             // MenuText langaugeTwo = new MenuText("ms", screenWidth, screenHeight, fontSize);
@@ -76,6 +80,21 @@ namespace Game
             // langaugeTwo.HoverNClick(GetMousePosition(), Color.Black);
             Shown = true;
         }
+
+        public override void Unload()
+        {
+            if (menuBg.Id != 0)
+            {
+                for (int y = 0; y < screenHeight; y += menuBg.Height)
+                {
+                    for (int x = 0; x < screenWidth; x += menuBg.Width)
+                    {
+                        UnloadTexture(menuBg);
+                    }
+                }
+            }
+        }
+        
     }
     
 }

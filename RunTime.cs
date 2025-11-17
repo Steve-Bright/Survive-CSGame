@@ -6,23 +6,9 @@ namespace Game
 {
     public static class RunTime
     {
-        static private string gameFont;
+        public static Texture2D mainGameBg;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
-        public static string Language { get; set; }
-        public static string GameFont
-        {
-            get { return gameFont; }
-            set { gameFont = value;  }
-        }
-
-        public static Font LoadGameFont()
-        {
-            Font actualFont = LoadFont(gameFont);
-            return actualFont;
-        }
-
-        public static LanguageFile LanFile { get; set; }
         public static Type CurrentWindow{
             get; set;
         }

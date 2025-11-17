@@ -8,58 +8,44 @@ namespace Game
     {
         private string text;
         private bool clickable;
-        private float lengthSize;
-        private float heightSize;
-        private float x;
-        private float y;
+        private int x;
+        private int y;
         private int pxSize;
-        private float spacing;
-
-        private int screenWidth;
-        private int screenHeight;
 
         private Action method = () => Console.WriteLine("button clicked ");
 
-        public MenuText(string menuString, int screenW, int screenH, int fontSize, float txtSpacing = 1.0f)
+        public MenuText(string menuString,  int fontSize)
         {
             text = menuString;
             clickable = false;
-            screenWidth = screenW;
-            screenHeight = screenH;
             pxSize = fontSize;
-            Vector2 textSize = MeasureTextEx(GetFontDefault(), text, pxSize, txtSpacing);
-            lengthSize = textSize.X;
-            heightSize = textSize.Y;
-            spacing = txtSpacing;
         }
 
-        public void PlaceText(Vector2 textPosition, Color textColor)
+        public void Draw(int posx, int posy, Color color)
         {
-            x = textPosition.X;
-            y = textPosition.Y;
-            DrawTextEx(RunTime.LoadGameFont(), text, textPosition, pxSize, spacing, textColor);
+            x = posx;
+            y = posy;
+            DrawText(text, x, y, pxSize, color);
         }
 
         public void HoverNClick(Vector2 mousePosition, Color hoverColor)
         {
             if(clickable == true)
             {
-                if (mousePosition.X > x && mousePosition.X < lengthSize + x )
-                {
-                    if(mousePosition.Y > y && mousePosition.Y < heightSize + y)
+                bool xCondition =  mousePosition.X > x && mousePosition.X < MeasureText(text, pxSize) + x ;
+                bool yCondition = mousePosition.Y > y && mousePosition.Y < y/3 + y;
+                
+                    if(xCondition && yCondition)
                     {
-                        SetMouseCursor(MouseCursor.PointingHand);
-                        Vector2 position;
-                        position.X = x;
-                        position.Y = y;
-                        DrawTextEx(RunTime.LoadGameFont(), text, position, pxSize, spacing, hoverColor);
+
+                        DrawText(text, x, y, pxSize, hoverColor);
                         if (IsMouseButtonPressed(MouseButton.Left))
                         {
                             method.Invoke();
                         }
 
                     }
-                }                   
+                       
             }         
         }
 
@@ -68,15 +54,6 @@ namespace Game
             set { clickable = value; }
         }
 
-        public float LengthSize
-        {
-            get { return lengthSize; }
-        }
-
-        public float HeightSize
-        {
-            get { return heightSize; }
-        }
 
         public float X
         {
@@ -92,12 +69,6 @@ namespace Game
         {
             get { return pxSize; }
             set { pxSize = value; }
-        }
-
-        public float Spacing
-        {
-            get { return spacing; }
-            set { spacing = value; }
         }
 
         public Action Method

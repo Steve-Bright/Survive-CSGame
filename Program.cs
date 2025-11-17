@@ -11,22 +11,22 @@ internal static class Program
     [System.STAThread]
     public static void Main()
     {
-        Dictionary<string, string> settings = Util.returnJsonFile("./resources/saved/settings.json");
-        RunTime.Language = settings["language"];
+        // Dictionary<string, string> settings = Util.returnJsonFile("./resources/saved/settings.json");
+        // RunTime.Language = settings["language"];
                 
-        string menuFile = File.ReadAllText("./resources/texts/menu.json");
-        LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
+        // string menuFile = File.ReadAllText("./resources/texts/menu.json");
+        // LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
 
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
-        RunTime.GameFont = "./resources/assets/englishfont.ttf";
-        RunTime.LanFile = menuJson;
+        // RunTime.LanFile = menuJson;
         RunTime.CurrentWindow = typeof(MenuScreen);
+        Screen currentScreen;
 
         InitWindow(800, 480, "Survive!");
         SetWindowIcon(gameIcon);
         SetWindowState(ConfigFlags.ResizableWindow);
         SetWindowState(ConfigFlags.MaximizedWindow);
-        SetTraceLogLevel(TraceLogLevel.None);
+        SetTraceLogLevel(TraceLogLevel.Error);
         SetTargetFPS(60);
 
         while (!WindowShouldClose())
@@ -35,11 +35,11 @@ internal static class Program
             ClearBackground(Color.White);
 
             ScreenFactory screen = new ScreenFactory();
-            screen.RunScreen(RunTime.CurrentWindow);
+            currentScreen = screen.RunScreen(RunTime.CurrentWindow);
+            // DrawRectangle(0,0,100, 100, Color.White);
 
             EndDrawing();
         }
-
         Raylib.CloseWindow();
     }
 
