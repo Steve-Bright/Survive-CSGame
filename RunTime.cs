@@ -6,10 +6,10 @@ namespace Game
 {
     public static class RunTime
     {
-        public static Texture2D mainGameBg;
+        public static Texture2D MainGameBg;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
-        public static Type CurrentWindow{
+        public static ScreenType CurrentWindow{
             get; set;
         }
     }

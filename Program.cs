@@ -11,40 +11,58 @@ internal static class Program
     [System.STAThread]
     public static void Main()
     {
-        // Dictionary<string, string> settings = Util.returnJsonFile("./resources/saved/settings.json");
-        // RunTime.Language = settings["language"];
-                
-        // string menuFile = File.ReadAllText("./resources/texts/menu.json");
-        // LanguageFile menuJson = JsonConvert.DeserializeObject<LanguageFile>(menuFile);
-
-        Image gameIcon = LoadImage("./resources/assets/bonfire.png");
-        // RunTime.LanFile = menuJson;
-        RunTime.CurrentWindow = typeof(MenuScreen);
-        Screen currentScreen;
-
         InitWindow(800, 480, "Survive!");
-        SetWindowIcon(gameIcon);
         SetWindowState(ConfigFlags.ResizableWindow);
         SetWindowState(ConfigFlags.MaximizedWindow);
-        SetTraceLogLevel(TraceLogLevel.Error);
+        SetTraceLogLevel(TraceLogLevel.All);
         SetTargetFPS(60);
+
+
+        List<Texture2D> allTextures = new List<Texture2D>();
+        //backgroound asset initialization
+        Image gameIcon = LoadImage("./resources/assets/bonfire.png");
+        Texture2D menuBg = LoadTexture("./resources/assets/menubg.png");
+        Texture2D gameScreenBg = LoadTexture("./resources/assets/gameplaybg.jpg");
+
+        allTextures.Add(menuBg);
+        allTextures.Add(gameScreenBg);
+        
+        //mainWindow initialization
+        int totalScreens = 2;
+        MenuScreen menu = new MenuScreen(menuBg);
+        GameScreen mainGame = new GameScreen(gameScreenBg);
+        
+        ScreenFactory screen = new ScreenFactory();
+        screen.AddScreen(menu);
+        screen.AddScreen(mainGame);
+
+        RunTime.CurrentWindow = ScreenType.Menu;
+        Screen currentScreen;
+
+        SetWindowIcon(gameIcon);
 
         while (!WindowShouldClose())
         {
             BeginDrawing();
             ClearBackground(Color.White);
 
-            ScreenFactory screen = new ScreenFactory();
-            currentScreen = screen.RunScreen(RunTime.CurrentWindow);
-            // DrawRectangle(0,0,100, 100, Color.White);
+            screen.RunScreen(RunTime.CurrentWindow);
 
             EndDrawing();
         }
-        Raylib.CloseWindow();
+
+        UnloadAssets(allTextures);
+        CloseWindow();
+
+
     }
 
-    public enum Language
+    public static void UnloadAssets(List<Texture2D> allAssets)
     {
-        English, Myanmar
+        foreach(Texture2D eachAsset in allAssets)
+        {
+            UnloadTexture(eachAsset);
+        }
     }
+
 }

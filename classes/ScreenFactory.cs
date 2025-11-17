@@ -5,26 +5,27 @@ using static Raylib_cs.Raylib;
 
 class ScreenFactory
 {
-    public Screen RunScreen(Type CurrentScreen)
-    {
+    List<Screen> windows;
 
-        if (CurrentScreen == typeof(MenuScreen))
+    public ScreenFactory()
+    {
+        windows = new List<Screen>();
+    }
+
+    public void AddScreen(Screen oneScreen)
+    {
+        windows.Add(oneScreen);
+    }
+
+    public void RunScreen(ScreenType currentScreen)
+    {   
+        foreach(Screen eachScreen in windows)
         {
-            MenuScreen menu = new MenuScreen();
-            menu.Display();
-            return menu;
+            if(eachScreen.TypeName == currentScreen)
+            {
+                eachScreen.Display();
+            }
         }
-        // else if (RunTime.CurrentWindow == typeof(GameScreen))
-        else
-        {
-            GameScreen mainGame = new GameScreen();
-            mainGame.Display();
-            return mainGame;
-        }
-        // else
-        // {
-        //     DrawText("Nothing at the moment", 0, 0, 10, Color.Black);
-        // }
     }
 
     // public void UnloadScreen(Type CurrentScreen)

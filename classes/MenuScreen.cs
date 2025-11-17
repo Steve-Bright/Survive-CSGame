@@ -5,16 +5,19 @@ using Newtonsoft.Json;
 
 namespace Game
 {
-    public class MenuScreen():Screen()
+    public class MenuScreen : Screen
     {
         int screenWidth = GetScreenWidth();
         int screenHeight = GetScreenHeight();
-        Texture2D menuBg;
+
+        public MenuScreen(Texture2D background) : base(ScreenType.Menu, background)
+        {
+            
+        }
 
         override public void Display()
         {
-
-            menuBg = LoadTexture("./resources/assets/menubg.png");
+            Texture2D menuBg = MainBackground;
 
             for (int y = 0; y < screenHeight; y += menuBg.Height)
             {
@@ -38,7 +41,7 @@ namespace Game
                     text.Clickable = true;
                     if (menuText.ToLower() == "play")
                     {
-                        Action goToGameScreen = () => RunTime.CurrentWindow = typeof(GameScreen);
+                        Action goToGameScreen = () => RunTime.CurrentWindow = ScreenType.Game;
                         text.Method = goToGameScreen;
                     }
                     else if (menuText.ToLower() == "quit")
@@ -79,20 +82,6 @@ namespace Game
             // langaugeOne.HoverNClick(GetMousePosition(), Color.Black);
             // langaugeTwo.HoverNClick(GetMousePosition(), Color.Black);
             Shown = true;
-        }
-
-        public override void Unload()
-        {
-            if (menuBg.Id != 0)
-            {
-                for (int y = 0; y < screenHeight; y += menuBg.Height)
-                {
-                    for (int x = 0; x < screenWidth; x += menuBg.Width)
-                    {
-                        UnloadTexture(menuBg);
-                    }
-                }
-            }
         }
         
     }
