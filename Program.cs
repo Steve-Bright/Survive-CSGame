@@ -22,6 +22,8 @@ internal static class Program
         allTextures = LoadAsssets();
         
         //mainWindow initialization
+        Calendar mainCalendar = new Calendar();
+        RunTime.currentCalendar = mainCalendar;
         MenuScreen menu = new MenuScreen(RunTime.MenuBg);
         GameScreen mainGame = new GameScreen(RunTime.GamescreenBg);
         
@@ -42,7 +44,7 @@ internal static class Program
 
             EndDrawing();
         }
-
+        UnloadImage(gameIcon);
         UnloadAssets(allTextures);
         CloseWindow();
 

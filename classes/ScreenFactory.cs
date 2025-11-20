@@ -27,19 +27,4 @@ class ScreenFactory
             }
         }
     }
-
-    // public void UnloadScreen(Type CurrentScreen)
-    // {
-    //     if (CurrentScreen == typeof(MenuScreen))
-    //     {
-    //         MenuScreen menu = new MenuScreen();
-    //         menu.Unload();
-    //     }
-    //     // else if (RunTime.CurrentWindow == typeof(GameScreen))
-    //     else
-    //     {
-    //         GameScreen mainGame = new GameScreen();
-    //         mainGame.Unload();
-    //     }
-    // }
 }

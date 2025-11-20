@@ -4,12 +4,24 @@ using static Raylib_cs.Raylib;
 using static Raylib_cs.Raymath;
 
 namespace Game;
+
+public enum TextAlign {
+    TEXT_ALIGN_LEFT   = 0,
+    TEXT_ALIGN_TOP    = 0,
+    TEXT_ALIGN_CENTRE = 1,
+    TEXT_ALIGN_MIDDLE = 1,
+    TEXT_ALIGN_RIGHT  = 2,
+    TEXT_ALIGN_BOTTOM = 2
+};
+
 public class GameScreen : Screen
 {
+    private Calendar _mainCalendar;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
-        
+        _mainCalendar = RunTime.currentCalendar;
+        _mainCalendar.StartCalendar();
     }
 
     override public void Display()
@@ -52,13 +64,17 @@ public class GameScreen : Screen
         Rectangle stoneRect = new Rectangle(ltIndiW /2 + 50, 61, ltIndiH - 40 , 35 );
         DrawRectangleRec(foodRect, new Color(255, 204, 106));
 
-        UpdateText(foodRect, "100",ltIndiW /2 + 50 , 5, 28);
-        UpdateText(woodRect, "200",ltIndiW /2 + 50 , 32, 28);
-        UpdateText(stoneRect, "300",ltIndiW /2 + 50 , 63, 28);
+        UpdateText(foodRect, "100",ltIndiW /2 + 50 , 5, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        UpdateText(woodRect, "200",ltIndiW /2 + 50 , 32, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        UpdateText(stoneRect, "300",ltIndiW /2 + 50 , 63, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
-        // UpdateText(GetFrameTime().ToString("0.00"), 10, GetScreenHeight() - 30, 20, Color.Red);
+        Rectangle clockRect = new Rectangle(ltIndiW/3 * 2, 2, ltIndiW/3 , ltIndiH /3 * 2 );
+        DrawRectangleRec(clockRect, new Color(255, 204, 106));
         Indicator dayIndicator = new Indicator(GetScreenWidth()/2 - 100, 0, 150, tIndiH, 1);
         dayIndicator.Draw();
+
+        UpdateTime(clockRect, ltIndiW - 170, 15, _mainCalendar.CurrentTime);  
+
         
     }
 
@@ -83,25 +99,67 @@ public class GameScreen : Screen
     {
         DrawText($"{text}", x, y, fontSize,  Color.Black);
     }
-    private void UpdateText(Rectangle rect, string text, int x, int y, int fontSize)
+    private void UpdateText(Rectangle rect, string text, int x, int y, int fontSize, int hAlign, int vAlign)
     {
         Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, fontSize*.1f);
         Vector2 textPos = new Vector2(
-            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, 1f)),
-            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, 0.5f))
+            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, hAlign * 0.5f)),
+            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, vAlign * 0.5f))
             );
-        // Vector2 textPos = (Vector2) {
-        //     ,
-        //     
-        // };
-            
         // Draw the text
         DrawTextEx(GetFontDefault(), text, textPos, fontSize, fontSize*.1f, Color.Black);        
+        // DrawText($"{text}", x, y, fontSize,  Color.Black);
+    }
+
+    private void UpdateText(Rectangle rect, string text, int x, int y, int fontSize, int hAlign, int vAlign, Color color)
+    {
+        Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, fontSize*.1f);
+        Vector2 textPos = new Vector2(
+            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, hAlign * 0.5f)),
+            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, vAlign * 0.5f))
+            );
+        // Draw the text
+        DrawTextEx(GetFontDefault(), text, textPos, fontSize, fontSize*.1f, color);        
         // DrawText($"{text}", x, y, fontSize,  Color.Black);
     }
 
     private void UpdateText(string text, int x, int y, int fontSize,  Color color)
     {
         DrawText($"{text}", x, y, fontSize, color);
+    }
+
+    private void UpdateTime(Rectangle formatRect, int clockX, int clockY, float currentTime){
+
+        _mainCalendar.CurrentTime = currentTime + GetFrameTime();
+        int roundedTime = (int)Math.Floor(_mainCalendar.CurrentTime);
+        int roundedTimeRemainder = roundedTime % 2;
+        int roundedTimeResult = roundedTime / 2;
+        if( roundedTimeRemainder == 0 && roundedTimeResult != _mainCalendar.PreviousRoundedResult ){
+            _mainCalendar.PreviousRoundedResult = roundedTimeResult;
+            if(_mainCalendar.HourSystem >= 24){
+                _mainCalendar.PassMidnight();
+            }else{
+                _mainCalendar.HourSystem +=  1;
+            }
+            Console.WriteLine("Rounded Time : " + roundedTime);
+            Console.WriteLine("Hour : " + _mainCalendar.HourSystem + "  Day:  " + _mainCalendar.CurrentDay + " isDay? : " + _mainCalendar.IsDay );
+                
+            if(roundedTime >= _mainCalendar.DayCriteria && roundedTime < _mainCalendar.NightCriteria && _mainCalendar.isDay != false){
+                _mainCalendar.ToggleNight();
+            }
+            else if(roundedTime >= _mainCalendar.NightCriteria){
+                _mainCalendar.EndADay();
+                Console.WriteLine("End a day ");
+            }
+        }
+        UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        string msg = _mainCalendar.IsDay ? "Build" : "Defend";
+        formatRect.Y += 40;
+        UpdateText(formatRect, $"{msg}", clockX, clockY + 40, 35, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Red);
+        Rectangle clockRect = new Rectangle(GetScreenWidth()/2 - 100, 0, 150, 100);
+        
+        UpdateText(clockRect, $"Day: {_mainCalendar.CurrentDay} ", GetScreenWidth()/2 - 70, 30, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_CENTRE);  
+        // DrawText($"{msg}", clockX, clockY + 40, 30, Color.Red);
+        // DrawText($"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, Color.Black);
     }
 }
