@@ -12,16 +12,6 @@ public class Land : BaseObj
         _building = null;
     }
     
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color);
-        
-        // if (_building != null)
-        // {
-        //     _building.Draw();
-        // }
-    }
-
     public override void Unload()
     {
         // if (_building != null)

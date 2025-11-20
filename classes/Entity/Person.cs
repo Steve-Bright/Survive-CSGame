@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Raylib_cs;
+using static Raylib_cs.Raylib;
+
 
 namespace Game;
 public class Person : Entity
@@ -85,12 +88,27 @@ public class Person : Entity
         // }
     }
 
-    public override void Draw()
-    {
-        // Color personColor = _isFainted ? Color.GRAY : Color.BLUE;
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, personColor);
-        // Raylib.DrawText("PERSON", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
-    }
+    // public override void Draw()
+    // {
+    //     int frameWidth = Icon.Width;
+    //     int frameHeight = Icon.Height;
+    //     int expectedWidth = 100;
+
+    //     //srcRectangle
+    //     Rectangle sourceRec = new Rectangle( 0, 0, (float)frameWidth, (float)frameHeight );
+    //     float scale = (float)expectedWidth / frameWidth;
+    //     // Expected Rectangle
+    //     Rectangle destRec = new Rectangle( X, Y, frameWidth * scale,  frameHeight * scale);
+
+    //      // Origin of the texture (rotation/scale point), it's relative to destination rectangle size
+    //     Vector2 origin = new Vector2(0);
+    //     DrawTexturePro(Icon, sourceRec, destRec, origin, 0, Color.White);  
+
+    //     // DrawTexture(Icon, (int)X, (int)Y, Color.White);
+    //     // Color personColor = _isFainted ? Color.GRAY : Color.BLUE;
+    //     // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, personColor);
+    //     // Raylib.DrawText("PERSON", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
+    // }
 
     public override void Unload()
     {

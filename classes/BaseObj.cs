@@ -52,7 +52,10 @@ public abstract class BaseObj
 
     public abstract Dictionary<string, string> ViewDetails();
 
-    public abstract void Draw();
+    public virtual void Draw()
+    {
+        Util.ScaledDrawTexture(Icon, X, Y, Width);
+    }
 
     public abstract void Unload();
 }

@@ -18,6 +18,7 @@ public class GameScreen : Screen
 {
     private List<Person> _persons;
     private List<Building> _buildings;
+    private List<Land> _lands;
     // private List<ResourceAre
     private Calendar _mainCalendar;
 
@@ -25,8 +26,14 @@ public class GameScreen : Screen
     {
         _persons = new List<Person>();
         _buildings = new List<Building>();
+        _lands = new List<Land>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
+    }
+
+    public void createLand(Land newLand)
+    {
+        _lands.Add(newLand);
     }
 
     public void createEntity(Person newPerson)
@@ -41,9 +48,24 @@ public class GameScreen : Screen
 
     override public void Display()
     {
-        // Texture2D displayBg = RunTime.Main
         Texture2D displayBg = MainBackground;
         DrawTexture(displayBg, 0, 0, Color.White);
+        foreach(Land eachLand in _lands)
+        {
+            eachLand.Draw();
+        }
+
+        foreach (Person eachPerson in _persons)
+        {
+            eachPerson.Draw();
+        }
+
+        AddIndicators();
+
+    }
+
+    private void AddIndicators()
+    {
 
 
         int ltIndiH = 100;
@@ -61,14 +83,14 @@ public class GameScreen : Screen
         }
         indicatorInsideOne.Draw();
 
-        AttachIconToIndicator(RunTime.PersonDown, 10, 10, ltIndiH-30);
-        AttachIconToIndicator(RunTime.Sun, (int)Math.Round(ltIndiW/2.8) + 10, 5, ltIndiH-40);
+        Util.ScaledDrawTexture(RunTime.PersonDown, 10, 10, ltIndiH-30);
+        Util.ScaledDrawTexture(RunTime.Sun, (int)Math.Round(ltIndiW/2.8) + 10, 5, ltIndiH-40);
         UpdateText("Sunny",(int)Math.Round(ltIndiW/2.8) , 68, 28);
 
         int resSize = ltIndiH - 60;
-        AttachIconToIndicator(RunTime.Food, ltIndiW /2 + 5, 5, resSize);
-        AttachIconToIndicator(RunTime.Wood, ltIndiW /2 + 5, 35, resSize);
-        AttachIconToIndicator(RunTime.Stone, ltIndiW /2 + 5, 60, resSize);
+        Util.ScaledDrawTexture(RunTime.Food, ltIndiW /2 + 5, 5, resSize);
+        Util.ScaledDrawTexture(RunTime.Wood, ltIndiW /2 + 5, 35, resSize);
+        Util.ScaledDrawTexture(RunTime.Stone, ltIndiW /2 + 5, 60, resSize);
         
         Rectangle foodRect = new Rectangle(ltIndiW /2 + 50, 2, ltIndiH - 40 , 35 );
         DrawRectangleRec(foodRect, new Color(255, 204, 106));
@@ -89,25 +111,6 @@ public class GameScreen : Screen
         dayIndicator.Draw();
 
         UpdateTime(clockRect, ltIndiW - 170, 15, _mainCalendar.CurrentTime);  
-
-        
-    }
-
-    private void AttachIconToIndicator(Texture2D icon, int x, int y, int expectedWidth)
-    {
-;
-        int frameWidth = icon.Width;
-        int frameHeight = icon.Height;
-
-        //srcRectangle
-        Rectangle sourceRec = new Rectangle( 0, 0, (float)frameWidth, (float)frameHeight );
-        float scale = (float)expectedWidth / frameWidth;
-        // Expected Rectangle
-        Rectangle destRec = new Rectangle( x, y, frameWidth * scale,  frameHeight * scale);
-
-         // Origin of the texture (rotation/scale point), it's relative to destination rectangle size
-        Vector2 origin = new Vector2(0);
-        DrawTexturePro(icon, sourceRec, destRec, origin, 0, Color.White);       
     }
 
     private void UpdateText(string text, int x, int y, int fontSize)
