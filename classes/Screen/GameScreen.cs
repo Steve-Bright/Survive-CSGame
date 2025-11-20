@@ -16,12 +16,27 @@ public enum TextAlign {
 
 public class GameScreen : Screen
 {
+    private List<Person> _persons;
+    private List<Building> _buildings;
+    // private List<ResourceAre
     private Calendar _mainCalendar;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
+        _persons = new List<Person>();
+        _buildings = new List<Building>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
+    }
+
+    public void createEntity(Person newPerson)
+    {
+        _persons.Add(newPerson);
+    }
+
+    public void createBuilding(Building newBuilding)
+    {
+        _buildings.Add(newBuilding);
     }
 
     override public void Display()
@@ -132,28 +147,26 @@ public class GameScreen : Screen
 
         _mainCalendar.CurrentTime = currentTime + GetFrameTime();
         int roundedTime = (int)Math.Floor(_mainCalendar.CurrentTime);
+        //swamhtet this is 1 hour per 2 sec. need to change.
         int roundedTimeRemainder = roundedTime % 2;
         int roundedTimeResult = roundedTime / 2;
         if( roundedTimeRemainder == 0 && roundedTimeResult != _mainCalendar.PreviousRoundedResult ){
             _mainCalendar.PreviousRoundedResult = roundedTimeResult;
-            if(_mainCalendar.HourSystem >= 24){
+            if(_mainCalendar.HourSystem >= 23){
                 _mainCalendar.PassMidnight();
             }else{
                 _mainCalendar.HourSystem +=  1;
             }
-            Console.WriteLine("Rounded Time : " + roundedTime);
-            Console.WriteLine("Hour : " + _mainCalendar.HourSystem + "  Day:  " + _mainCalendar.CurrentDay + " isDay? : " + _mainCalendar.IsDay );
                 
             if(roundedTime >= _mainCalendar.DayCriteria && roundedTime < _mainCalendar.NightCriteria && _mainCalendar.isDay != false){
                 _mainCalendar.ToggleNight();
             }
             else if(roundedTime >= _mainCalendar.NightCriteria){
                 _mainCalendar.EndADay();
-                Console.WriteLine("End a day ");
             }
         }
         UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        string msg = _mainCalendar.IsDay ? "Build" : "Defend";
+        string msg = _mainCalendar.IsDay ? "BUILD" : "DEFEND";
         formatRect.Y += 40;
         UpdateText(formatRect, $"{msg}", clockX, clockY + 40, 35, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Red);
         Rectangle clockRect = new Rectangle(GetScreenWidth()/2 - 100, 0, 150, 100);

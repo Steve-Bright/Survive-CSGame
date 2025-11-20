@@ -26,7 +26,8 @@ internal static class Program
         RunTime.currentCalendar = mainCalendar;
         MenuScreen menu = new MenuScreen(RunTime.MenuBg);
         GameScreen mainGame = new GameScreen(RunTime.GamescreenBg);
-        
+
+
         ScreenFactory screen = new ScreenFactory();
         screen.AddScreen(menu);
         screen.AddScreen(mainGame);
@@ -49,6 +50,10 @@ internal static class Program
         CloseWindow();
 
 
+    }
+
+    public static void CreateInitialEntites(){
+        
     }
 
     public static List<Texture2D> LoadAsssets()
