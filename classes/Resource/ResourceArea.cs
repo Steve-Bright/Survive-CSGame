@@ -5,23 +5,24 @@ namespace Game;
 public class ResourceArea : BaseObj
 {
     
-    private Resource _resource;
+    private int _capacity;
+    private ResourceType _resource;
     private bool _isAccessible;
     private int _requiredWorkers;
     private List<Person> _currentWorkers;
 
     // + ResourceArea(name: string, xPos: float, yPos: float, width: int, height: int, type: ResourceType)
-    public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  Resource type)
+    public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type)
         : base(name, xPos, yPos, width, height, resourceAreaIcon)
     {
-        // Initialize private fields
+        _capacity = 1000;
         _resource = type;
         _isAccessible = true;
         _requiredWorkers = 1;
         _currentWorkers = new List<Person>();
     }
 
-    public Resource Resource => _resource;
+    public ResourceType Resource => _resource;
 
     public bool IsAccessible => _isAccessible;
 
@@ -56,8 +57,8 @@ public class ResourceArea : BaseObj
         };
     }
 
-    public override void Draw()
-    {
+    // public override void Draw()
+    // {
         // Color drawColor;
         // switch (_resource.Type)
         // {
@@ -78,7 +79,7 @@ public class ResourceArea : BaseObj
         
         // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, drawColor);
         // Raylib.DrawText(_resource.Type.ToString(), (int)X + 5, (int)Y + 5, 10, Color.BLACK);
-    }
+    // }
 
     // + Unload() : void
     public override void Unload()

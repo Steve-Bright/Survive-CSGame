@@ -6,18 +6,24 @@ namespace Game;
 
 public class GameScreen : Screen
 {
+    private List<ResourceArea> _resourceAreas;
     private List<Inventory> _allInventories;
     private List<BaseObj> _allObjects;
     private Calendar _mainCalendar;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
+        _resourceAreas = new List<ResourceArea>();
         _allInventories = new List<Inventory>();
         _allObjects = new List<BaseObj>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
     }
 
+    public void AddResourceArea(ResourceArea newResourceArea)
+    {
+        _resourceAreas.Add(newResourceArea);
+    }
 
     public void AddBaseObj(BaseObj newObj)
     {
@@ -37,6 +43,11 @@ public class GameScreen : Screen
         foreach(BaseObj eachObj in _allObjects)
         {
             eachObj.Draw();
+        }
+
+        foreach(ResourceArea eachResourceArea in _resourceAreas)
+        {
+            eachResourceArea.Draw();
         }
 
         BaseObj toShowDetails = null;

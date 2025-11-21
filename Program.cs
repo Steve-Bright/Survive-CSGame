@@ -93,6 +93,19 @@ internal static class Program
             Person p = new Person(name, x, y, entityWidth, entityHeight, 100, 2, RunTime.PersonDown, RunTime.currentCalendar);
             gameScreen.AddBaseObj(p);
         }
+
+        
+        ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);
+        ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT);
+        ResourceArea stoneArea = new ResourceArea("Stone Area 1 ",  50, forest.Width + 300, 150, 150, RunTime.StoneArea, ResourceType.STONE);
+        ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE);
+        ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD);
+
+        gameScreen.AddResourceArea(forest);
+        gameScreen.AddResourceArea(animalArea);
+        gameScreen.AddResourceArea(stoneArea);
+        gameScreen.AddResourceArea(stoneArea2);
+        gameScreen.AddResourceArea(forest2);
     }
 
     public static List<Texture2D> LoadAsssets()
