@@ -26,10 +26,12 @@ namespace Game
         public static Texture2D Land;
         public static Texture2D WallV;
         public static Texture2D WallH;
+        public static Texture2D CloseIcon;
 
         public static Texture2D MenuBg;
         public static Texture2D GamescreenBg;
         public static Calendar currentCalendar;
+        public static bool detailsShown = false;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
         public static ScreenType CurrentWindow{

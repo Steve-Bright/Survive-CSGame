@@ -29,6 +29,7 @@ public class Calendar
         _dayCriteria = 24;
         _nightCriteria = 48;
         _subscribers = new List<Entity>();
+        _currentWeather = Weather.Sunny;
     }
 
     public void StartCalendar(Weather startingWeather = Weather.Sunny)

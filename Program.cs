@@ -53,23 +53,6 @@ internal static class Program
     }
 
     public static void CreateInitialEntites(GameScreen gameScreen){
-        Random rng = new Random();
-        int entityWidth = 55; 
-        int entityHeight = 55;
-        string[] names = new[]
-        {
-            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
-            "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor"
-        };
-
-        foreach (var name in names)
-        {
-            int x = rng.Next(0, GetScreenWidth() - entityWidth);
-            int y = rng.Next(0, GetScreenHeight() - entityHeight);
-            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, 2, RunTime.PersonDown, RunTime.currentCalendar);
-            gameScreen.createEntity(p);
-        }
-
 
         //block one
         Land landOne = new Land("Area 1", 500, 200, 180, 180, RunTime.Land);
@@ -95,22 +78,41 @@ internal static class Program
         Land landFifteen = new Land("Area 15", 1040, 760, 180, 180, RunTime.Land);
         Land landSixteen = new Land("Area 16", 1220, 760, 180, 180, RunTime.Land);
 
-        gameScreen.createLand(landOne);
-        gameScreen.createLand(landTwo);
-        gameScreen.createLand(landThree);
-        gameScreen.createLand(landFour);
-        gameScreen.createLand(landFive);
-        gameScreen.createLand(landSix);
-        gameScreen.createLand(landSeven);
-        gameScreen.createLand(landEight);
-        gameScreen.createLand(landNine);
-        gameScreen.createLand(landTen);
-        gameScreen.createLand(landEleven);
-        gameScreen.createLand(landTwelve);
-        gameScreen.createLand(landThirteen);
-        gameScreen.createLand(landFourteen);
-        gameScreen.createLand(landFifteen);
-        gameScreen.createLand(landSixteen);
+
+
+        gameScreen.addBaseObj(landOne);
+        gameScreen.addBaseObj(landTwo);
+        gameScreen.addBaseObj(landThree);
+        gameScreen.addBaseObj(landFour);
+        gameScreen.addBaseObj(landFive);
+        gameScreen.addBaseObj(landSix);
+        gameScreen.addBaseObj(landSeven);
+        gameScreen.addBaseObj(landEight);
+        gameScreen.addBaseObj(landNine);
+        gameScreen.addBaseObj(landTen);
+        gameScreen.addBaseObj(landEleven);
+        gameScreen.addBaseObj(landTwelve);
+        gameScreen.addBaseObj(landThirteen);
+        gameScreen.addBaseObj(landFourteen);
+        gameScreen.addBaseObj(landFifteen);
+        gameScreen.addBaseObj(landSixteen);
+
+        Random rng = new Random();
+        int entityWidth = 55; 
+        int entityHeight = 55;
+        string[] names = new[]
+        {
+            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
+            "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
+        };
+
+        foreach (var name in names)
+        {
+            int x = rng.Next(0, GetScreenWidth() - entityWidth);
+            int y = rng.Next(0, GetScreenHeight() - entityHeight);
+            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, 2, RunTime.PersonDown, RunTime.currentCalendar);
+            gameScreen.addBaseObj(p);
+        }
     }
 
     public static List<Texture2D> LoadAsssets()
@@ -139,6 +141,7 @@ internal static class Program
         Texture2D land  = LoadTexture("./resources/assets/land.png");
         Texture2D wallV  = LoadTexture("./resources/assets/wallV.png");
         Texture2D wallH  = LoadTexture("./resources/assets/wallH.png");
+        Texture2D closeIcon = LoadTexture("./resources/assets/close.png");
 
         allTextures.Add(menuBg);
         allTextures.Add(gameScreenBg);
@@ -161,6 +164,7 @@ internal static class Program
         allTextures.Add(land);
         allTextures.Add(wallV);
         allTextures.Add(wallH);
+        allTextures.Add(closeIcon);
 
         RunTime.MenuBg = menuBg;
         RunTime.GamescreenBg = gameScreenBg;
@@ -183,6 +187,7 @@ internal static class Program
         RunTime.Land = land;
         RunTime.WallV = wallV;
         RunTime.WallH = wallH;
+        RunTime.CloseIcon = closeIcon;
 
         return allTextures;     
     }

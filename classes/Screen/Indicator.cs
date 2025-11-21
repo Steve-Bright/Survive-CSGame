@@ -10,12 +10,16 @@ public class Indicator
     private float _w;
     private float _h;
     private float _columnWidths;
+    private float _rowHeights;                               
+
 
     private int _columns;
+    private int _rows; 
     private Color _baseColor;
     private float _outlineThick;
     private Color _outlineColor;
     private List<float> _allColumnX;
+    private List<float> _allRowY;
 
     public Indicator(float xPos, float yPos, float width, float height, int cols)
     {
@@ -34,6 +38,32 @@ public class Indicator
 
         _baseColor = new Color(255, 204, 106);
         // _baseColor = customizedColor;
+        _outlineThick = 2;
+        _outlineColor = Color.Black;
+    }
+
+    public Indicator(float xPos, float yPos, float width, float height, int cols, int rows)
+    {
+        if (cols < 1 || cols > 10)
+            throw new ArgumentException("Haiya cannot lah, only support 1 to 10 columns!");
+        if (rows < 1 || rows > 10)
+            throw new ArgumentException("Haiya cannot lah, only support 1 to 10 rows!");
+
+        _allColumnX = new List<float>();
+        _allRowY = new List<float>();
+
+        _x = xPos;
+        _y = yPos;
+        _w = width;
+        _h = height;
+
+        _columns = cols;
+        _rows = rows;
+
+        _columnWidths = width / cols;
+        _rowHeights = height / rows;
+
+        _baseColor = new Color(255, 204, 106);
         _outlineThick = 2;
         _outlineColor = Color.Black;
     }
@@ -91,9 +121,15 @@ public class Indicator
             DrawRectangleLinesEx(indicatorRect, _outlineThick, _outlineColor);
         }
 
-        // Rectangle indicatorOne = new Rectangle(x, y, w, h);
-        // DrawRectangleRec(indicatorOne, baseColor);
-        // DrawRectangleLinesEx(indicatorOne, 2, outlineColor);
+        for (int j = 0; j < _rows; j++)
+        {
+            float rowY = _y + (j * _rowHeights);
+            _allRowY.Add(rowY);
+            Rectangle indicatorRect = new Rectangle(_x, rowY, _w, _rowHeights);
+            // DrawRectangleRec(indicatorRect, _baseColor);
+            DrawRectangleLines((int) _x, (int) rowY, (int) _w, (int) _rowHeights, _outlineColor);
+        }
+
     }
 
     public List<float> ColumnXValues

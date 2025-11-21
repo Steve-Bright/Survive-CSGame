@@ -1,72 +1,104 @@
 using Raylib_cs;
-using System.Numerics;
 using static Raylib_cs.Raylib;
-using static Raylib_cs.Raymath;
+using System.Numerics;
 
 namespace Game;
 
-public enum TextAlign {
-    TEXT_ALIGN_LEFT   = 0,
-    TEXT_ALIGN_TOP    = 0,
-    TEXT_ALIGN_CENTRE = 1,
-    TEXT_ALIGN_MIDDLE = 1,
-    TEXT_ALIGN_RIGHT  = 2,
-    TEXT_ALIGN_BOTTOM = 2
-};
-
 public class GameScreen : Screen
 {
-    private List<Person> _persons;
-    private List<Building> _buildings;
-    private List<Land> _lands;
-    // private List<ResourceAre
+    private List<BaseObj> _allObjects;
     private Calendar _mainCalendar;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
-        _persons = new List<Person>();
-        _buildings = new List<Building>();
-        _lands = new List<Land>();
+        _allObjects = new List<BaseObj>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
     }
 
-    public void createLand(Land newLand)
-    {
-        _lands.Add(newLand);
-    }
 
-    public void createEntity(Person newPerson)
+    public void addBaseObj(BaseObj newObj)
     {
-        _persons.Add(newPerson);
-    }
-
-    public void createBuilding(Building newBuilding)
-    {
-        _buildings.Add(newBuilding);
+        _allObjects.Add(newObj);
     }
 
     override public void Display()
     {
         Texture2D displayBg = MainBackground;
         DrawTexture(displayBg, 0, 0, Color.White);
-        foreach(Land eachLand in _lands)
+
+        foreach(BaseObj eachObj in _allObjects)
         {
-            eachLand.Draw();
+            eachObj.Draw();
         }
 
-        foreach (Person eachPerson in _persons)
+        BaseObj toShowDetails = null;
+
+        foreach(BaseObj obj in _allObjects)
         {
-            eachPerson.Draw();
+            if (obj.IsSelected)
+            {
+                toShowDetails = obj;
+                break;
+            }
         }
+
+        if(toShowDetails == null)
+        {
+            foreach(BaseObj obj in _allObjects)
+            {
+                Vector2 mousePos = GetMousePosition();
+                if(mousePos.X > obj.X && mousePos.X < obj.X + obj.Width &&  mousePos.Y > obj.Y && mousePos.Y < obj.Y + obj.Height && IsMouseButtonPressed(MouseButton.Right)  && !obj.IsSelected)
+                {
+                    RunTime.detailsShown = true;
+                    obj.IsSelected = true;
+                }
+            }
+
+        }else if(toShowDetails != null)
+        {
+            toShowDetails.DisplayDetails();
+        }
+
 
         AddIndicators();
 
     }
 
+    public int GetPersonCount()
+    {
+        int count = 0;
+        foreach(BaseObj obj in _allObjects)
+        {
+            if(obj is Person)
+            {
+                count ++;
+            }
+        }
+
+        return count;
+    }
+
+    public Weather CurrentWeather()
+    {
+        return _mainCalendar.CurrentWeather;
+    }   
+
     private void AddIndicators()
     {
+        int freePeople = 0;
 
+        foreach(BaseObj obj in _allObjects)
+        {
+            if(obj is Person)
+            {
+                Person person = (Person)obj;
+                if(!person.IsWorking && !person.IsFainted)
+                {
+                    freePeople += 1;
+                }
+            }
+        }
 
         int ltIndiH = 100;
         int ltIndiW = 700;
@@ -84,8 +116,15 @@ public class GameScreen : Screen
         indicatorInsideOne.Draw();
 
         Util.ScaledDrawTexture(RunTime.PersonDown, 10, 10, ltIndiH-30);
+        Rectangle currentPersonRect = new Rectangle(90, 30, 40 , 40 );
+        DrawRectangleRec(currentPersonRect, new Color(255, 204, 106));
+
+        Util.UpdateText(currentPersonRect, $"{freePeople}", 90, 30, 40, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText("/", 130, 30, 40);
+        Util.UpdateText($"{GetPersonCount()}", 160, 30, 40);
+
         Util.ScaledDrawTexture(RunTime.Sun, (int)Math.Round(ltIndiW/2.8) + 10, 5, ltIndiH-40);
-        UpdateText("Sunny",(int)Math.Round(ltIndiW/2.8) , 68, 28);
+        Util.UpdateText($"{_mainCalendar.CurrentWeather}",(int)Math.Round(ltIndiW/2.8) , 68, 28);
 
         int resSize = ltIndiH - 60;
         Util.ScaledDrawTexture(RunTime.Food, ltIndiW /2 + 5, 5, resSize);
@@ -101,9 +140,9 @@ public class GameScreen : Screen
         Rectangle stoneRect = new Rectangle(ltIndiW /2 + 50, 61, ltIndiH - 40 , 35 );
         DrawRectangleRec(foodRect, new Color(255, 204, 106));
 
-        UpdateText(foodRect, "100",ltIndiW /2 + 50 , 5, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        UpdateText(woodRect, "200",ltIndiW /2 + 50 , 32, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        UpdateText(stoneRect, "300",ltIndiW /2 + 50 , 63, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(foodRect, "100",ltIndiW /2 + 50 , 5, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(woodRect, "200",ltIndiW /2 + 50 , 32, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(stoneRect, "300",ltIndiW /2 + 50 , 63, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
         Rectangle clockRect = new Rectangle(ltIndiW/3 * 2, 2, ltIndiW/3 , ltIndiH /3 * 2 );
         DrawRectangleRec(clockRect, new Color(255, 204, 106));
@@ -113,38 +152,6 @@ public class GameScreen : Screen
         UpdateTime(clockRect, ltIndiW - 170, 15, _mainCalendar.CurrentTime);  
     }
 
-    private void UpdateText(string text, int x, int y, int fontSize)
-    {
-        DrawText($"{text}", x, y, fontSize,  Color.Black);
-    }
-    private void UpdateText(Rectangle rect, string text, int x, int y, int fontSize, int hAlign, int vAlign)
-    {
-        Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, fontSize*.1f);
-        Vector2 textPos = new Vector2(
-            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, hAlign * 0.5f)),
-            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, vAlign * 0.5f))
-            );
-        // Draw the text
-        DrawTextEx(GetFontDefault(), text, textPos, fontSize, fontSize*.1f, Color.Black);        
-        // DrawText($"{text}", x, y, fontSize,  Color.Black);
-    }
-
-    private void UpdateText(Rectangle rect, string text, int x, int y, int fontSize, int hAlign, int vAlign, Color color)
-    {
-        Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, fontSize*.1f);
-        Vector2 textPos = new Vector2(
-            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, hAlign * 0.5f)),
-            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, vAlign * 0.5f))
-            );
-        // Draw the text
-        DrawTextEx(GetFontDefault(), text, textPos, fontSize, fontSize*.1f, color);        
-        // DrawText($"{text}", x, y, fontSize,  Color.Black);
-    }
-
-    private void UpdateText(string text, int x, int y, int fontSize,  Color color)
-    {
-        DrawText($"{text}", x, y, fontSize, color);
-    }
 
     private void UpdateTime(Rectangle formatRect, int clockX, int clockY, float currentTime){
 
@@ -168,13 +175,13 @@ public class GameScreen : Screen
                 _mainCalendar.EndADay();
             }
         }
-        UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
         string msg = _mainCalendar.IsDay ? "BUILD" : "DEFEND";
         formatRect.Y += 40;
-        UpdateText(formatRect, $"{msg}", clockX, clockY + 40, 35, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Red);
+        Util.UpdateText(formatRect, $"{msg}", clockX, clockY + 40, 35, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Red);
         Rectangle clockRect = new Rectangle(GetScreenWidth()/2 - 100, 0, 150, 100);
         
-        UpdateText(clockRect, $"Day: {_mainCalendar.CurrentDay} ", GetScreenWidth()/2 - 70, 30, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_CENTRE);  
+        Util.UpdateText(clockRect, $"Day: {_mainCalendar.CurrentDay} ", GetScreenWidth()/2 - 70, 30, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_CENTRE);  
         // DrawText($"{msg}", clockX, clockY + 40, 30, Color.Red);
         // DrawText($"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, Color.Black);
     }
