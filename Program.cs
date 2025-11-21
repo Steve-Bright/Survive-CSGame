@@ -53,49 +53,29 @@ internal static class Program
     }
 
     public static void CreateInitialEntites(GameScreen gameScreen){
+        Inventory foodInventory = new Inventory(ResourceType.FOOD, 10);
+        Inventory woodInventory = new Inventory(ResourceType.WOOD, 20);
+        Inventory stoneInventory = new Inventory(ResourceType.STONE, 0);
+        Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);
+        gameScreen.AddInventory(foodInventory);
+        gameScreen.AddInventory(woodInventory);
+        gameScreen.AddInventory(stoneInventory);
+        gameScreen.AddInventory(rawMeatInventory);
 
-        //block one
-        Land landOne = new Land("Area 1", 500, 200, 180, 180, RunTime.Land);
-        Land landTwo = new Land("Area 2", 680, 200, 180, 180, RunTime.Land);
-        Land landThree = new Land("Area 3", 500, 340, 180, 180, RunTime.Land);
-        Land landFour = new Land("Area 4", 680, 340, 180, 180, RunTime.Land);
+        int[] xs = { 500, 680, 1040, 1220 };
+        int[] ys = { 200, 340, 620, 760 };
+        int landW = 180, landH = 180;
 
-        //block two
-        Land landFive = new Land("Area 5", 1040, 200, 180, 180, RunTime.Land);
-        Land landSix = new Land("Area 6", 1220, 200, 180, 180, RunTime.Land);
-        Land landSeven = new Land("Area 7", 1040, 340, 180, 180, RunTime.Land);
-        Land landEight = new Land("Area 8", 1220, 340, 180, 180, RunTime.Land);
-
-        // block three (under block one)
-        Land landNine = new Land("Area 9", 500, 620, 180, 180, RunTime.Land); //620
-        Land landTen = new Land("Area 10", 680, 620, 180, 180, RunTime.Land);
-        Land landEleven = new Land("Area 11", 500, 760, 180, 180, RunTime.Land);
-        Land landTwelve = new Land("Area 12", 680, 760, 180, 180, RunTime.Land);
-
-        // block four (under block two)
-        Land landThirteen = new Land("Area 13", 1040, 620, 180, 180, RunTime.Land);
-        Land landFourteen = new Land("Area 14", 1220, 620, 180, 180, RunTime.Land);
-        Land landFifteen = new Land("Area 15", 1040, 760, 180, 180, RunTime.Land);
-        Land landSixteen = new Land("Area 16", 1220, 760, 180, 180, RunTime.Land);
-
-
-
-        gameScreen.addBaseObj(landOne);
-        gameScreen.addBaseObj(landTwo);
-        gameScreen.addBaseObj(landThree);
-        gameScreen.addBaseObj(landFour);
-        gameScreen.addBaseObj(landFive);
-        gameScreen.addBaseObj(landSix);
-        gameScreen.addBaseObj(landSeven);
-        gameScreen.addBaseObj(landEight);
-        gameScreen.addBaseObj(landNine);
-        gameScreen.addBaseObj(landTen);
-        gameScreen.addBaseObj(landEleven);
-        gameScreen.addBaseObj(landTwelve);
-        gameScreen.addBaseObj(landThirteen);
-        gameScreen.addBaseObj(landFourteen);
-        gameScreen.addBaseObj(landFifteen);
-        gameScreen.addBaseObj(landSixteen);
+        for (int r = 0; r < ys.Length; r++)
+        {
+            for (int c = 0; c < xs.Length; c++)
+            {
+                int id = r * xs.Length + c + 1;
+                string name = $"Area {id}";
+                Land land = new Land(name, xs[c], ys[r], landW, landH, RunTime.Land);
+                gameScreen.AddBaseObj(land);
+            }
+        }
 
         Random rng = new Random();
         int entityWidth = 55; 
@@ -111,7 +91,7 @@ internal static class Program
             int x = rng.Next(0, GetScreenWidth() - entityWidth);
             int y = rng.Next(0, GetScreenHeight() - entityHeight);
             Person p = new Person(name, x, y, entityWidth, entityHeight, 100, 2, RunTime.PersonDown, RunTime.currentCalendar);
-            gameScreen.addBaseObj(p);
+            gameScreen.AddBaseObj(p);
         }
     }
 
@@ -142,6 +122,7 @@ internal static class Program
         Texture2D wallV  = LoadTexture("./resources/assets/wallV.png");
         Texture2D wallH  = LoadTexture("./resources/assets/wallH.png");
         Texture2D closeIcon = LoadTexture("./resources/assets/close.png");
+        Texture2D meatIcon = LoadTexture("./resources/assets/meat.png");
 
         allTextures.Add(menuBg);
         allTextures.Add(gameScreenBg);
@@ -165,6 +146,8 @@ internal static class Program
         allTextures.Add(wallV);
         allTextures.Add(wallH);
         allTextures.Add(closeIcon);
+        allTextures.Add(meatIcon);
+
 
         RunTime.MenuBg = menuBg;
         RunTime.GamescreenBg = gameScreenBg;
@@ -188,6 +171,7 @@ internal static class Program
         RunTime.WallV = wallV;
         RunTime.WallH = wallH;
         RunTime.CloseIcon = closeIcon;
+        RunTime.meatIcon = meatIcon;
 
         return allTextures;     
     }

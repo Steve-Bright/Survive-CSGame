@@ -30,6 +30,7 @@ namespace Game
 
         public static Texture2D MenuBg;
         public static Texture2D GamescreenBg;
+        public static Texture2D meatIcon;
         public static Calendar currentCalendar;
         public static bool detailsShown = false;
 

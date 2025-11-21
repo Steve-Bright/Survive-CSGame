@@ -7,10 +7,10 @@ public class Inventory
     private ResourceType _type;
     private int _totalNum;
 
-    public Inventory(ResourceType type)
+    public Inventory(ResourceType type, int initialNum)
     {
         _type = type;
-        _totalNum = 0;
+        _totalNum = initialNum;
     }
 
     public void Increase(int num)
@@ -27,5 +27,15 @@ public class Inventory
         {
             _totalNum = Math.Max(0, _totalNum - num);
         }
+    }
+
+    public int TotalNum
+    {
+        get => _totalNum;
+    }
+
+    public ResourceType Type
+    {
+        get => _type;
     }
 }

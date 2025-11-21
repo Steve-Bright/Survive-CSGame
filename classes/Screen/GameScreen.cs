@@ -6,20 +6,27 @@ namespace Game;
 
 public class GameScreen : Screen
 {
+    private List<Inventory> _allInventories;
     private List<BaseObj> _allObjects;
     private Calendar _mainCalendar;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
+        _allInventories = new List<Inventory>();
         _allObjects = new List<BaseObj>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
     }
 
 
-    public void addBaseObj(BaseObj newObj)
+    public void AddBaseObj(BaseObj newObj)
     {
         _allObjects.Add(newObj);
+    }
+
+    public void AddInventory(Inventory newInventory)
+    {
+        _allInventories.Add(newInventory);
     }
 
     override public void Display()
@@ -79,6 +86,62 @@ public class GameScreen : Screen
         return count;
     }
 
+    public int GetFoodCount()
+    {
+        int foodCount = 0;
+        foreach(Inventory inventory in _allInventories)
+        {
+            if(inventory.Type == ResourceType.FOOD)
+            {
+                foodCount = inventory.TotalNum;
+                break;
+            }
+        }
+        return foodCount;
+    }
+
+    public int GetWoodCount()
+    {
+        int woodCount = 0;
+        foreach(Inventory inventory in _allInventories)
+        {
+            if(inventory.Type == ResourceType.WOOD)
+            {
+                woodCount = inventory.TotalNum;
+                break;
+            }
+        }
+        return woodCount;
+    }
+
+    public int GetStoneCount()
+    {
+        int stoneCount = 0;
+        foreach(Inventory inventory in _allInventories)
+        {
+            if(inventory.Type == ResourceType.STONE)
+            {
+                stoneCount = inventory.TotalNum;
+                break;
+            }
+        }
+        return stoneCount;
+    }
+
+    public int GetMeatCount()
+    {
+        int meatCount = 0;
+        foreach(Inventory inventory in _allInventories)
+        {
+            if(inventory.Type == ResourceType.MEAT)
+            {
+                meatCount = inventory.TotalNum;
+                break;
+            }
+        }
+        return meatCount;
+    }
+
     public Weather CurrentWeather()
     {
         return _mainCalendar.CurrentWeather;
@@ -99,6 +162,7 @@ public class GameScreen : Screen
                 }
             }
         }
+
 
         int ltIndiH = 100;
         int ltIndiW = 700;
@@ -127,7 +191,7 @@ public class GameScreen : Screen
         Util.UpdateText($"{_mainCalendar.CurrentWeather}",(int)Math.Round(ltIndiW/2.8) , 68, 28);
 
         int resSize = ltIndiH - 60;
-        Util.ScaledDrawTexture(RunTime.Food, ltIndiW /2 + 5, 5, resSize);
+        Util.ScaledDrawTexture(RunTime.Food, ltIndiW /2 + 5, 2, resSize);
         Util.ScaledDrawTexture(RunTime.Wood, ltIndiW /2 + 5, 35, resSize);
         Util.ScaledDrawTexture(RunTime.Stone, ltIndiW /2 + 5, 60, resSize);
         
@@ -140,9 +204,9 @@ public class GameScreen : Screen
         Rectangle stoneRect = new Rectangle(ltIndiW /2 + 50, 61, ltIndiH - 40 , 35 );
         DrawRectangleRec(foodRect, new Color(255, 204, 106));
 
-        Util.UpdateText(foodRect, "100",ltIndiW /2 + 50 , 5, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        Util.UpdateText(woodRect, "200",ltIndiW /2 + 50 , 32, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        Util.UpdateText(stoneRect, "300",ltIndiW /2 + 50 , 63, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(foodRect, $"{GetFoodCount()}",ltIndiW /2 + 50 , 5, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(woodRect, $"{GetWoodCount()}",ltIndiW /2 + 50 , 32, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        Util.UpdateText(stoneRect, $"{GetStoneCount()}",ltIndiW /2 + 50 , 63, 28, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
         Rectangle clockRect = new Rectangle(ltIndiW/3 * 2, 2, ltIndiW/3 , ltIndiH /3 * 2 );
         DrawRectangleRec(clockRect, new Color(255, 204, 106));
@@ -182,7 +246,5 @@ public class GameScreen : Screen
         Rectangle clockRect = new Rectangle(GetScreenWidth()/2 - 100, 0, 150, 100);
         
         Util.UpdateText(clockRect, $"Day: {_mainCalendar.CurrentDay} ", GetScreenWidth()/2 - 70, 30, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_CENTRE);  
-        // DrawText($"{msg}", clockX, clockY + 40, 30, Color.Red);
-        // DrawText($"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, Color.Black);
     }
 }
