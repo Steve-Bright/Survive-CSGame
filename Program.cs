@@ -101,11 +101,11 @@ internal static class Program
         ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE);
         ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD);
 
-        gameScreen.AddResourceArea(forest);
-        gameScreen.AddResourceArea(animalArea);
-        gameScreen.AddResourceArea(stoneArea);
-        gameScreen.AddResourceArea(stoneArea2);
-        gameScreen.AddResourceArea(forest2);
+        gameScreen.AddBaseObj(forest);
+        gameScreen.AddBaseObj(animalArea);
+        gameScreen.AddBaseObj(stoneArea);
+        gameScreen.AddBaseObj(stoneArea2);
+        gameScreen.AddBaseObj(forest2);
     }
 
     public static List<Texture2D> LoadAsssets()
