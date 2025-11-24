@@ -82,14 +82,16 @@ public class Land : BaseObj
 
     private void DisplayShopUI()
     {
+        Inventory stoneInv = _gameScreen.GetInventory(ResourceType.STONE);
+        Inventory woodInv = _gameScreen.GetInventory(ResourceType.WOOD);
         int shopWidth = 1100;
         int shopHeight = 600;
         Rectangle shopRect = new Rectangle((GetScreenWidth()  - shopWidth ) / 2, (GetScreenHeight() - shopHeight) / 2, shopWidth, shopHeight);
         DrawRectangleRec(shopRect, new Color(200, 200, 200, 225));
-
         
         Util.UpdateText(shopRect, "\nBuildings", (int) shopRect.X, (int) shopRect.Y + 20, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_TOP);
         
+        //From this point on, you will see that there are so many duplicate codes when trying to draw each building option.
         
         Rectangle closeBtnRect = new Rectangle(shopRect.X + shopRect.Width - 45, shopRect.Y, 45, 45);
         DrawRectangleRec(closeBtnRect, new Color(255, 100, 100, 200));
@@ -97,8 +99,7 @@ public class Land : BaseObj
 
         if(GetMousePosition().X > closeBtnRect.X && GetMousePosition().X < closeBtnRect.X + closeBtnRect.Width &&  GetMousePosition().Y > closeBtnRect.Y && GetMousePosition().Y < closeBtnRect.Y + closeBtnRect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new Hut("Hut", X, Y, 180, 180, RunTime.Hut);
-            _gameScreen.AddBaseObj(_building);
+            // _gameScreen.AddBaseObj(_building)
             _shopOpen = false;
         }
 
@@ -122,9 +123,16 @@ public class Land : BaseObj
 
         if(GetMousePosition().X > building1Rect.X && GetMousePosition().X < building1Rect.X + building1Rect.Width &&  GetMousePosition().Y > building1Rect.Y && GetMousePosition().Y < building1Rect.Y + building1Rect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new Hut("Hut", X + 100/2, Y, 100, 100, RunTime.Hut);
-            _gameScreen.AddBaseObj(_building);
-            _shopOpen = false;
+            if(stoneInv.TotalNum < 30 || woodInv.TotalNum < 50)
+            {
+                _gameScreen.AddMessage("Not enough resources to build Hut!!!", AlertType.ERROR);
+            }else{
+                stoneInv.TotalNum -= 30;
+                woodInv.TotalNum -= 50;
+                _building = new Hut("Hut", X + 100/2, Y, 100, 100, RunTime.Hut);
+                _gameScreen.Build(_building);
+            }
+             _shopOpen = false;
         }
 
         //hut done
@@ -150,8 +158,13 @@ public class Land : BaseObj
 
         if(GetMousePosition().X > building2Rect.X && GetMousePosition().X < building2Rect.X + building2Rect.Width &&  GetMousePosition().Y > building2Rect.Y && GetMousePosition().Y < building2Rect.Y + building2Rect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new Clinic("Clinic", X + 100/2 -15, Y, 120, 120, RunTime.Clinic);
-            _gameScreen.AddBaseObj(_building);
+            if(stoneInv.TotalNum < 100 || woodInv.TotalNum < 150)
+            {
+                _gameScreen.AddMessage("Not enough resources to build Clinic!!!", AlertType.ERROR);
+            }else{
+                _building = new Clinic("Clinic", X + 100/2 -15, Y, 120, 120, RunTime.Clinic);
+                _gameScreen.Build(_building);
+            }
             _shopOpen = false;
         }
 
@@ -173,8 +186,13 @@ public class Land : BaseObj
 
         if(GetMousePosition().X > building3Rect.X && GetMousePosition().X < building3Rect.X + building3Rect.Width &&  GetMousePosition().Y > building3Rect.Y && GetMousePosition().Y < building3Rect.Y + building3Rect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new Kitchen("Cookery", X + 50/2 + 5, Y, 120, 120, RunTime.Cookery);
-            _gameScreen.AddBaseObj(_building);
+            if( woodInv.TotalNum < 120)
+            {
+                _gameScreen.AddMessage("Not enough resources to build Kitchen!!!", AlertType.ERROR);
+            }else{
+                _building = new Kitchen("Kitchen", X + 100/2 -10, Y, 120, 120, RunTime.Cookery);
+                _gameScreen.Build(_building);
+            }
             _shopOpen = false;
         }
 
@@ -192,12 +210,17 @@ public class Land : BaseObj
         Util.ScaledDrawTexture(RunTime.Stone, building4Rect.X + 155, building4Rect.Y + 115, 50);
         Rectangle wood4NumRect = new Rectangle(building4Rect.X + 210, building4Rect.Y + 110, 50 , 35 );
         DrawRectangleRec(wood4NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(wood4NumRect, "200", (int) building4Rect.X + 210, (int)building4Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE); 
+        Util.UpdateText(wood4NumRect, "150", (int) building4Rect.X + 210, (int)building4Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE); 
 
         if(GetMousePosition().X > building4Rect.X && GetMousePosition().X < building4Rect.X + building4Rect.Width &&  GetMousePosition().Y > building4Rect.Y && GetMousePosition().Y < building4Rect.Y + building4Rect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 10, 5);
-            _gameScreen.AddBaseObj(_building);
+            if(stoneInv.TotalNum < 150)
+            {
+                _gameScreen.AddMessage("Not enough resources to build Cannon!!!", AlertType.ERROR);
+            }else{
+                _building = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 10, 5);
+                _gameScreen.Build(_building);
+            }
             _shopOpen = false;
         }
 
@@ -221,8 +244,13 @@ public class Land : BaseObj
 
         if(GetMousePosition().X > building5Rect.X && GetMousePosition().X < building5Rect.X + building5Rect.Width &&  GetMousePosition().Y > building5Rect.Y && GetMousePosition().Y < building5Rect.Y + building5Rect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            _building = new WatchTower("Tower", X + 40, Y, 110, 120, RunTime.Tower, 2, 15, 15, 7);
-            _gameScreen.AddBaseObj(_building);  
+            if(stoneInv.TotalNum < 250 || woodInv.TotalNum < 150)
+            {
+                _gameScreen.AddMessage("Not enough resources to build Tower!!!", AlertType.ERROR);
+            }else{
+                _building = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
+                _gameScreen.Build(_building);
+            }
             _shopOpen = false;
         }
     }

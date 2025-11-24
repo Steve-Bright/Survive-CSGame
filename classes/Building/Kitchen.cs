@@ -5,8 +5,8 @@ public class Kitchen : Workplace
 {
     private int _cookingRate;
 
-    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon)
-        : base(name, xPos, yPos, width, height, kitchenIcon)
+    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon, int woodCost = 120, int stoneCost = 0)
+        : base(name, xPos, yPos, width, height, kitchenIcon, woodCost, stoneCost)
     {
         _cookingRate = 1; // e.g., 1 unit per cycle
     }

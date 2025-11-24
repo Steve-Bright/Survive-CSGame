@@ -16,8 +16,8 @@ public abstract class Workplace : Building
     public int MaxWorkers => DEFAULT_MAX_WORKERS;
 
     // Constructor chains up to Building, setting default Workplace properties
-    public Workplace(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon)
-        : base(name, xPos, yPos, width, height, buildingIcon)
+    public Workplace(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int woodCost , int stoneCost, int capacityLimit = 2)
+        : base(name, xPos, yPos, width, height, buildingIcon, woodCost, stoneCost, capacityLimit)
     {
         _requiredWorkers = 1;
         _currentWorkers = new List<Person>();

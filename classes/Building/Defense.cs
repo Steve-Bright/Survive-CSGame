@@ -13,8 +13,8 @@ public abstract class Defense : Building
     public int MaxPersonCount => _maxPerson;
     public List<Person> AllPeople => _currentPeople;
 
-    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int maxPerson, float critChance, int range, int hitRate)
-        : base(name, xPos, yPos, width, height,  buildingIcon)
+    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int maxPerson, float critChance, int range, int hitRate, int woodCost = 60, int stoneCost = 60, int capacityLimit = 4)
+        : base(name, xPos, yPos, width, height,  buildingIcon, woodCost, stoneCost, capacityLimit)
     {
         _maxPerson = maxPerson;
         _currentPeople = new List<Person>();

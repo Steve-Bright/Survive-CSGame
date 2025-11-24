@@ -5,6 +5,9 @@ using Raylib_cs;
 namespace Game;
 public abstract class Building : BaseObj
 {
+    private int _capacityLimit;
+    private int _woodCost;
+    private int _stoneCost;
     private int _level;
     private int _currentHealth;
     private Dictionary<ResourceType, int> _requiredToBuild;
@@ -21,7 +24,7 @@ public abstract class Building : BaseObj
 
     public int Level => _level;
 
-    public Building(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon)
+    public Building(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int woodCost, int stoneCost, int capacityLimit = 0)
         : base(name, xPos, yPos, width, height, buildingIcon)
     {
         _level = 0;
@@ -31,6 +34,9 @@ public abstract class Building : BaseObj
         _requiredBuilder = 1;
         _listOfBuilders = new List<Person>();
         _buildingTime = 100;
+        _woodCost = woodCost;
+        _stoneCost = stoneCost;
+        _capacityLimit = capacityLimit;
     }
 
     public void Build(Land land, Dictionary<ResourceType, int> consumables)
@@ -61,5 +67,12 @@ public abstract class Building : BaseObj
         };
     }
 
+    public int WoodCost => _woodCost;
+    public int StoneCost => _stoneCost;
+
     public abstract void Clone(); 
+
+    public int CapacityLimit{
+        get => _capacityLimit;
+    }
 }

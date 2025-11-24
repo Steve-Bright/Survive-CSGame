@@ -3,8 +3,8 @@ using Raylib_cs;
 namespace Game;
 public class WatchTower : Defense
 {
-    public WatchTower(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate)
-        : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate)
+    public WatchTower(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate, int woodCost = 150, int stoneCost = 250)
+        : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate, woodCost, stoneCost)
     {
     }
     

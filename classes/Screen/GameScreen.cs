@@ -9,6 +9,7 @@ public class GameScreen : Screen
     private List<Inventory> _allInventories;
     private List<BaseObj> _allObjects;
     private Calendar _mainCalendar;
+    private AlertList _alertList;
 
     public GameScreen(Texture2D background) : base(ScreenType.Game, background)
     {
@@ -16,10 +17,40 @@ public class GameScreen : Screen
         _allObjects = new List<BaseObj>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
+        _alertList = new AlertList();
     }
     public void AddBaseObj(BaseObj newObj)
     {
         _allObjects.Add(newObj);
+    }
+
+    public void Build(Building building)
+    {
+        int buildingCount = 0;
+        for(int i = 0; i < _allObjects.Count; i++){
+            if(_allObjects[i] is Building && _allObjects[i].Name == building.Name){
+                buildingCount ++;
+            }
+        }
+        Console.WriteLine("Building Count: " + buildingCount);
+        Console.WriteLine("Building Capacity Limit: " + building.CapacityLimit);
+        if(buildingCount >= building.CapacityLimit){
+            AddMessage($"Cannot build more {building.Name}s. Limit reached.", AlertType.ERROR);
+        }else{
+            _allObjects.Add(building);
+            foreach(Inventory inventory in _allInventories)
+            {
+                if(inventory.Type == ResourceType.WOOD)
+                {
+                    inventory.TotalNum -= building.WoodCost;
+                }
+                else if(inventory.Type == ResourceType.STONE)
+                {
+                    inventory.TotalNum -= building.StoneCost;
+                }
+            }
+        }
+            
     }
 
     public void AddInventory(Inventory newInventory)
@@ -65,9 +96,9 @@ public class GameScreen : Screen
             toShowDetails.DisplayDetails();
         }
 
+        _alertList.DisplayAllAlerts();
 
         AddIndicators();
-
     }
 
     public int GetPersonCount()
@@ -144,6 +175,18 @@ public class GameScreen : Screen
     {
         return _mainCalendar.CurrentWeather;
     }   
+
+    public Inventory GetInventory(ResourceType type)
+    {
+        foreach(Inventory inventory in _allInventories)
+        {
+            if(inventory.Type == type)
+            {
+                return inventory;
+            }
+        }
+        return null;
+    }
 
     private void AddIndicators()
     {
@@ -244,5 +287,10 @@ public class GameScreen : Screen
         Rectangle clockRect = new Rectangle(GetScreenWidth()/2 - 100, 0, 150, 100);
         
         Util.UpdateText(clockRect, $"Day: {_mainCalendar.CurrentDay} ", GetScreenWidth()/2 - 70, 30, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_CENTRE);  
+    }
+
+    public void AddMessage(string message, AlertType alertType)
+    {
+        _alertList.AddAlert(new Alert(message, alertType));
     }
 }

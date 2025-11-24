@@ -4,8 +4,8 @@ public class Wall : Building
 {
     private int _durability;
     
-    public Wall(string name, float xPos, float yPos, int width, int height, Texture2D wallIcon, int durability)
-        : base(name, xPos, yPos, width, height, wallIcon) 
+    public Wall(string name, float xPos, float yPos, int width, int height, Texture2D wallIcon, int durability, int woodCost = 20, int stoneCost = 0, int capacityLimit = 32)
+        : base(name, xPos, yPos, width, height, wallIcon, woodCost, stoneCost, capacityLimit) 
     {
         _durability = durability; 
     }

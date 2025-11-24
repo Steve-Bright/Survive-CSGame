@@ -31,6 +31,7 @@ public class Inventory
 
     public int TotalNum
     {
+        set => _totalNum = value;
         get => _totalNum;
     }
 

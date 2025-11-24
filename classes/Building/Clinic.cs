@@ -9,8 +9,8 @@ public class Clinic : Workplace
     public List<Person> CurrentPatients => _currentPatients;
     public int MaxPatients => _maxPatients;
 
-    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon)
-        : base(name, xPos, yPos, width, height, clinicIcon)
+    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon, int woodCost = 150, int stoneCost = 100)
+        : base(name, xPos, yPos, width, height, clinicIcon, woodCost, stoneCost)
     {
         _maxPatients = 5;
         _currentPatients = new List<Person>();

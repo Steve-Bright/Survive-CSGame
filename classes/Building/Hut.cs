@@ -10,8 +10,8 @@ public class Hut : Building
     public int MaxPersonCount => _maxPerson;
     public List<Person> AllPeople => _currentPeople;
 
-    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon)
-        : base(name, xPos, yPos, width, height, hutIcon)
+    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int woodCost = 50, int stoneCost = 30, int capacityLimit = 6)
+        : base(name, xPos, yPos, width, height, hutIcon, woodCost, stoneCost, capacityLimit)
     {
         // _hutId = 1;
         _maxPerson = 10;

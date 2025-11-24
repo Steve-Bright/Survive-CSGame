@@ -3,8 +3,8 @@ using Raylib_cs;
 namespace Game;
 public class Cannon : Defense
 {
-    public Cannon(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate)
-        : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate)
+    public Cannon(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate, int woodCost = 0, int stoneCost = 150)
+        : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate, woodCost, stoneCost)
     {
     }
 
