@@ -57,11 +57,7 @@ public class Kitchen : Workplace
         return new Dictionary<string, string> { {"Cooking Rate", _cookingRate.ToString()}, {"Workers", _currentWorkers.Count.ToString()} };
     }
     
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.ORANGE);
-    }
     
-    public override void Unload() { }
+
     public override void Clone() { }
 }

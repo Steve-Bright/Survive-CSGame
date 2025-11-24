@@ -4,7 +4,6 @@ using Raylib_cs;
 namespace Game;
 public abstract class Defense : Building
 {
-    protected int _defenseId;
     protected int _maxPerson;
     protected List<Person> _currentPeople;
     protected float _critChance;
@@ -14,10 +13,9 @@ public abstract class Defense : Building
     public int MaxPersonCount => _maxPerson;
     public List<Person> AllPeople => _currentPeople;
 
-    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int defenseId, int maxPerson, float critChance, int range, int hitRate)
+    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int maxPerson, float critChance, int range, int hitRate)
         : base(name, xPos, yPos, width, height,  buildingIcon)
     {
-        _defenseId = defenseId;
         _maxPerson = maxPerson;
         _currentPeople = new List<Person>();
         _critChance = critChance;

@@ -126,8 +126,4 @@ public class ResourceArea : BaseObj
     // }
 
     // + Unload() : void
-    public override void Unload()
-    {
-        // Logic to dispose of any Raylib textures or resources specific to this area
-    }
 }

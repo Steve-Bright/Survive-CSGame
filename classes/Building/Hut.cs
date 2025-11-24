@@ -46,11 +46,6 @@ public class Hut : Building
         return new Dictionary<string, string> { {"Occupancy", "test"} };
     }
     
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.BEIGE);
-    }
     
-    public override void Unload() { }
     public override void Clone() { }
 }

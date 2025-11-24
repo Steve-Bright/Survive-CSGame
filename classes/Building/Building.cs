@@ -51,16 +51,6 @@ public abstract class Building : BaseObj
 
     public abstract void TakeDamage(int hitpoint);
 
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.DARKGRAY);
-        // Raylib.DrawText($"Lvl {Level}", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
-    }
-
-    public override void Unload()
-    {
-    }
-
     public override Dictionary<string, string> ViewDetails()
     {
         return new Dictionary<string, string>

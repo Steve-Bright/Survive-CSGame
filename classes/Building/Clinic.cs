@@ -77,12 +77,6 @@ public class Clinic : Workplace
         return new Dictionary<string, string> { {"Max Patients", _maxPatients.ToString()}, {"Patients", _currentPatients.Count.ToString()} };
     }
     
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.WHITE);
-        // Raylib.DrawText("+", (int)X + Width / 2 - 5, (int)Y + Height / 2 - 10, 20, Color.RED);
-    }
     
-    public override void Unload() { }
     public override void Clone() { }
 }

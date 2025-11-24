@@ -72,7 +72,7 @@ internal static class Program
             {
                 int id = r * xs.Length + c + 1;
                 string name = $"Area {id}";
-                Land land = new Land(name, xs[c], ys[r], landW, landH, RunTime.Land);
+                Land land = new Land(name, xs[c], ys[r], landW, landH, RunTime.Land, gameScreen);
                 gameScreen.AddBaseObj(land);
             }
         }
@@ -127,8 +127,8 @@ internal static class Program
         Texture2D stoneAreaIcon = LoadTexture("./resources/assets/stonearea.png");
         Texture2D animalArea = LoadTexture("./resources/assets/animalarea.png");
         Texture2D hutIcon = LoadTexture("./resources/assets/hut.png");
-        Texture2D cannonIcon = LoadTexture("./resources/assets/cannon.png");
-        Texture2D towerIcon = LoadTexture("./resources/assets/tower.png");
+        Texture2D cannonIcon = LoadTexture("./resources/assets/cannon2.png");
+        Texture2D towerIcon = LoadTexture("./resources/assets/tower2.png");
         Texture2D clinicIcon = LoadTexture("./resources/assets/clinic.png");
         Texture2D cookeryIcon  = LoadTexture("./resources/assets/cookery.png");
         Texture2D land  = LoadTexture("./resources/assets/land.png");
@@ -136,6 +136,7 @@ internal static class Program
         Texture2D wallH  = LoadTexture("./resources/assets/wallH.png");
         Texture2D closeIcon = LoadTexture("./resources/assets/close.png");
         Texture2D meatIcon = LoadTexture("./resources/assets/meat.png");
+        // Texture2D cannonStatic = LoadTexture("./resources/assets/cannonStatic.png");
 
         allTextures.Add(menuBg);
         allTextures.Add(gameScreenBg);
@@ -160,6 +161,7 @@ internal static class Program
         allTextures.Add(wallH);
         allTextures.Add(closeIcon);
         allTextures.Add(meatIcon);
+        // allTextures.Add(cannonStatic);
 
 
         RunTime.MenuBg = menuBg;
@@ -185,6 +187,7 @@ internal static class Program
         RunTime.WallH = wallH;
         RunTime.CloseIcon = closeIcon;
         RunTime.meatIcon = meatIcon;
+        // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     
     }

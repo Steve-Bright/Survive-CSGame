@@ -3,8 +3,8 @@ using Raylib_cs;
 namespace Game;
 public class WatchTower : Defense
 {
-    public WatchTower(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int defenseId, int maxPerson, float critChance, int range, int hitRate)
-        : base(name, xPos, yPos, width, height,  buildingIcon,  defenseId, maxPerson, critChance, range, hitRate)
+    public WatchTower(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate)
+        : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate)
     {
     }
     
@@ -37,11 +37,6 @@ public class WatchTower : Defense
         return new Dictionary<string, string> { {"Range", _range.ToString()}, {"Staff", $"{_currentPeople.Count}/{_maxPerson}"} };
     }
     
-    public override void Draw()
-    {
-        // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.LIME);
-    }
     
-    public override void Unload() { }
     public override void Clone() { }
 }

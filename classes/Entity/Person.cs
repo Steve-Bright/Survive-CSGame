@@ -111,9 +111,6 @@ public class Person : Entity
     //     // Raylib.DrawText("PERSON", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
     // }
 
-    public override void Unload()
-    {
-    }
 
     public override void DisplayDetails()
     {

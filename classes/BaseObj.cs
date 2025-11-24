@@ -114,5 +114,4 @@ public abstract class BaseObj
         get { return _name; }
     }   
 
-    public abstract void Unload();
 }

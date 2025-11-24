@@ -35,6 +35,5 @@ public class Wall : Building
         // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, Color.DARKGRAY);
     }
     
-    public override void Unload() { }
     public override void Clone() { }
 }

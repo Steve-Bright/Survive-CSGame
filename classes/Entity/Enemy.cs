@@ -65,9 +65,6 @@ public class Enemy : Entity
         // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, enemyColor);
     }
 
-    public override void Unload()
-    {
-    }
 
     public override Dictionary<string, string> ViewDetails()
     {

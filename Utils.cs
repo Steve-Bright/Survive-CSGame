@@ -73,4 +73,20 @@ public static class Util
         DrawText($"{text}", x, y, fontSize, color);
     }
 
+    public static void MakeButton(Rectangle rect,  string text, int x, int y, int fontSize, int hAlign, int vAlign, Color color, Action buildButton)
+    {
+        Vector2 textSize = MeasureTextEx(GetFontDefault(), text, fontSize, fontSize*.1f);
+        Vector2 textPos = new Vector2(
+            (rect.X + Lerp(0.0f, rect.Width  - textSize.X, hAlign * 0.5f)),
+            (rect.Y + Lerp(0.0f, rect.Height - textSize.Y, vAlign * 0.5f))
+            );
+        // Draw the text
+        DrawTextEx(GetFontDefault(), text, textPos, fontSize, fontSize*.1f, color);  
+
+        if(GetMousePosition().X > rect.X && GetMousePosition().X < rect.X + rect.Width &&  GetMousePosition().Y > rect.Y && GetMousePosition().Y < rect.Y + rect.Height && IsMouseButtonPressed(MouseButton.Left))
+        {
+            buildButton();
+        }  
+    }
+
 }
