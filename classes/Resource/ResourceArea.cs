@@ -12,6 +12,7 @@ public class ResourceArea : BaseObj
     private bool _isAccessible;
     private int _requiredWorkers;
     private List<Person> _currentWorkers;
+    private bool _isWorking = false;
 
     // + ResourceArea(name: string, xPos: float, yPos: float, width: int, height: int, type: ResourceType)
     public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type)
@@ -51,6 +52,21 @@ public class ResourceArea : BaseObj
         Util.UpdateText($"Capacity: {_capacity}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
         Util.UpdateText($"Status: {resourceAreaStatus}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
 
+
+        if(_capacity > 0)
+        {
+
+            Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-85, 265, 45 );
+            DrawRectangleRec(buttonRect, Color.Red);
+            Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => _isWorking = true);
+            // DisplayShopUI();
+            if(_isWorking == true)
+            {
+                // DisplayShopUI();
+                Console.WriteLine("Working...");
+            }
+        
+        }
         // Util.UpdateText($"Max Energy: TEST", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
         // Util.UpdateText($"Current: test", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);

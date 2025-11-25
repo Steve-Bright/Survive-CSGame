@@ -68,42 +68,42 @@ public class Indicator
         _outlineColor = Color.Black;
     }
 
-    private float X
+    public float X
     {
         get { return _x; }
         set { _x = value; }
     }
 
-    private float Y
+    public float Y
     {
         get { return _y; }
         set { _y = value; }
     }
 
 
-    private float Width
+    public float Width
     {
         get { return _w; }
         set { _w = value; }
     }
 
-    private float Height
+    public float Height
     {
         get { return _h; }
         set { _h = value; }
     }
 
-    private Color BaseColor
+    public  Color BaseColor
     {
         get { return _baseColor; }
         set { _baseColor = value; }
     }
-    private float OutlineThick
+    public float OutlineThick
     {
         get { return _outlineThick; }
         set { _outlineThick = value; }
     }
-    private Color OutlineColor
+    public Color OutlineColor
     {
         get { return _outlineColor; }
         set { _outlineColor = value; }
