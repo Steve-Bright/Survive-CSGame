@@ -20,14 +20,14 @@ public abstract class Entity : BaseObj
     public int WalkRate { get => _walkRate; set => _walkRate = value; }
     public bool IsAccessible { get => _isAccessible; set => _isAccessible = value; }
     
-    public Entity(string name, float xPos, float yPos, int width, int height, int maxHealth, int walkRate, Texture2D entityIcon, Calendar calendar)
+    public Entity(string name, float xPos, float yPos, int width, int height, int maxHealth, Texture2D entityIcon, Calendar calendar)
         : base(name, xPos, yPos, width, height, entityIcon) 
     {
         _calendar = calendar;
         calendar.Subscribe(this);
         _maxHealth = maxHealth;
         _currentHealth = maxHealth; 
-        _walkRate = walkRate;
+        _walkRate = 600 / _calendar.DayCriteria; //swamhtet speed will be 2 if day criteria is 24. 25 if day criteria is 3000.
         _isAccessible = true;
     }
 

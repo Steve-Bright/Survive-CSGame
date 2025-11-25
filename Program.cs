@@ -90,17 +90,16 @@ internal static class Program
         {
             int x = rng.Next(0, GetScreenWidth() - entityWidth);
             int y = rng.Next(0, GetScreenHeight() - entityHeight);
-            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, 2, RunTime.PersonDown, RunTime.currentCalendar);
+            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, RunTime.PersonDown, RunTime.currentCalendar);
             gameScreen.AddBaseObj(p);
         }
 
         
-        ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);
-        ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT);
-        ResourceArea stoneArea = new ResourceArea("Stone Area 1 ",  50, forest.Width + 300, 150, 150, RunTime.StoneArea, ResourceType.STONE);
-        ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE);
-        ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD);
-
+        ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD, gameScreen);
+        ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT, gameScreen);
+        ResourceArea stoneArea = new ResourceArea("Stone Area 1 ",  50, forest.Width + 300, 150, 150, RunTime.StoneArea, ResourceType.STONE, gameScreen);
+        ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE, gameScreen);
+        ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD, gameScreen);
         gameScreen.AddBaseObj(forest);
         gameScreen.AddBaseObj(animalArea);
         gameScreen.AddBaseObj(stoneArea);
@@ -136,6 +135,8 @@ internal static class Program
         Texture2D wallH  = LoadTexture("./resources/assets/wallH.png");
         Texture2D closeIcon = LoadTexture("./resources/assets/close.png");
         Texture2D meatIcon = LoadTexture("./resources/assets/meat.png");
+        Texture2D tickIcon = LoadTexture("./resources/assets/tick.png");
+        Texture2D crossIcon = LoadTexture("./resources/assets/cross.png");
         // Texture2D cannonStatic = LoadTexture("./resources/assets/cannonStatic.png");
 
         allTextures.Add(menuBg);
@@ -161,6 +162,8 @@ internal static class Program
         allTextures.Add(wallH);
         allTextures.Add(closeIcon);
         allTextures.Add(meatIcon);
+        allTextures.Add(tickIcon);
+        allTextures.Add(crossIcon);
         // allTextures.Add(cannonStatic);
 
 
@@ -187,6 +190,8 @@ internal static class Program
         RunTime.WallH = wallH;
         RunTime.CloseIcon = closeIcon;
         RunTime.meatIcon = meatIcon;
+        RunTime.tickIcon = tickIcon;
+        RunTime.crossIcon = crossIcon;
         // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     

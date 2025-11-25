@@ -122,6 +122,16 @@ public class GameScreen : Screen
         return count;
     }
 
+    public List<Person> GetPersonLists(){
+        List<Person> persons = new List<Person>();
+        foreach (BaseObj obj in _allObjects)
+        {
+            if (obj is Person p)
+                persons.Add(p);
+        }
+        return persons;
+    }
+
     public int GetFoodCount()
     {
         int foodCount = 0;
@@ -308,7 +318,7 @@ public class GameScreen : Screen
         _alertList.AddAlert(new Alert(message, alertType));
     }
 
-    public void DisplayPeopleList()
+    private void DisplayPeopleList()
     {
         int personLimitPerPage = 5;
         int currentPerson = 0;
@@ -346,12 +356,7 @@ public class GameScreen : Screen
 
         Rectangle[] personRectangles = new Rectangle[] { personOne, personTwo, personThree, personFour, personFive };
 
-        List<Person> persons = new List<Person>();
-        foreach (BaseObj obj in _allObjects)
-        {
-            if (obj is Person p)
-                persons.Add(p);
-        }
+        List<Person> persons = GetPersonLists();
 
         int personCountTotal = persons.Count;
         int pageIndex = Math.Max(0, _currentPersonDisplayPage);
@@ -413,5 +418,17 @@ public class GameScreen : Screen
                 if (_currentPersonDisplayPage > 0) _currentPersonDisplayPage--;
             });
         }
+    }
+
+    public int CurrentPersonDisplayPage
+    {
+        get { return _currentPersonDisplayPage; }
+        set { _currentPersonDisplayPage = value; }
+    }
+
+    public bool PeopleListOpen
+    {
+        get { return _peopleListOpen; }
+        set { _peopleListOpen = value; }
     }
 }

@@ -11,30 +11,31 @@ public class Person : Entity
     private int _maxEnergy;
     private int _currentEnergy;
     private bool _isFainted;
+    private bool _isWalking = false;
     private bool _isWorking;
     private float _workRate;
+    
+    private BaseObj _destination;
 
     public bool IsWorking 
     { 
         get => _isWorking; 
-        private set => _isWorking = value; 
+        set => _isWorking = value; 
     }
 
     public int CurrentEnergy 
     { 
         get => _currentEnergy; 
-        private set => _currentEnergy = Math.Clamp(value, 0, _maxEnergy); 
     }
     
-    public Person(string name, float xPos, float yPos, int width, int height, int maxHealth, int walkRate, Texture2D personIcon, Calendar calendar)
-        : base(name, xPos, yPos, width, height, maxHealth, walkRate, personIcon, calendar)
+    public Person(string name, float xPos, float yPos, int width, int height, int maxHealth,Texture2D personIcon, Calendar calendar)
+        : base(name, xPos, yPos, width, height, maxHealth, personIcon, calendar)
     {
         _workRate = 1f;
         _maxEnergy = 100;
         _currentEnergy = 100;
         _isFainted = false;
         _isWorking = false;
-        _workRate = 1f;
     }
 
     public void ConsumeFood(int foodNum)
@@ -59,6 +60,7 @@ public class Person : Entity
 
     public void Walk(BaseObj destination)
     {
+        
         // if (_isFainted)
         // {
         //     Console.WriteLine("Cannot walk. Person is fainted.");
@@ -89,6 +91,39 @@ public class Person : Entity
         // }
     }
 
+    public override void Draw()
+    {
+        if (!_isWalking)
+        {
+            base.Draw();
+        }
+        else
+        {
+            
+            if(MathF.Abs(this.X - _destination.X) > WalkRate){
+                if(_destination.X > this.X){
+                    this.Icon = RunTime.PersonRight;
+                }else{
+                    this.Icon = RunTime.PersonLeft;
+                }
+                this.X += MathF.Sign(_destination.X - this.X) * WalkRate;
+            }else if(MathF.Abs(this.Y - _destination.Y) > WalkRate){
+                if(_destination.Y > this.Y){
+                    this.Icon = RunTime.PersonDown;
+                }else{
+                    this.Icon = RunTime.PersonUp;
+                }
+                this.Y += MathF.Sign(_destination.Y - this.Y) * WalkRate;
+            }
+
+            if(MathF.Abs(this.X - _destination.X) <= WalkRate && MathF.Abs(this.Y - _destination.Y) <= WalkRate){
+                this.Icon = RunTime.PersonDown;
+                _isWalking = false;
+            }
+            base.Draw();
+        }
+    }
+
     // public override void Draw()
     // {
     //     int frameWidth = Icon.Width;
@@ -110,6 +145,12 @@ public class Person : Entity
     //     // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, personColor);
     //     // Raylib.DrawText("PERSON", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
     // }
+
+    public void SetDestination(BaseObj destination)
+    {
+        _destination = destination;
+        _isWalking = true;
+    }
 
 
     public override void DisplayDetails()

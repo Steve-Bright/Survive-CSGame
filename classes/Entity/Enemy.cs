@@ -21,8 +21,8 @@ public class Enemy : Entity
     private EnemyType _enemyType;
     private float _spawnRate;
 
-    public Enemy(string name, float xPos, float yPos, int width, int height, int maxHealth, int walkRate, Texture2D enemyIcon, Calendar calendar)
-        : base(name, xPos, yPos, width, height, maxHealth, walkRate, enemyIcon, calendar)
+    public Enemy(string name, float xPos, float yPos, int width, int height, int maxHealth, Texture2D enemyIcon, Calendar calendar)
+        : base(name, xPos, yPos, width, height, maxHealth, enemyIcon, calendar)
     {
         _attackRate = 1; 
         _preferableTarget = Target.PERSON; 

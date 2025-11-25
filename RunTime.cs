@@ -31,6 +31,8 @@ namespace Game
         public static Texture2D MenuBg;
         public static Texture2D GamescreenBg;
         public static Texture2D meatIcon;
+        public static Texture2D tickIcon;
+        public static Texture2D crossIcon;
         
         // public static Texture2D cannonStatic;
         public static Calendar currentCalendar;
