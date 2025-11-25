@@ -7,6 +7,7 @@ namespace Game;
 public class GameScreen : Screen
 {
     private List<Inventory> _allInventories;
+    private bool _isClicked = false;
     private List<BaseObj> _allObjects;
     private Calendar _mainCalendar;
     private AlertList _alertList;
@@ -34,8 +35,6 @@ public class GameScreen : Screen
                 buildingCount ++;
             }
         }
-        Console.WriteLine("Building Count: " + buildingCount);
-        Console.WriteLine("Building Capacity Limit: " + building.CapacityLimit);
         if(buildingCount >= building.CapacityLimit){
             AddMessage($"Cannot build more {building.Name}s. Limit reached.", AlertType.ERROR);
         }else{
@@ -51,6 +50,7 @@ public class GameScreen : Screen
                     inventory.TotalNum -= building.StoneCost;
                 }
             }
+            PlaySound(RunTime.buildSound);
         }
             
     }
@@ -62,6 +62,17 @@ public class GameScreen : Screen
 
     override public void Display()
     {
+        if(IsMouseButtonPressed(MouseButton.Left))
+        {   
+          _isClicked = true;
+        }
+
+        if(_isClicked)
+        {
+            PlaySound(RunTime.clickSound);
+            _isClicked = false;
+        }
+        
         Texture2D displayBg = MainBackground;
         DrawTexture(displayBg, 0, 0, Color.White);
 
@@ -391,8 +402,14 @@ public class GameScreen : Screen
                 Util.UpdateText(cancelRect, "Cancel", (int) personRectangles[slot].X + 790, (int)personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
                 if(GetMousePosition().X > cancelRect.X && GetMousePosition().X < cancelRect.X + cancelRect.Width &&  GetMousePosition().Y > cancelRect.Y && GetMousePosition().Y < cancelRect.Y + cancelRect.Height && IsMouseButtonPressed(MouseButton.Left))
                 {
-                    Console.WriteLine("Cancel working for " + person.Name);
-                    // person.IsWorking = false;
+                    person.IsWorking = false;
+                    if(person.WorkPlace != null)
+                    {
+                        person.WorkPlace.RemoveWorker(person);
+                    }else if(person.WorkPlaceAsWorkplace != null)
+                    {
+                        // person.WorkPlaceAsWorkplace.RemoveWorker(person);
+                    }
                 }
             }
         }

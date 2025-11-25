@@ -19,6 +19,7 @@ public class Person : Entity
     private List<Inventory> _inventories;
     private BaseObj? _destination;
     private ResourceArea? _workPlace;
+    private Workplace? _workPlaceAsWorkplace;
 
     public bool IsWorking 
     { 
@@ -98,7 +99,7 @@ public class Person : Entity
         if (!_isWalking)
         {
             base.Draw();
-            this.Work();
+            Work();
         }
         else
         {
@@ -243,4 +244,15 @@ public class Person : Entity
     public override void Clone()
     {
     }
+
+    public ResourceArea? WorkPlace
+    {
+        get { return _workPlace; }
+    }
+
+    public Workplace? WorkPlaceAsWorkplace
+    {
+        get { return _workPlaceAsWorkplace; }
+    }
+
 }

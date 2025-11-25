@@ -37,6 +37,8 @@ namespace Game
         // public static Texture2D cannonStatic;
         public static Calendar currentCalendar;
         public static bool detailsShown = false;
+        public static Sound clickSound;
+        public static Sound buildSound;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
         public static ScreenType CurrentWindow{

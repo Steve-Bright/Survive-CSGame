@@ -12,6 +12,7 @@ internal static class Program
     public static void Main()
     {
         InitWindow(800, 480, "Survive!");
+        InitAudioDevice();
         SetWindowState(ConfigFlags.ResizableWindow);
         SetWindowState(ConfigFlags.MaximizedWindow);
         SetTraceLogLevel(TraceLogLevel.All);
@@ -20,6 +21,10 @@ internal static class Program
         List<Texture2D> allTextures = new List<Texture2D>();
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
         allTextures = LoadAsssets();
+        Sound clickSound = LoadSound("./resources/assets/click.mp3");
+        Sound buildSound = LoadSound("./resources/assets/build.mp3");
+        RunTime.clickSound = clickSound;
+        RunTime.buildSound = buildSound;
         
         //mainWindow initialization
         Calendar mainCalendar = new Calendar();
@@ -45,6 +50,8 @@ internal static class Program
 
             EndDrawing();
         }
+        UnloadSound(clickSound);
+        UnloadSound(buildSound);
         UnloadImage(gameIcon);
         UnloadAssets(allTextures);
         CloseWindow();

@@ -309,7 +309,16 @@ public class ResourceArea : BaseObj
                 }
                 else
                 {
-                    //SWAMHTET later to add.
+                    List<Person> idlePersons = _resourcePersons.Where(rp => !rp.Person.IsWorking).Select(rp => rp.Person).ToList();
+                    Random rand = new Random();
+                    idlePersons = idlePersons.OrderBy(x => rand.Next()).ToList(); 
+
+                    for (int i = 0; i < Math.Min(workersNeeded, idlePersons.Count); i++)
+                    {
+                        idlePersons[i].SetDestination(this);
+                    }
+                    _resourcePersons.Clear();
+                    _peopleListOpen = false;
                 }
 
             }
