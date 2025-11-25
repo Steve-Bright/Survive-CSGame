@@ -8,6 +8,7 @@ public abstract class Workplace : Building
     protected List<Person> _currentWorkers;
     protected int _requiredFood;
     protected int _currentFood;
+    private bool _isOperating;
 
     // Assuming a default durability for Workplaces, and default max workers.
     protected const int DEFAULT_MAX_WORKERS = 5;
@@ -23,6 +24,7 @@ public abstract class Workplace : Building
         _currentWorkers = new List<Person>();
         _requiredFood = 1;
         _currentFood = 0;
+        _isOperating = false;
     }
     
     // Abstract methods specific to Workplace
@@ -32,4 +34,10 @@ public abstract class Workplace : Building
 
     // TakeDamage is inherited from Building and must be implemented by concrete classes.
     public override abstract void TakeDamage(int hitpoint);
+
+    public bool IsOperating
+    {
+        get => _isOperating;
+        set => _isOperating = value;
+    }
 }

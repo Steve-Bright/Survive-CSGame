@@ -55,7 +55,7 @@ internal static class Program
     public static void CreateInitialEntites(GameScreen gameScreen){
         Inventory foodInventory = new Inventory(ResourceType.FOOD, 10);
         Inventory woodInventory = new Inventory(ResourceType.WOOD, 2000);
-        Inventory stoneInventory = new Inventory(ResourceType.STONE, 0);
+        Inventory stoneInventory = new Inventory(ResourceType.STONE, 2000);
         Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);
         gameScreen.AddInventory(foodInventory);
         gameScreen.AddInventory(woodInventory);
