@@ -431,4 +431,8 @@ public class GameScreen : Screen
         get { return _peopleListOpen; }
         set { _peopleListOpen = value; }
     }
+
+    public List<Inventory> Inventories{
+        get { return _allInventories; }
+    }
 }

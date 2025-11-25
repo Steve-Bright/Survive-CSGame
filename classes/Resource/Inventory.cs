@@ -13,11 +13,12 @@ public class Inventory
         _totalNum = initialNum;
     }
 
-    public void Increase(int num)
+    public void Increase(float num)
     {
-        if (num > 0)
+        int actualIncrease = (int)Math.Floor(num);
+        if (actualIncrease > 0)
         {
-            _totalNum += num;
+            _totalNum += actualIncrease;
         }
     }
 

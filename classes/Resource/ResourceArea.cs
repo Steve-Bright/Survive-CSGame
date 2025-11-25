@@ -80,7 +80,7 @@ public class ResourceArea : BaseObj
         }            
     }
 
-    public ResourceType Resource => _resource;
+    public ResourceType ResourceType => _resource;
 
     public bool IsAccessible => _isAccessible;
 
@@ -93,9 +93,27 @@ public class ResourceArea : BaseObj
         }
     }
 
-    // + Extract(type: ResourceType, inv: Inventory)
-    public void Extract(ResourceType type, Inventory inv)
+    public void RemoveWorker(Person person)
     {
+        if (_currentWorkers.Contains(person))
+        {
+            _currentWorkers.Remove(person);
+            person.IsWorking = false;
+        }
+    }
+
+    public void Extract(Inventory inv)
+    {
+        if(_capacity > 0)
+        {
+            inv.Increase(1);
+            _capacity -= 1;
+        }
+        else
+        {
+            _currentWorkers.Where(p => p.IsWorking).ToList().ForEach(p => p.IsWorking = false);
+            _gameScreen.AddMessage($"{Name} is out of resources.", AlertType.ERROR);
+        }
         // if (_currentWorkers.Count > 0 && type == _resource.Type)
         // {
         //     int extractionRate = _currentWorkers.Count; // Simple extraction based on worker count

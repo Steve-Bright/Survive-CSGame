@@ -14,8 +14,11 @@ public class Person : Entity
     private bool _isWalking = false;
     private bool _isWorking;
     private float _workRate;
+    private float _workTimer = 0f;
     
-    private BaseObj _destination;
+    private List<Inventory> _inventories;
+    private BaseObj? _destination;
+    private ResourceArea? _workPlace;
 
     public bool IsWorking 
     { 
@@ -28,7 +31,7 @@ public class Person : Entity
         get => _currentEnergy; 
     }
     
-    public Person(string name, float xPos, float yPos, int width, int height, int maxHealth,Texture2D personIcon, Calendar calendar)
+    public Person(string name, float xPos, float yPos, int width, int height, int maxHealth,Texture2D personIcon, Calendar calendar, List<Inventory> inventories )
         : base(name, xPos, yPos, width, height, maxHealth, personIcon, calendar)
     {
         _workRate = 1f;
@@ -36,6 +39,7 @@ public class Person : Entity
         _currentEnergy = 100;
         _isFainted = false;
         _isWorking = false;
+        _inventories = inventories;
     }
 
     public void ConsumeFood(int foodNum)
@@ -46,29 +50,27 @@ public class Person : Entity
 
     public void Work()
     {
-        // if (_isFainted || CurrentEnergy <= 0)
-        // {
-        //     Console.WriteLine("Cannot work. Person is fainted or out of energy.");
-        //     IsWorking = false;
-        //     return;
-        // }
+        if (!_isWorking) return;
+        if (_isFainted) return;
+        if (_workPlace == null) return;
 
-        // IsWorking = true;
-        // CurrentEnergy -= _workRate / 2;
-        // Console.WriteLine("Person is working.");
+        // _workPlace.Extract(_inventories.Find(inv => inv.Type == _workPlace.ResourceType)!);
+        _workTimer += GetFrameTime();
+        if (_workTimer < _workRate) return;
+
+        ResourceType resourceType = _workPlace.ResourceType;
+        foreach (Inventory inventory in _inventories)
+        {
+            if (inventory.Type == resourceType)
+            {
+                _workPlace.Extract(inventory);
+            }
+        }
+
+        _workTimer -= _workRate;
+        if (_workTimer < 0f) _workTimer = 0f;
     }
 
-    public void Walk(BaseObj destination)
-    {
-        
-        // if (_isFainted)
-        // {
-        //     Console.WriteLine("Cannot walk. Person is fainted.");
-        //     return;
-        // }
-        
-        // IsWorking = false;
-    }
 
     public void Sleep()
     {
@@ -96,9 +98,15 @@ public class Person : Entity
         if (!_isWalking)
         {
             base.Draw();
+            this.Work();
         }
         else
         {
+            if (_destination == null)
+            {
+                base.Draw();
+                return;
+            }
             
             if(MathF.Abs(this.X - _destination.X) > WalkRate){
                 if(_destination.X > this.X){
@@ -119,6 +127,11 @@ public class Person : Entity
             if(MathF.Abs(this.X - _destination.X) <= WalkRate && MathF.Abs(this.Y - _destination.Y) <= WalkRate){
                 this.Icon = RunTime.PersonDown;
                 _isWalking = false;
+                if(_destination is ResourceArea){
+                    ((ResourceArea)_destination).AssignWorker(this);
+                    _workPlace = (ResourceArea)_destination;
+                    _destination = null;
+                }
             }
             base.Draw();
         }

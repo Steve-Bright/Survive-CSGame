@@ -90,7 +90,7 @@ internal static class Program
         {
             int x = rng.Next(0, GetScreenWidth() - entityWidth);
             int y = rng.Next(0, GetScreenHeight() - entityHeight);
-            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, RunTime.PersonDown, RunTime.currentCalendar);
+            Person p = new Person(name, x, y, entityWidth, entityHeight, 100, RunTime.PersonDown, RunTime.currentCalendar, gameScreen.Inventories);
             gameScreen.AddBaseObj(p);
         }
 
