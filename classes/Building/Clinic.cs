@@ -25,14 +25,14 @@ public class Clinic : Workplace
         _maxPatients += 2;
     }
 
-    public override void AssignWorker(Person person)
-    {
-        // Assigning a worker (doctor/nurse)
-        if (_currentWorkers.Count < MaxWorkers)
-        {
-            _currentWorkers.Add(person);
-        }
-    }
+    // public override void AssignWorker(Person person)
+    // {
+    //     // Assigning a worker (doctor/nurse)
+    //     if (_currentWorkers.Count < MaxWorkers)
+    //     {
+    //         _currentWorkers.Add(person);
+    //     }
+    // }
 
     public override void RemoveWorker(Person person)
     {
@@ -115,7 +115,16 @@ public class Clinic : Workplace
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-40, 28);
-        // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-40, 28); 
+
+        Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-45, 265, 45 );
+        DrawRectangleRec(buttonRect, Color.Red);
+        Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => _peopleListOpen = true);
+        if(_peopleListOpen == true)
+        {
+            DisplayPeopleList();
+        }
+
+        Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-40, 28); 
 
         RunTime.detailsShown = true;
         if(GetMousePosition().X > GetScreenWidth()-50 && GetMousePosition().X < GetScreenWidth() &&  GetMousePosition().Y > GetScreenHeight()-290 && GetMousePosition().Y < GetScreenHeight()-240 && IsMouseButtonPressed(MouseButton.Left))
@@ -124,4 +133,8 @@ public class Clinic : Workplace
             RunTime.detailsShown = false;
         }        
     }
+
+    // public void DisplayPeopleList(){
+    //     Console.WriteLine("Displaying people list for assignment.");
+    // }
 }

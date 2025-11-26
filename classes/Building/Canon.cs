@@ -10,20 +10,20 @@ public class Cannon : Defense
 
     public override void Attack()
     {
-        if (_currentPeople.Count > 0)
+        if (_currentWorkers.Count > 0)
         {
             Console.WriteLine("Cannon firing a heavy projectile.");
         }
     }
     
-    public override void Assign(Person person)
-    {
-        if (_currentPeople.Count < _maxPerson) _currentPeople.Add(person);
-    }
+    // public override void Assign(Person person)
+    // {
+    //     if (_currentWorkers.Count < _requiredWorkers) _currentWorkers.Add(person);
+    // }
     
     public override void Remove(Person person)
     {
-        _currentPeople.Remove(person);
+        _currentWorkers.Remove(person);
     }
     
     public override void TakeDamage(int hitpoint)

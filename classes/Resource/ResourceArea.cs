@@ -220,14 +220,14 @@ public class ResourceArea : BaseObj
 
             Rectangle energyRect = new Rectangle((int) personRectangles[slot].X + 520, (int) personRectangles[slot].Y + 10, 250, 50);
             DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(energyRect, "E: 100%, W: 100", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, W: 100", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
             Rectangle eachPersonTickRect = new Rectangle((int) personRectangles[slot].X + 900, (int) personRectangles[slot].Y + 15, 40, 40);
             DrawRectangleRec(eachPersonTickRect, new Color(215, 217, 219, 255));
             DrawRectangleLinesEx(eachPersonTickRect, 2, Color.Black);
 
 
-            if(person.IsWorking)
+            if(person.IsWorking || person.NightShift)
             {
                 if(person.ResourceArea == this)
                 {
@@ -308,7 +308,9 @@ public class ResourceArea : BaseObj
                            if(rp.IsSelected)
                            {
                                AssignWorker(rp.Person);
-                               rp.Person.SetDestination(this);
+                                if(RunTime.gameScreen.MainCalendar.IsDay){
+                                    rp.Person.SetDestination(this);
+                               }
                            }
                        }
                          _resourcePersons.Clear();

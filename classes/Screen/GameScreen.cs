@@ -225,7 +225,7 @@ public class GameScreen : Screen
             if(obj is Person)
             {
                 Person person = (Person)obj;
-                if(!person.IsWorking && !person.IsFainted)
+                if(!person.IsWorking && !person.IsFainted && !person.NightShift)
                 {
                     freePeople += 1;
                 }
@@ -396,7 +396,7 @@ public class GameScreen : Screen
             if(sleepingStatus == "Sleeping"){
                 idleStatus = "Sleeping";
             } else {
-                idleStatus = person.IsWorking ? "Working" : "Idle";
+                idleStatus = (person.IsWorking || person.NightShift) ? "Working" : "Idle";
             }
 
             Util.ScaledDrawTexture(RunTime.PersonDown, personRectangles[slot].X + 10, personRectangles[slot].Y + 10, 50);
@@ -413,7 +413,7 @@ public class GameScreen : Screen
             DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
             Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, W: 100%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
-            if(person.IsWorking)
+            if(person.IsWorking || person.NightShift)
             {
                 Rectangle cancelRect = new Rectangle((int) personRectangles[slot].X + 790, (int) personRectangles[slot].Y + 10, 200, 50);
                 DrawRectangleRec(cancelRect, new Color(255, 100, 100, 200));
@@ -470,5 +470,9 @@ public class GameScreen : Screen
 
     public List<Inventory> Inventories{
         get { return _allInventories; }
+    }
+
+    public Calendar MainCalendar{
+        get { return _mainCalendar; }
     }
 }

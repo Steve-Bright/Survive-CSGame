@@ -14,6 +14,7 @@ public class Person : Entity
     private bool _isWalking = false;
     private bool _isSleeping = false;
     private bool _isWorking;
+    private bool _nightShift;
     private float _workRate;
     private float _workTimer = 0f;
     
@@ -23,6 +24,7 @@ public class Person : Entity
     private ResourceArea? _resourceArea;
     private Building _placeHut;
     private Workplace? _workPlaceAsWorkplace;
+    private Defense? _defenseBuilding;
 
     public bool IsWorking 
     { 
@@ -43,6 +45,7 @@ public class Person : Entity
         _currentEnergy = 100;
         _isFainted = false;
         _isWorking = false;
+        _nightShift = false;
         _inventories = inventories;
     }
 
@@ -63,7 +66,6 @@ public class Person : Entity
                 _currentEnergy = _maxEnergy;
             }
         }
-        // Console.WriteLine($"Person consumed food, energy increased by {foodNum}. Current energy: {CurrentEnergy}");
     }
 
     public void Work()
@@ -71,8 +73,7 @@ public class Person : Entity
         if(_isSleeping) return;
         if (!_isWorking) return;
         if (_isFainted) return;
-        if (_resourceArea == null && _workPlaceAsWorkplace == null) return;
-
+        if (_resourceArea == null && _workPlaceAsWorkplace == null && _defenseBuilding == null) return;
         // _resourceArea.Extract(_inventories.Find(inv => inv.Type == _resourceArea.ResourceType)!);
         _workTimer += GetFrameTime();
         if (_workTimer < _workRate) return;
@@ -131,15 +132,13 @@ public class Person : Entity
     {
         if (!_isWalking)
         {
-            if(!_isSleeping && !_isWorking)
+            if(!_isSleeping && !_isWorking && !_nightShift)
             {
-                Console.WriteLine("Hello");
                 Random rng = new Random();
                 SetDestination(new Vector2(rng.Next(0, GetScreenWidth()- Width), rng.Next(0, GetScreenHeight() - Height)));
             }
             else
             {
-                Console.WriteLine("?");
                 base.Draw();
                 Sleep();
                 Work();
@@ -161,7 +160,6 @@ public class Person : Entity
                 base.Draw();
                 return;
             }else if(_destination == null && _destionationXY != null){
-                Console.WriteLine("Self x " + X+ " y " + Y +  " Destination XY not null " + _destionationXY.X + " " + _destionationXY.Y);
                 finalDestinationX = (int)_destionationXY.X;
                 finalDestinationY = (int)_destionationXY.Y;
             }
@@ -171,7 +169,6 @@ public class Person : Entity
                 finalDestinationY = (int)_destination.Y + 50;
             }
 
-            Console.WriteLine("Walk rate " + finalWalkRate);
             
             // int finalDestinationX = (int)_destination.X + 30;
             // int finalDestinationY = (int)_destination.Y + 50;
@@ -327,22 +324,26 @@ public class Person : Entity
     public override void Update(Calendar calendar)
     {
         if(calendar.IsDay){
-            if(_isSleeping){
-                DailyEnergyReduce();
-                ConsumeFood(1);
-                _isSleeping = false;
+            DailyEnergyReduce();
+             ConsumeFood(1);
+            if(_defenseBuilding != null){
+                _isSleeping = true;
+            }else{
+                 _isSleeping = false;
                 if(ResourceArea != null){
                     SetDestination(ResourceArea);
                 }else if(WorkPlaceAsWorkplace != null){
                     SetDestination(WorkPlaceAsWorkplace);
                 }
-                Console.WriteLine($"{Name} woke up.");
             }
         }else{
-            if(!_isSleeping){
+            if(_defenseBuilding == null){
                 _isWalking = true;
                 _isSleeping = true;
+            }else{
+                SetDestination(_defenseBuilding);
             }
+
         }
     }
 
@@ -378,6 +379,10 @@ public class Person : Entity
             _workPlaceAsWorkplace.RemoveWorker(this);
             _workPlaceAsWorkplace = null;
         }
+        if(_defenseBuilding != null){
+            _defenseBuilding.Remove(this);
+            _defenseBuilding = null;
+        }
         _resourceArea = resourceArea;
     }   
 
@@ -387,11 +392,16 @@ public class Person : Entity
         if(_resourceArea != null){
             _resourceArea = null;
         }
+        if(_defenseBuilding != null){
+            _defenseBuilding.Remove(this);
+            _defenseBuilding = null;
+        }
         _workPlaceAsWorkplace = workplace;
     }
 
-    public void QuitWork(){
-        _isWorking = false;
+    public void AssignNightShift(Defense defenseBuilding)
+    {
+        _nightShift = true;
         if(_resourceArea != null){
             _resourceArea.RemoveWorker(this);
             _resourceArea = null;
@@ -399,6 +409,24 @@ public class Person : Entity
         if(_workPlaceAsWorkplace != null){
             _workPlaceAsWorkplace.RemoveWorker(this);
             _workPlaceAsWorkplace = null;
+        }
+        _defenseBuilding = defenseBuilding;
+    }
+
+    public void QuitWork(){
+        _isWorking = false;
+        _nightShift = false;
+        if(_resourceArea != null){
+            _resourceArea.RemoveWorker(this);
+            _resourceArea = null;
+        }
+        if(_workPlaceAsWorkplace != null){
+            _workPlaceAsWorkplace.RemoveWorker(this);
+            _workPlaceAsWorkplace = null;
+        }
+        if(_defenseBuilding != null){
+            _defenseBuilding.Remove(this);
+            _defenseBuilding = null;
         }
     }
 
@@ -413,8 +441,19 @@ public class Person : Entity
         _workPlaceAsWorkplace = null;
     }
 
+    public Defense? DefenseBuilding
+    {
+        get { return _defenseBuilding; }
+    }
+
     public bool IsSleeping
     {
         get { return _isSleeping; }
+    }
+
+    public bool NightShift
+    {
+        get { return _nightShift; }
+        set { _nightShift = value; }
     }
 }
