@@ -411,7 +411,7 @@ public class GameScreen : Screen
 
             Rectangle energyRect = new Rectangle((int) personRectangles[slot].X + 520, (int) personRectangles[slot].Y + 10, 250, 50);
             DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(energyRect, "E: 100%, W: 100", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, W: 100%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
             if(person.IsWorking)
             {

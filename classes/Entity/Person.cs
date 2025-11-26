@@ -53,7 +53,16 @@ public class Person : Entity
 
     public void ConsumeFood(int foodNum)
     {
-        // CurrentEnergy += foodNum;
+        Inventory foodInventory = RunTime.gameScreen.GetInventory(ResourceType.FOOD);
+
+        if(foodInventory.TotalNum >= foodNum){
+             _currentEnergy += foodNum * 10;
+            foodInventory.Decrease(foodNum);
+            if (_currentEnergy > _maxEnergy)
+            {
+                _currentEnergy = _maxEnergy;
+            }
+        }
         // Console.WriteLine($"Person consumed food, energy increased by {foodNum}. Current energy: {CurrentEnergy}");
     }
 
@@ -68,7 +77,6 @@ public class Person : Entity
         _workTimer += GetFrameTime();
         if (_workTimer < _workRate) return;
 
-        Console.WriteLine("Person is working.");
         if(_resourceArea != null){
             ResourceType resourceType = _resourceArea.ResourceType;
             foreach (Inventory inventory in _inventories)
@@ -79,7 +87,6 @@ public class Person : Entity
                 }
             }
         }else if(_workPlaceAsWorkplace != null){
-            Console.WriteLine("hello???");
             // Workplace workPlace = _workPlaceAsWorkplace;
             // workPlace.Produce();
             Workplace workPlace = _workPlaceAsWorkplace;
@@ -126,11 +133,13 @@ public class Person : Entity
         {
             if(!_isSleeping && !_isWorking)
             {
+                Console.WriteLine("Hello");
                 Random rng = new Random();
                 SetDestination(new Vector2(rng.Next(0, GetScreenWidth()- Width), rng.Next(0, GetScreenHeight() - Height)));
             }
             else
             {
+                Console.WriteLine("?");
                 base.Draw();
                 Sleep();
                 Work();
@@ -143,6 +152,8 @@ public class Person : Entity
         }
         else
         {
+
+            int finalWalkRate = (int)Math.Ceiling(WalkRate * (float)Math.Round((CurrentEnergy / 100.0),1 ));
             int finalDestinationX;
             int finalDestinationY;
             if (_destination == null && _destionationXY == null)
@@ -150,6 +161,7 @@ public class Person : Entity
                 base.Draw();
                 return;
             }else if(_destination == null && _destionationXY != null){
+                Console.WriteLine("Self x " + X+ " y " + Y +  " Destination XY not null " + _destionationXY.X + " " + _destionationXY.Y);
                 finalDestinationX = (int)_destionationXY.X;
                 finalDestinationY = (int)_destionationXY.Y;
             }
@@ -159,32 +171,33 @@ public class Person : Entity
                 finalDestinationY = (int)_destination.Y + 50;
             }
 
+            Console.WriteLine("Walk rate " + finalWalkRate);
             
             // int finalDestinationX = (int)_destination.X + 30;
             // int finalDestinationY = (int)_destination.Y + 50;
         
 
-            if(MathF.Abs(this.X - finalDestinationX ) > WalkRate){
+            if(MathF.Abs(this.X - finalDestinationX ) > finalWalkRate){
                 if(finalDestinationX > this.X){
                     this.Icon = RunTime.PersonRight;
                 }else{
                     this.Icon = RunTime.PersonLeft;
                 }
-                this.X += MathF.Sign(finalDestinationX - this.X) * WalkRate;
-            }else if(MathF.Abs(this.Y - finalDestinationY ) > WalkRate){
+                this.X += MathF.Sign(finalDestinationX - this.X) * finalWalkRate;
+            }else if(MathF.Abs(this.Y - finalDestinationY ) > finalWalkRate){
                 if(finalDestinationY > this.Y){
                     this.Icon = RunTime.PersonDown;
                 }else{
                     this.Icon = RunTime.PersonUp;
                 }
-                this.Y += MathF.Sign(finalDestinationY - this.Y) * WalkRate;
+                this.Y += MathF.Sign(finalDestinationY - this.Y) * finalWalkRate;
             }
 
-            if(MathF.Abs(this.X - finalDestinationX) <= WalkRate && MathF.Abs(this.Y - finalDestinationY) <= WalkRate){
+            if(MathF.Abs(this.X - finalDestinationX) <= finalWalkRate && MathF.Abs(this.Y - finalDestinationY) <= finalWalkRate){
                 this.Icon = RunTime.PersonDown;
                 _isWalking = false;
                 if(_destination is ResourceArea){
-                    ((ResourceArea)_destination).AssignWorker(this);
+                    // ((ResourceArea)_destination).AssignWorker(this);
                     _destination = null;
                 }
                 else if(_destination is Building){
@@ -294,10 +307,29 @@ public class Person : Entity
         };
     }
 
+    private void DailyEnergyReduce()
+    {
+        if(_currentEnergy > 40)
+        {
+            if(CurrentEnergy > 60){
+                _currentEnergy -= 10;
+                if (_currentEnergy < 0)
+                {
+                    _currentEnergy = 0;
+                }
+            }else{
+                _currentEnergy -= 5;
+            }
+
+        }
+    }
+
     public override void Update(Calendar calendar)
     {
         if(calendar.IsDay){
             if(_isSleeping){
+                DailyEnergyReduce();
+                ConsumeFood(1);
                 _isSleeping = false;
                 if(ResourceArea != null){
                     SetDestination(ResourceArea);

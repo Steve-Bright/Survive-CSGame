@@ -55,7 +55,7 @@ internal static class Program
     }
 
     public static void CreateInitialEntites(GameScreen gameScreen){
-        Inventory foodInventory = new Inventory(ResourceType.FOOD, 10);
+        Inventory foodInventory = new Inventory(ResourceType.FOOD, 0);
         Inventory woodInventory = new Inventory(ResourceType.WOOD, 1000);
         Inventory stoneInventory = new Inventory(ResourceType.STONE, 1000);
         Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);

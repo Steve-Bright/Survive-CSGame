@@ -20,10 +20,10 @@ public class ResourceArea : BaseObj
     public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type)
         : base(name, xPos, yPos, width, height, resourceAreaIcon)
     {
-        _capacity = 50; //default - 2000
+        _capacity = 4000; //default - 2000
         _resource = type;
         _isAccessible = true;
-        _requiredWorkers = 10;
+        _requiredWorkers = 5;
         _currentWorkers = new List<Person>();
         _resourcePersons = new List<ResourcePerson>();
     }
