@@ -297,9 +297,9 @@ public class GameScreen : Screen
 
         _mainCalendar.CurrentTime = currentTime + GetFrameTime();
         int roundedTime = (int)Math.Floor(_mainCalendar.CurrentTime);
-        //swamhtet this is 1 hour per 2 sec. need to change.
-        int roundedTimeRemainder = roundedTime % 2;
-        int roundedTimeResult = roundedTime / 2;
+        //swamhtet this is 1 hour per 2 sec. need to change. must changed to 25
+        int roundedTimeRemainder = roundedTime % (_mainCalendar.DayCriteria / 12);
+        int roundedTimeResult = roundedTime / (_mainCalendar.DayCriteria / 12);
         if( roundedTimeRemainder == 0 && roundedTimeResult != _mainCalendar.PreviousRoundedResult ){
             _mainCalendar.PreviousRoundedResult = roundedTimeResult;
             if(_mainCalendar.HourSystem >= 23){
@@ -326,6 +326,18 @@ public class GameScreen : Screen
 
     public void AddMessage(string message, AlertType alertType)
     {
+        switch(alertType){
+            case AlertType.ERROR:
+                PlaySound(RunTime.errorSound);
+                break;
+            case AlertType.WARNING:
+                PlaySound(RunTime.warningSound);
+                break;
+            case AlertType.INFO:
+                PlaySound(RunTime.infoSound);
+                break;
+        }
+
         _alertList.AddAlert(new Alert(message, alertType));
     }
 
@@ -379,7 +391,13 @@ public class GameScreen : Screen
             if (personIndex >= personCountTotal) break;
             Person person = persons[personIndex];
             currentPerson++;
-            string idleStatus = person.IsWorking ? "Working" : "Idle";
+            string sleepingStatus = person.IsSleeping ? "Sleeping" : "Awake";
+            string idleStatus ;
+            if(sleepingStatus == "Sleeping"){
+                idleStatus = "Sleeping";
+            } else {
+                idleStatus = person.IsWorking ? "Working" : "Idle";
+            }
 
             Util.ScaledDrawTexture(RunTime.PersonDown, personRectangles[slot].X + 10, personRectangles[slot].Y + 10, 50);
 
@@ -403,13 +421,14 @@ public class GameScreen : Screen
                 if(GetMousePosition().X > cancelRect.X && GetMousePosition().X < cancelRect.X + cancelRect.Width &&  GetMousePosition().Y > cancelRect.Y && GetMousePosition().Y < cancelRect.Y + cancelRect.Height && IsMouseButtonPressed(MouseButton.Left))
                 {
                     person.IsWorking = false;
-                    if(person.WorkPlace != null)
+                    if(person.ResourceArea != null)
                     {
-                        person.WorkPlace.RemoveWorker(person);
+                        person.ResourceArea.RemoveWorker(person);
                     }else if(person.WorkPlaceAsWorkplace != null)
                     {
-                        // person.WorkPlaceAsWorkplace.RemoveWorker(person);
+                        person.WorkPlaceAsWorkplace.RemoveWorker(person);
                     }
+                    person.QuitWork();
                 }
             }
         }

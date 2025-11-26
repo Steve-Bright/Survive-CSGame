@@ -76,7 +76,6 @@ public class Calendar
 
     public void ToggleNight()
     {
-        Console.WriteLine("Toggling to Night...");
         _isDay = false;
         Notify();
     }

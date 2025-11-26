@@ -19,18 +19,17 @@ internal static class Program
         SetTargetFPS(60);
 
         List<Texture2D> allTextures = new List<Texture2D>();
+        List<Sound> allSounds = new List<Sound>();
         Image gameIcon = LoadImage("./resources/assets/bonfire.png");
         allTextures = LoadAsssets();
-        Sound clickSound = LoadSound("./resources/assets/click.mp3");
-        Sound buildSound = LoadSound("./resources/assets/build.mp3");
-        RunTime.clickSound = clickSound;
-        RunTime.buildSound = buildSound;
+        allSounds = LoadSounds();
         
         //mainWindow initialization
         Calendar mainCalendar = new Calendar();
         RunTime.currentCalendar = mainCalendar;
         MenuScreen menu = new MenuScreen(RunTime.MenuBg);
         GameScreen mainGame = new GameScreen(RunTime.GamescreenBg);
+        RunTime.gameScreen = mainGame;
         CreateInitialEntites(mainGame);
 
         ScreenFactory screen = new ScreenFactory();
@@ -50,19 +49,15 @@ internal static class Program
 
             EndDrawing();
         }
-        UnloadSound(clickSound);
-        UnloadSound(buildSound);
         UnloadImage(gameIcon);
-        UnloadAssets(allTextures);
         CloseWindow();
-
 
     }
 
     public static void CreateInitialEntites(GameScreen gameScreen){
         Inventory foodInventory = new Inventory(ResourceType.FOOD, 10);
-        Inventory woodInventory = new Inventory(ResourceType.WOOD, 2000);
-        Inventory stoneInventory = new Inventory(ResourceType.STONE, 2000);
+        Inventory woodInventory = new Inventory(ResourceType.WOOD, 1000);
+        Inventory stoneInventory = new Inventory(ResourceType.STONE, 1000);
         Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);
         gameScreen.AddInventory(foodInventory);
         gameScreen.AddInventory(woodInventory);
@@ -102,11 +97,11 @@ internal static class Program
         }
 
         
-        ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD, gameScreen);
-        ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT, gameScreen);
-        ResourceArea stoneArea = new ResourceArea("Stone Area 1 ",  50, forest.Width + 300, 150, 150, RunTime.StoneArea, ResourceType.STONE, gameScreen);
-        ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE, gameScreen);
-        ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD, gameScreen);
+        ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);
+        ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT);
+        ResourceArea stoneArea = new ResourceArea("Stone Area 1 ",  50, forest.Width + 300, 150, 150, RunTime.StoneArea, ResourceType.STONE);
+        ResourceArea stoneArea2 = new ResourceArea("Stone Area 2 ",  GetScreenWidth()-200, 200, 150, 150, RunTime.StoneArea, ResourceType.STONE);
+        ResourceArea forest2 = new ResourceArea("Forest 2", GetScreenWidth()-200, GetScreenHeight()-400, 200, 200, RunTime.Forest, ResourceType.WOOD);
         gameScreen.AddBaseObj(forest);
         gameScreen.AddBaseObj(animalArea);
         gameScreen.AddBaseObj(stoneArea);
@@ -144,6 +139,7 @@ internal static class Program
         Texture2D meatIcon = LoadTexture("./resources/assets/meat.png");
         Texture2D tickIcon = LoadTexture("./resources/assets/tick.png");
         Texture2D crossIcon = LoadTexture("./resources/assets/cross.png");
+        Texture2D greenTickIcon = LoadTexture("./resources/assets/greentick.png");
         // Texture2D cannonStatic = LoadTexture("./resources/assets/cannonStatic.png");
 
         allTextures.Add(menuBg);
@@ -171,6 +167,7 @@ internal static class Program
         allTextures.Add(meatIcon);
         allTextures.Add(tickIcon);
         allTextures.Add(crossIcon);
+        allTextures.Add(greenTickIcon);
         // allTextures.Add(cannonStatic);
 
 
@@ -199,9 +196,42 @@ internal static class Program
         RunTime.meatIcon = meatIcon;
         RunTime.tickIcon = tickIcon;
         RunTime.crossIcon = crossIcon;
+        RunTime.greenTickIcon = greenTickIcon;
         // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     
+    }
+
+    public static List<Sound> LoadSounds(){
+        List<Sound> allSounds = new List<Sound>();
+
+        Sound warningSound = LoadSound("./resources/assets/warning.mp3");
+        Sound clickSound = LoadSound("./resources/assets/click.mp3");
+        Sound buildSound = LoadSound("./resources/assets/build.mp3");
+        Sound errorSound = LoadSound("./resources/assets/error.mp3");
+        Sound infoSound = LoadSound("./resources/assets/info.mp3");
+
+        RunTime.warningSound = warningSound;
+        RunTime.clickSound = clickSound;
+        RunTime.buildSound = buildSound;
+        RunTime.errorSound = errorSound;
+        RunTime.infoSound = infoSound;
+
+        allSounds.Add(warningSound);
+        allSounds.Add(clickSound);
+        allSounds.Add(buildSound);
+        allSounds.Add(errorSound);
+        allSounds.Add(infoSound);
+
+        return allSounds;
+    }
+
+    public static void UnloadSounds(List<Sound> allSounds)
+    {
+        foreach(Sound eachSound in allSounds)
+        {
+            UnloadSound(eachSound);
+        }
     }
 
     public static void UnloadAssets(List<Texture2D> allAssets)

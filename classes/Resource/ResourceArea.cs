@@ -6,7 +6,6 @@ namespace Game;
 
 public class ResourceArea : BaseObj
 {
-    private GameScreen _gameScreen;
     
     private int _capacity;
     private ResourceType _resource;
@@ -18,16 +17,15 @@ public class ResourceArea : BaseObj
     private bool _randomAssign = true;
 
     // + ResourceArea(name: string, xPos: float, yPos: float, width: int, height: int, type: ResourceType)
-    public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type, GameScreen gameScreen)
+    public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type)
         : base(name, xPos, yPos, width, height, resourceAreaIcon)
     {
-        _capacity = 1000;
+        _capacity = 50; //default - 2000
         _resource = type;
         _isAccessible = true;
         _requiredWorkers = 10;
         _currentWorkers = new List<Person>();
         _resourcePersons = new List<ResourcePerson>();
-        _gameScreen = gameScreen;
     }
 
     public override void DisplayDetails()
@@ -88,8 +86,8 @@ public class ResourceArea : BaseObj
     {
         if (_isAccessible)
         {
+            person.AssignWork(this);
             _currentWorkers.Add(person);
-            person.IsWorking = true;
         }
     }
 
@@ -97,6 +95,7 @@ public class ResourceArea : BaseObj
     {
         if (_currentWorkers.Contains(person))
         {
+            person.RemoveResourceArea();
             _currentWorkers.Remove(person);
             person.IsWorking = false;
         }
@@ -111,8 +110,9 @@ public class ResourceArea : BaseObj
         }
         else
         {
-            _currentWorkers.Where(p => p.IsWorking).ToList().ForEach(p => p.IsWorking = false);
-            _gameScreen.AddMessage($"{Name} is out of resources.", AlertType.ERROR);
+            _currentWorkers.Where(person => person.IsWorking).ToList().ForEach(person => { person.IsWorking = false; person.RemoveResourceArea(); });
+             _currentWorkers.Clear();
+            RunTime.gameScreen.AddMessage($"{Name} is out of resources.", AlertType.ERROR);
         }
         // if (_currentWorkers.Count > 0 && type == _resource.Type)
         // {
@@ -172,7 +172,7 @@ public class ResourceArea : BaseObj
         Rectangle[] personRectangles = new Rectangle[] { personOne, personTwo, personThree, personFour, personFive };
 
         // List<ResourcePerson> resourcePersons = new List<ResourcePerson>();
-        List<Person> persons = _gameScreen.GetPersonLists();
+        List<Person> persons = RunTime.gameScreen.GetPersonLists();
         bool personExists = false;
         foreach (Person person in persons)
         {
@@ -195,7 +195,7 @@ public class ResourceArea : BaseObj
         }
 
         int personCountTotal = _resourcePersons.Count;
-        int pageIndex = Math.Max(0, _gameScreen.CurrentPersonDisplayPage);
+        int pageIndex = Math.Max(0, RunTime.gameScreen.CurrentPersonDisplayPage);
         int startIndex = pageIndex * personLimitPerPage;
 
         for (int slot = 0; slot < personLimitPerPage; slot++)
@@ -229,7 +229,15 @@ public class ResourceArea : BaseObj
 
             if(person.IsWorking)
             {
-                Util.ScaledDrawTexture(RunTime.crossIcon, eachPersonTickRect.X, eachPersonTickRect.Y, 40);
+                if(person.ResourceArea == this)
+                {
+                    Util.ScaledDrawTexture(RunTime.greenTickIcon, eachPersonTickRect.X, eachPersonTickRect.Y, 40);
+                }
+                else
+                {
+                    Util.ScaledDrawTexture(RunTime.crossIcon, eachPersonTickRect.X, eachPersonTickRect.Y, 40);
+                }
+                // Util.ScaledDrawTexture(RunTime.crossIcon, eachPersonTickRect.X, eachPersonTickRect.Y, 40);
             }
             else
             {
@@ -277,7 +285,7 @@ public class ResourceArea : BaseObj
             if(_currentWorkers.Count == _requiredWorkers)
             {
                 _peopleListOpen = false;
-                _gameScreen.AddMessage("Workers is already full.", AlertType.ERROR);
+                RunTime.gameScreen.AddMessage("Workers is already full.", AlertType.ERROR);
             }else if(_currentWorkers.Count < _requiredWorkers)
             {
                 int workersNeeded = _requiredWorkers - _currentWorkers.Count;
@@ -287,11 +295,11 @@ public class ResourceArea : BaseObj
                     // Console.WriteLine($"Workers Selected: {workersSelected}, Workers Needed: {workersNeeded}");
                     if(workersSelected > workersNeeded)
                     {
-                        _gameScreen.AddMessage("Too many workers", AlertType.ERROR);
+                        RunTime.gameScreen.AddMessage("Too many workers", AlertType.ERROR);
                     }
                     else if(workersSelected == 0)
                     {
-                        _gameScreen.AddMessage("No workers selected", AlertType.WARNING);
+                        RunTime.gameScreen.AddMessage("No workers selected", AlertType.WARNING);
                     }
                     else
                     {
@@ -303,7 +311,7 @@ public class ResourceArea : BaseObj
                                rp.Person.SetDestination(this);
                            }
                        }
-                       _resourcePersons.Clear();
+                         _resourcePersons.Clear();
                           _peopleListOpen = false;
                     }
                 }
@@ -315,6 +323,7 @@ public class ResourceArea : BaseObj
 
                     for (int i = 0; i < Math.Min(workersNeeded, idlePersons.Count); i++)
                     {
+                        AssignWorker(idlePersons[i]);
                         idlePersons[i].SetDestination(this);
                     }
                     _resourcePersons.Clear();
@@ -322,26 +331,6 @@ public class ResourceArea : BaseObj
                 }
 
             }
-            // List<Person> toAssignPersons = new List<Person>();
-            // foreach( ResourcePerson rp in _resourcePersons)
-            // {
-            //     if(_randomAssign)
-            //     {
-            //         toAssignPersons.Add(rp.Person);
-            //     }
-            //     else
-            //     {
-            //         if(rp.IsSelected)
-            //         {
-            //             toAssignPersons.Add(rp.Person);
-            //         }
-            //     }
-            // }
-
-            // foreach (Person p in toAssignPersons)
-            // {
-            //     Console.WriteLine($"Assigned Person: {p.Name}");
-            // }
         }
 
         if ((pageIndex + 1) * personLimitPerPage < personCountTotal)
@@ -351,7 +340,7 @@ public class ResourceArea : BaseObj
             DrawRectangleLinesEx(nextBtn, 2, Color.Black);
 
             Util.MakeButton(nextBtn, "Next", (int)(peopleListRect.X + peopleListRect.Width - 160), (int)(peopleListRect.Y + peopleListRect.Height - 60), 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
-                _gameScreen.CurrentPersonDisplayPage += 1;
+                RunTime.gameScreen.CurrentPersonDisplayPage += 1;
             });
         }
 
@@ -361,13 +350,13 @@ public class ResourceArea : BaseObj
             DrawRectangleRec(prevBtn, new Color(217, 217, 219, 255));
             DrawRectangleLinesEx(prevBtn, 2, Color.Black);
             Util.MakeButton(prevBtn, "Prev", (int)prevBtn.X, (int)prevBtn.Y, 28, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
-                if (_gameScreen.CurrentPersonDisplayPage > 0) _gameScreen.CurrentPersonDisplayPage--;
+                if (RunTime.gameScreen.CurrentPersonDisplayPage > 0) RunTime.gameScreen.CurrentPersonDisplayPage--;
             });
         }
     }
 }
 
-internal class ResourcePerson
+public class ResourcePerson
 {
     private Person person;
     private bool isSelected;

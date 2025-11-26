@@ -7,7 +7,7 @@ public class Land : BaseObj
 {
     private GameScreen _gameScreen;
     private bool _shopOpen = false;
-    private Building _building; 
+    private Building? _building; 
     
     public Land(string name, float xPos, float yPos, int width, int height, Texture2D landIcon, GameScreen gameScreen)
         : base(name, xPos, yPos, width, height, landIcon)
@@ -53,7 +53,7 @@ public class Land : BaseObj
         }
         else
         {
-            _building.DisplayDetails();
+            _building?.DisplayDetails();
         }
 
         RunTime.detailsShown = true;
@@ -91,7 +91,6 @@ public class Land : BaseObj
         
         Util.UpdateText(shopRect, "\nBuildings", (int) shopRect.X, (int) shopRect.Y + 20, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_TOP);
         
-        //From this point on, you will see that there are so many duplicate codes when trying to draw each building option.
         
         Rectangle closeBtnRect = new Rectangle(shopRect.X + shopRect.Width - 45, shopRect.Y, 45, 45);
         DrawRectangleRec(closeBtnRect, new Color(255, 100, 100, 200));
@@ -103,155 +102,96 @@ public class Land : BaseObj
             _shopOpen = false;
         }
 
-        Rectangle building1Rect = new Rectangle(shopRect.X + 50, shopRect.Y + 80, 300, 200);
-        DrawRectangleRec(building1Rect, new Color(150, 150, 150, 200));
-        Util.ScaledDrawTexture(RunTime.Hut, building1Rect.X , building1Rect.Y, 150);
-        Rectangle nameRect = new Rectangle(building1Rect.X + 150, building1Rect.Y + 80 - 30, 150 , 30 );
-        DrawRectangleRec(nameRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(nameRect, "HUT", (int) building1Rect.X + 150, (int)building1Rect.Y + 80, 25, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+        // Replace manual building blocks with a loop-driven layout
+        string[] labels = new string[] { "HUT", "CLINIC", "KITCHEN", "CANNON", "TOWER" };
+        Texture2D[] icons = new Texture2D[] { RunTime.Hut, RunTime.Clinic, RunTime.Cookery, RunTime.Cannon, RunTime.Tower };
+        int[] woodCosts = new int[] { 50, 150, 120, 0, 150 };
+        int[] stoneCosts = new int[] { 30, 100, 0, 150, 250 };
 
-        Util.ScaledDrawTexture(RunTime.Wood, building1Rect.X + 165, building1Rect.Y + 115, 50);
+        int cols = 3;
+        int optionW = 300;
+        int optionH = 200;
+        int xPad = 50;
+        int yPad = 80;
+        int xSpacing = 350;
+        int ySpacing = 220;
 
-        Rectangle woodNumRect = new Rectangle(building1Rect.X + 210, building1Rect.Y + 110, 50 , 35 );
-        DrawRectangleRec(woodNumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(woodNumRect, "50", (int) building1Rect.X + 210, (int)building1Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Util.ScaledDrawTexture(RunTime.Stone, building1Rect.X + 165, building1Rect.Y + 150, 50);
-        Rectangle stoneNumRect = new Rectangle(building1Rect.X + 210, building1Rect.Y + 150, 50 , 35 );
-        DrawRectangleRec(stoneNumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(stoneNumRect, "30", (int) building1Rect.X + 210, (int)building1Rect.Y + 145, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        if(GetMousePosition().X > building1Rect.X && GetMousePosition().X < building1Rect.X + building1Rect.Width &&  GetMousePosition().Y > building1Rect.Y && GetMousePosition().Y < building1Rect.Y + building1Rect.Height && IsMouseButtonPressed(MouseButton.Left))
+        for (int i = 0; i < labels.Length; i++)
         {
-            if(stoneInv.TotalNum < 30 || woodInv.TotalNum < 50)
+            int col = i % cols;
+            int row = i / cols;
+            float bx = shopRect.X + xPad + col * xSpacing;
+            float by = shopRect.Y + yPad + row * ySpacing;
+
+            Rectangle optRect = new Rectangle(bx, by, optionW, optionH);
+            DrawRectangleRec(optRect, new Color(150, 150, 150, 200));
+            Util.ScaledDrawTexture(icons[i], optRect.X, optRect.Y, 150);
+
+            Rectangle optNameRect = new Rectangle(optRect.X + 150, optRect.Y + 80 - 30, 150, 30);
+            DrawRectangleRec(optNameRect, new Color(255, 204, 106, 0));
+            Util.UpdateText(optNameRect, labels[i], (int)optRect.X + 150, (int)optRect.Y + 80, 25, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE);
+
+            int wCost = woodCosts[i];
+            int sCost = stoneCosts[i];
+            int iconX = (int)optRect.X + 165;
+            int iconWoodY = (int)optRect.Y + 115;
+            int iconStoneY = (int)optRect.Y + 150;
+
+            if (wCost > 0)
             {
-                _gameScreen.AddMessage("Not enough resources to build Hut!!!", AlertType.ERROR);
-            }else{
-                stoneInv.TotalNum -= 30;
-                woodInv.TotalNum -= 50;
-                _building = new Hut("Hut", X + 100/2, Y, 100, 100, RunTime.Hut);
-                _gameScreen.Build(_building);
+                Util.ScaledDrawTexture(RunTime.Wood, iconX, iconWoodY, 50);
+                Rectangle woodNumRect = new Rectangle(optRect.X + 210, optRect.Y + 110, 50, 35);
+                DrawRectangleRec(woodNumRect, new Color(255, 204, 106, 0));
+                Util.UpdateText(woodNumRect, wCost.ToString(), (int)optRect.X + 210, (int)optRect.Y + 110, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
             }
-             _shopOpen = false;
-        }
 
-        //hut done
-
-        Rectangle building2Rect = new Rectangle(shopRect.X + 400, shopRect.Y + 80, 300, 200);
-        DrawRectangleRec(building2Rect, new Color(150, 150, 150, 200));
-        Util.ScaledDrawTexture(RunTime.Clinic, building2Rect.X, building2Rect.Y, 150);
-
-        Rectangle name2Rect = new Rectangle(building2Rect.X + 150, building2Rect.Y + 80 - 30, 150 , 30 );
-        DrawRectangleRec(name2Rect, new Color(255, 204, 106, 0));
-        Util.UpdateText(name2Rect, "CLINIC", (int) building2Rect.X + 150, (int)building2Rect.Y + 80, 25, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Util.ScaledDrawTexture(RunTime.Wood, building2Rect.X + 165, building2Rect.Y + 115, 50);
-        Rectangle wood2NumRect = new Rectangle(building2Rect.X + 210, building2Rect.Y + 110, 50 , 35 );
-        DrawRectangleRec(wood2NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(wood2NumRect, "150", (int) building2Rect.X + 210, (int)building2Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Rectangle stone2NumRect = new Rectangle(building2Rect.X + 210, building2Rect.Y + 150, 50 , 35 );
-        DrawRectangleRec(stone2NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(stone2NumRect, "100", (int) building2Rect.X + 210, (int)building2Rect.Y + 145, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Util.ScaledDrawTexture(RunTime.Stone, building2Rect.X + 165, building2Rect.Y + 150, 50);
-
-        if(GetMousePosition().X > building2Rect.X && GetMousePosition().X < building2Rect.X + building2Rect.Width &&  GetMousePosition().Y > building2Rect.Y && GetMousePosition().Y < building2Rect.Y + building2Rect.Height && IsMouseButtonPressed(MouseButton.Left))
-        {
-            if(stoneInv.TotalNum < 100 || woodInv.TotalNum < 150)
+            if (sCost > 0)
             {
-                _gameScreen.AddMessage("Not enough resources to build Clinic!!!", AlertType.ERROR);
-            }else{
-                _building = new Clinic("Clinic", X + 100/2 -15, Y, 120, 120, RunTime.Clinic);
-                _gameScreen.Build(_building);
+                Util.ScaledDrawTexture(RunTime.Stone, iconX, iconStoneY, 50);
+                Rectangle stoneNumRect = new Rectangle(optRect.X + 210, optRect.Y + 150, 50, 35);
+                DrawRectangleRec(stoneNumRect, new Color(255, 204, 106, 0));
+                Util.UpdateText(stoneNumRect, sCost.ToString(), (int)optRect.X + 210, (int)optRect.Y + 145, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
             }
-            _shopOpen = false;
-        }
 
-        //clinic done
-
-
-        Rectangle building3Rect = new Rectangle(shopRect.X + 750, shopRect.Y + 80, 300, 200);
-        DrawRectangleRec(building3Rect, new Color(150, 150, 150, 200));
-        Util.ScaledDrawTexture(RunTime.Cookery, building3Rect.X, building3Rect.Y, 150);
-
-        Rectangle name3Rect = new Rectangle(building3Rect.X + 150, building3Rect.Y + 80 - 30, 150 , 30 );
-        DrawRectangleRec(name3Rect, new Color(255, 204, 106, 0));
-        Util.UpdateText(name3Rect, "KITCHEN", (int) building3Rect.X + 150, (int)building3Rect.Y + 80, 25, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-        Util.ScaledDrawTexture(RunTime.Wood, building3Rect.X + 165, building3Rect.Y + 115, 50);
-
-        Rectangle wood3NumRect = new Rectangle(building3Rect.X + 210, building3Rect.Y + 110, 50 , 35 );
-        DrawRectangleRec(wood3NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(wood3NumRect, "120", (int) building3Rect.X + 210, (int)building3Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        if(GetMousePosition().X > building3Rect.X && GetMousePosition().X < building3Rect.X + building3Rect.Width &&  GetMousePosition().Y > building3Rect.Y && GetMousePosition().Y < building3Rect.Y + building3Rect.Height && IsMouseButtonPressed(MouseButton.Left))
-        {
-            if( woodInv.TotalNum < 120)
+            // Click handling
+            if (GetMousePosition().X > optRect.X && GetMousePosition().X < optRect.X + optRect.Width && GetMousePosition().Y > optRect.Y && GetMousePosition().Y < optRect.Y + optRect.Height && IsMouseButtonPressed(MouseButton.Left))
             {
-                _gameScreen.AddMessage("Not enough resources to build Kitchen!!!", AlertType.ERROR);
-            }else{
-                _building = new Kitchen("Kitchen", X + 100/2 -10, Y, 120, 120, RunTime.Cookery);
-                _gameScreen.Build(_building);
+                // check resources
+                if (woodInv.TotalNum < wCost || stoneInv.TotalNum < sCost)
+                {
+                    _gameScreen.AddMessage($"Not enough resources to build {labels[i]}!!!", AlertType.ERROR);
+                }
+                else
+                {
+                    // create building instances consistent with previous behavior
+                    switch (labels[i])
+                    {
+                        case "HUT":
+                            _building = new Hut("Hut", X + 100 / 2, Y, 100, 100, RunTime.Hut);
+                            break;
+                        case "CLINIC":
+                            _building = new Clinic("Clinic", X + 100 / 2 - 15, Y, 120, 120, RunTime.Clinic);
+                            break;
+                        case "KITCHEN":
+                            _building = new Kitchen("Kitchen", X + 100 / 2 - 10, Y, 120, 120, RunTime.Cookery);
+                            break;
+                        case "CANNON":
+                            _building = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 10, 5);
+                            break;
+                        case "TOWER":
+                            _building = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
+                            break;
+                    }
+
+                    if (_building != null)
+                    {
+                        _gameScreen.Build(_building);
+                        _gameScreen.AddMessage($"{labels[i]} built successfully!", AlertType.INFO);
+                    }
+                }
+
+                _shopOpen = false;
             }
-            _shopOpen = false;
-        }
-
-        //cookery done
-
-
-        Rectangle building4Rect = new Rectangle(shopRect.X + 50, shopRect.Y + 300, 300, 200);
-        DrawRectangleRec(building4Rect, new Color(150, 150, 150, 200));
-        Util.ScaledDrawTexture(RunTime.Cannon, building4Rect.X, building4Rect.Y, 130);
-
-        Rectangle name4Rect = new Rectangle(building4Rect.X + 130, building4Rect.Y + 80 - 30, 150 , 30 );
-        DrawRectangleRec(name4Rect, new Color(255, 204, 106, 0));
-        Util.UpdateText(name4Rect, "CANNON", (int) building4Rect.X + 150, (int)building4Rect.Y + 80, 25, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Util.ScaledDrawTexture(RunTime.Stone, building4Rect.X + 155, building4Rect.Y + 115, 50);
-        Rectangle wood4NumRect = new Rectangle(building4Rect.X + 210, building4Rect.Y + 110, 50 , 35 );
-        DrawRectangleRec(wood4NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(wood4NumRect, "150", (int) building4Rect.X + 210, (int)building4Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE); 
-
-        if(GetMousePosition().X > building4Rect.X && GetMousePosition().X < building4Rect.X + building4Rect.Width &&  GetMousePosition().Y > building4Rect.Y && GetMousePosition().Y < building4Rect.Y + building4Rect.Height && IsMouseButtonPressed(MouseButton.Left))
-        {
-            if(stoneInv.TotalNum < 150)
-            {
-                _gameScreen.AddMessage("Not enough resources to build Cannon!!!", AlertType.ERROR);
-            }else{
-                _building = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 10, 5);
-                _gameScreen.Build(_building);
-            }
-            _shopOpen = false;
-        }
-
-        Rectangle building5Rect = new Rectangle(shopRect.X + 400, shopRect.Y + 300, 300, 200);
-        DrawRectangleRec(building5Rect, new Color(150, 150, 150, 200));
-        Util.ScaledDrawTexture(RunTime.Tower, building5Rect.X, building5Rect.Y, 130);
-
-        Rectangle name5Rect = new Rectangle(building5Rect.X + 130, building5Rect.Y + 80 - 30, 150 , 30 );
-        DrawRectangleRec(name5Rect, new Color(255, 204, 106, 0));
-        Util.UpdateText(name5Rect, "TOWER", (int) building5Rect.X + 150, (int)building5Rect.Y + 80, 25, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-        Util.ScaledDrawTexture(RunTime.Wood, building5Rect.X + 155, building5Rect.Y + 115, 50);
-        Rectangle wood5NumRect = new Rectangle(building5Rect.X + 210, building5Rect.Y + 110, 50 , 35 );
-        DrawRectangleRec(wood5NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(wood5NumRect, "150", (int) building5Rect.X + 210, (int)building5Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE); 
-
-        Util.ScaledDrawTexture(RunTime.Stone, building5Rect.X + 150, building5Rect.Y + 150, 50);
-        Rectangle stone5NumRect = new Rectangle(building5Rect.X + 210, building5Rect.Y + 150, 50 , 35 );
-        DrawRectangleRec(stone5NumRect, new Color(255, 204, 106, 0));
-        Util.UpdateText(stone5NumRect, "250", (int) building5Rect.X + 210, (int)building5Rect.Y + 110, 25, (int) TextAlign.TEXT_ALIGN_RIGHT, (int) TextAlign.TEXT_ALIGN_MIDDLE); 
-
-        if(GetMousePosition().X > building5Rect.X && GetMousePosition().X < building5Rect.X + building5Rect.Width &&  GetMousePosition().Y > building5Rect.Y && GetMousePosition().Y < building5Rect.Y + building5Rect.Height && IsMouseButtonPressed(MouseButton.Left))
-        {
-            if(stoneInv.TotalNum < 250 || woodInv.TotalNum < 150)
-            {
-                _gameScreen.AddMessage("Not enough resources to build Tower!!!", AlertType.ERROR);
-            }else{
-                _building = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
-                _gameScreen.Build(_building);
-            }
-            _shopOpen = false;
         }
     }
 }

@@ -33,12 +33,19 @@ namespace Game
         public static Texture2D meatIcon;
         public static Texture2D tickIcon;
         public static Texture2D crossIcon;
+        public static Texture2D greenTickIcon;
         
         // public static Texture2D cannonStatic;
         public static Calendar currentCalendar;
         public static bool detailsShown = false;
         public static Sound clickSound;
         public static Sound buildSound;
+        public static Sound warningSound;
+
+        public static Sound infoSound;
+        public static Sound errorSound;
+
+        public static GameScreen gameScreen;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
         public static ScreenType CurrentWindow{

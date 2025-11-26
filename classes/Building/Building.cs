@@ -29,7 +29,7 @@ public abstract class Building : BaseObj
     {
         _level = 0;
         _maxHealth = 100;
-        _currentHealth = 0;
+        _currentHealth = 100;
         _requiredToBuild = new Dictionary<ResourceType, int>();
         _requiredBuilder = 1;
         _listOfBuilders = new List<Person>();

@@ -12,13 +12,16 @@ public class Person : Entity
     private int _currentEnergy;
     private bool _isFainted;
     private bool _isWalking = false;
+    private bool _isSleeping = false;
     private bool _isWorking;
     private float _workRate;
     private float _workTimer = 0f;
     
     private List<Inventory> _inventories;
+    private Vector2 _destionationXY;
     private BaseObj? _destination;
-    private ResourceArea? _workPlace;
+    private ResourceArea? _resourceArea;
+    private Building _placeHut;
     private Workplace? _workPlaceAsWorkplace;
 
     public bool IsWorking 
@@ -43,6 +46,11 @@ public class Person : Entity
         _inventories = inventories;
     }
 
+    public void AssignHut(Building hut)
+    {
+        _placeHut = hut;
+    }
+
     public void ConsumeFood(int foodNum)
     {
         // CurrentEnergy += foodNum;
@@ -51,20 +59,47 @@ public class Person : Entity
 
     public void Work()
     {
+        if(_isSleeping) return;
         if (!_isWorking) return;
         if (_isFainted) return;
-        if (_workPlace == null) return;
+        if (_resourceArea == null && _workPlaceAsWorkplace == null) return;
 
-        // _workPlace.Extract(_inventories.Find(inv => inv.Type == _workPlace.ResourceType)!);
+        // _resourceArea.Extract(_inventories.Find(inv => inv.Type == _resourceArea.ResourceType)!);
         _workTimer += GetFrameTime();
         if (_workTimer < _workRate) return;
 
-        ResourceType resourceType = _workPlace.ResourceType;
-        foreach (Inventory inventory in _inventories)
-        {
-            if (inventory.Type == resourceType)
+        Console.WriteLine("Person is working.");
+        if(_resourceArea != null){
+            ResourceType resourceType = _resourceArea.ResourceType;
+            foreach (Inventory inventory in _inventories)
             {
-                _workPlace.Extract(inventory);
+                if (inventory.Type == resourceType)
+                {
+                    _resourceArea.Extract(inventory);
+                }
+            }
+        }else if(_workPlaceAsWorkplace != null){
+            Console.WriteLine("hello???");
+            // Workplace workPlace = _workPlaceAsWorkplace;
+            // workPlace.Produce();
+            Workplace workPlace = _workPlaceAsWorkplace;
+            switch(workPlace)
+            {
+                case Kitchen kitchen:
+                    foreach (Inventory inventory in _inventories)
+                    {
+                        if (inventory.Type == ResourceType.FOOD)
+                        {
+                            kitchen.Cook(inventory);
+                        }
+                    }
+                    break;
+                case Clinic clinic:
+                    // clinic.Heal();
+                    break;
+                // Add more cases for other Workplace types as needed
+                default:
+                    break;
             }
         }
 
@@ -75,62 +110,84 @@ public class Person : Entity
 
     public void Sleep()
     {
-        // IsWorking = false;
-        // _isFainted = false;
-        // CurrentEnergy += _maxEnergy / 5;
-        // Console.WriteLine("Person is sleeping and recovering energy.");
+        if(_isSleeping == true){
+            _isWalking = true;
+            SetDestination(_placeHut);
+        }
     }
 
     public void GetDamaged(int healthNum)
     {
-        // CurrentHealth -= healthNum;
-        // Console.WriteLine($"Person took {healthNum} damage. Health remaining: {CurrentHealth}");
-
-        // if (CurrentHealth <= 0)
-        // {
-        //     _isFainted = true;
-        //     IsWorking = false;
-        //     Console.WriteLine("Person has fainted due to low health.");
-        // }
     }
 
     public override void Draw()
     {
         if (!_isWalking)
         {
-            base.Draw();
-            Work();
+            if(!_isSleeping && !_isWorking)
+            {
+                Random rng = new Random();
+                SetDestination(new Vector2(rng.Next(0, GetScreenWidth()- Width), rng.Next(0, GetScreenHeight() - Height)));
+            }
+            else
+            {
+                base.Draw();
+                Sleep();
+                Work();
+            }
+
+            // base.Draw();
+            // Sleep();
+            // Work();
+
         }
         else
         {
-            if (_destination == null)
+            int finalDestinationX;
+            int finalDestinationY;
+            if (_destination == null && _destionationXY == null)
             {
                 base.Draw();
                 return;
+            }else if(_destination == null && _destionationXY != null){
+                finalDestinationX = (int)_destionationXY.X;
+                finalDestinationY = (int)_destionationXY.Y;
             }
+            else
+            {
+                finalDestinationX = (int)_destination.X + 30;
+                finalDestinationY = (int)_destination.Y + 50;
+            }
+
             
-            if(MathF.Abs(this.X - _destination.X) > WalkRate){
-                if(_destination.X > this.X){
+            // int finalDestinationX = (int)_destination.X + 30;
+            // int finalDestinationY = (int)_destination.Y + 50;
+        
+
+            if(MathF.Abs(this.X - finalDestinationX ) > WalkRate){
+                if(finalDestinationX > this.X){
                     this.Icon = RunTime.PersonRight;
                 }else{
                     this.Icon = RunTime.PersonLeft;
                 }
-                this.X += MathF.Sign(_destination.X - this.X) * WalkRate;
-            }else if(MathF.Abs(this.Y - _destination.Y) > WalkRate){
-                if(_destination.Y > this.Y){
+                this.X += MathF.Sign(finalDestinationX - this.X) * WalkRate;
+            }else if(MathF.Abs(this.Y - finalDestinationY ) > WalkRate){
+                if(finalDestinationY > this.Y){
                     this.Icon = RunTime.PersonDown;
                 }else{
                     this.Icon = RunTime.PersonUp;
                 }
-                this.Y += MathF.Sign(_destination.Y - this.Y) * WalkRate;
+                this.Y += MathF.Sign(finalDestinationY - this.Y) * WalkRate;
             }
 
-            if(MathF.Abs(this.X - _destination.X) <= WalkRate && MathF.Abs(this.Y - _destination.Y) <= WalkRate){
+            if(MathF.Abs(this.X - finalDestinationX) <= WalkRate && MathF.Abs(this.Y - finalDestinationY) <= WalkRate){
                 this.Icon = RunTime.PersonDown;
                 _isWalking = false;
                 if(_destination is ResourceArea){
                     ((ResourceArea)_destination).AssignWorker(this);
-                    _workPlace = (ResourceArea)_destination;
+                    _destination = null;
+                }
+                else if(_destination is Building){
                     _destination = null;
                 }
             }
@@ -163,6 +220,12 @@ public class Person : Entity
     public void SetDestination(BaseObj destination)
     {
         _destination = destination;
+        _isWalking = true;
+    }
+    
+    public void SetDestination(Vector2 destinationXY)
+    {
+        _destionationXY = destinationXY;
         _isWalking = true;
     }
 
@@ -233,6 +296,22 @@ public class Person : Entity
 
     public override void Update(Calendar calendar)
     {
+        if(calendar.IsDay){
+            if(_isSleeping){
+                _isSleeping = false;
+                if(ResourceArea != null){
+                    SetDestination(ResourceArea);
+                }else if(WorkPlaceAsWorkplace != null){
+                    SetDestination(WorkPlaceAsWorkplace);
+                }
+                Console.WriteLine($"{Name} woke up.");
+            }
+        }else{
+            if(!_isSleeping){
+                _isWalking = true;
+                _isSleeping = true;
+            }
+        }
     }
 
     public bool IsFainted
@@ -245,9 +324,9 @@ public class Person : Entity
     {
     }
 
-    public ResourceArea? WorkPlace
+    public ResourceArea? ResourceArea
     {
-        get { return _workPlace; }
+        get { return _resourceArea; }
     }
 
     public Workplace? WorkPlaceAsWorkplace
@@ -255,4 +334,55 @@ public class Person : Entity
         get { return _workPlaceAsWorkplace; }
     }
 
+    public Building PlaceHut
+    {
+        get { return _placeHut; }
+    }
+
+    public void AssignWork(ResourceArea resourceArea)
+    {
+        _isWorking = true;
+        if(_workPlaceAsWorkplace != null){
+            _workPlaceAsWorkplace.RemoveWorker(this);
+            _workPlaceAsWorkplace = null;
+        }
+        _resourceArea = resourceArea;
+    }   
+
+    public void AssignWork(Workplace workplace)
+    {
+        _isWorking = true;
+        if(_resourceArea != null){
+            _resourceArea = null;
+        }
+        _workPlaceAsWorkplace = workplace;
+    }
+
+    public void QuitWork(){
+        _isWorking = false;
+        if(_resourceArea != null){
+            _resourceArea.RemoveWorker(this);
+            _resourceArea = null;
+        }
+        if(_workPlaceAsWorkplace != null){
+            _workPlaceAsWorkplace.RemoveWorker(this);
+            _workPlaceAsWorkplace = null;
+        }
+    }
+
+
+    public void RemoveResourceArea()
+    {
+        _resourceArea = null;
+    }
+
+    public void RemoveWorkPlaceAsWorkplace()
+    {
+        _workPlaceAsWorkplace = null;
+    }
+
+    public bool IsSleeping
+    {
+        get { return _isSleeping; }
+    }
 }

@@ -25,7 +25,7 @@ public class Clinic : Workplace
         _maxPatients += 2;
     }
 
-    public override void Assign(Person person)
+    public override void AssignWorker(Person person)
     {
         // Assigning a worker (doctor/nurse)
         if (_currentWorkers.Count < MaxWorkers)
@@ -34,7 +34,7 @@ public class Clinic : Workplace
         }
     }
 
-    public override void Fire(Person person)
+    public override void RemoveWorker(Person person)
     {
         // Firing a worker
         _currentWorkers.Remove(person);
