@@ -34,6 +34,21 @@ namespace Game
         public static Texture2D tickIcon;
         public static Texture2D crossIcon;
         public static Texture2D greenTickIcon;
+        public static Texture2D snowyIcon;
+        public static Texture2D stormyIcon;
+        public static Texture2D zombie_down;
+        public static Texture2D zombie_up;
+        public static Texture2D zombie_left;
+        public static Texture2D zombie_right;
+
+        public static Texture2D zombie_downAtk;
+        public static Texture2D zombie_downAtk2;
+        public static Texture2D zombie_upAtk;
+        public static Texture2D zombie_upAtk2;
+        public static Texture2D zombie_leftAtk;
+        public static Texture2D zombie_leftAtk2;
+        public static Texture2D zombie_rightAtk;
+        public static Texture2D zombie_rightAtk2;
         
         // public static Texture2D cannonStatic;
         public static Calendar currentCalendar;

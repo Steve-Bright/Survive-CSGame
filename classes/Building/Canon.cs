@@ -31,11 +31,7 @@ public class Cannon : Defense
         // _currentDurability -= hitpoint;
         // if (_currentDurability <= 0) Unload();
     }
-    
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Range", _range.ToString()}, {"Hit Rate", _hitRate.ToString()} };
-    }
+
     
     
     public override void Clone() { }

@@ -37,7 +37,16 @@ public class Hut : Building
     
     public void Remove(Person person)
     {
-        // _currentPeople.Remove(person);
+        _currentPeople.Remove(person);
+    }
+
+    public void ReleaseAllResidents()
+    {
+        foreach (Person person in _currentPeople)
+        {
+            person.RemoveHut();
+        }
+        _currentPeople.Clear();
     }
     
     public override void TakeDamage(int hitpoint)
@@ -50,10 +59,6 @@ public class Hut : Building
         // }
     }
     
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Occupancy", "test"} };
-    }
     
     
     public override void Clone() { }

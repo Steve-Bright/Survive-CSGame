@@ -3,7 +3,6 @@ namespace Game;
 public enum Weather
 {
     Sunny,
-    Rainy,
-    Cloudy,
+    Snowy,
     Stormy
 }

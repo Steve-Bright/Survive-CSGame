@@ -57,16 +57,6 @@ public abstract class Building : BaseObj
 
     public abstract void TakeDamage(int hitpoint);
 
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string>
-        {
-            {"Name", base.X.ToString()},
-            {"Level", _level.ToString()},
-            {"Health", $"{CurrentHealth}/{_maxHealth}"},
-        };
-    }
-
     public int WoodCost => _woodCost;
     public int StoneCost => _stoneCost;
 
@@ -74,6 +64,15 @@ public abstract class Building : BaseObj
 
     public int CapacityLimit{
         get => _capacityLimit;
+    }
+
+    public virtual void GetDamaged(int healthNum)
+    {
+        CurrentHealth -= healthNum;
+        if(CurrentHealth <= 0)
+        {
+            RunTime.gameScreen.DestroyBuilding(this);
+        }
     }
 
     public override void DisplayDetails()

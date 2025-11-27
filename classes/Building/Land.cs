@@ -64,21 +64,6 @@ public class Land : BaseObj
         }        
     }
 
-    public override Dictionary<string, string> ViewDetails()
-    {
-        Dictionary<string, string> details = new Dictionary<string, string>
-        {
-            {"Type", "Land"},
-            {"Status", _building != null ? "Occupied" : "Empty"},
-        };
-        
-        if (_building != null)
-        {
-            details.Add("Building", _building.GetType().Name);
-        }
-        
-        return details;
-    }
 
     private void DisplayShopUI()
     {

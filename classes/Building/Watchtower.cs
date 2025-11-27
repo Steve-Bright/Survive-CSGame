@@ -32,10 +32,6 @@ public class WatchTower : Defense
         // if (_currentDurability <= 0) Unload();
     }
     
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Range", _range.ToString()}, {"Staff", $"{_currentWorkers.Count}/{_requiredWorkers}"} };
-    }
     
     
     public override void Clone() { }

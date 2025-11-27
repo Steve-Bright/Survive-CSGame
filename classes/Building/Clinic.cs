@@ -73,10 +73,6 @@ public class Clinic : Workplace
     }
 
     // Abstract BaseObj/Entity Implementations
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Max Patients", _maxPatients.ToString()}, {"Patients", _currentPatients.Count.ToString()} };
-    }
     
     
     public override void Clone() { }

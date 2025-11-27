@@ -31,7 +31,7 @@ public class GameScreen : Screen
     {
         int buildingCount = 0;
         for(int i = 0; i < _allObjects.Count; i++){
-            if(_allObjects[i] is Building && _allObjects[i].Name == building.Name){
+            if(_allObjects[i] is Building && _allObjects[i].Name == building.Name && _allObjects[i].CanBeSeen){
                 buildingCount ++;
             }
         }
@@ -143,6 +143,19 @@ public class GameScreen : Screen
         return persons;
     }
 
+    public List<Building> GetBuildingLists()
+    {
+        List<Building> buildings = new List<Building>();
+        foreach (BaseObj obj in _allObjects)
+        {
+            if (obj is Building b)
+                buildings.Add(b);
+        }
+        return buildings;
+    }
+
+    
+
     public int GetFoodCount()
     {
         int foodCount = 0;
@@ -197,6 +210,19 @@ public class GameScreen : Screen
             }
         }
         return meatCount;
+    }
+
+    public int GetEnemyCount()
+    {
+        int enemyCount = 0;
+        foreach(BaseObj obj in _allObjects)
+        {
+            if(obj is Enemy)
+            {
+                enemyCount ++;
+            }
+        }
+        return enemyCount;
     }
 
     public Weather CurrentWeather()
@@ -263,7 +289,21 @@ public class GameScreen : Screen
             _peopleListOpen = true;
         }
 
-        Util.ScaledDrawTexture(RunTime.Sun, (int)Math.Round(ltIndiW/2.8) + 10, 5, ltIndiH-40);
+        Texture2D[] weatherIcons = { RunTime.Sun, RunTime.snowyIcon, RunTime.stormyIcon };
+        Texture2D currentWeatherIcon;
+        switch(_mainCalendar.CurrentWeather){
+            case Weather.Sunny:
+                currentWeatherIcon = weatherIcons[0];
+                break;
+            case Weather.Snowy:
+                currentWeatherIcon = weatherIcons[1];
+                break;
+            default:
+                currentWeatherIcon = weatherIcons[2];
+                break;
+        }
+
+        Util.ScaledDrawTexture(currentWeatherIcon, (int)Math.Round(ltIndiW/2.8) + 10, 5, ltIndiH-40);
         Util.UpdateText($"{_mainCalendar.CurrentWeather}",(int)Math.Round(ltIndiW/2.8) , 68, 28);
 
         int resSize = ltIndiH - 60;
@@ -310,9 +350,12 @@ public class GameScreen : Screen
                 
             if(roundedTime >= _mainCalendar.DayCriteria && roundedTime < _mainCalendar.NightCriteria && _mainCalendar.isDay != false){
                 _mainCalendar.ToggleNight();
+                SpawnEnemies();
             }
             else if(roundedTime >= _mainCalendar.NightCriteria){
                 _mainCalendar.EndADay();
+                _mainCalendar.CheckWinLostCondition();
+                KillAllEnemies();
             }
         }
         Util.UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
@@ -411,7 +454,7 @@ public class GameScreen : Screen
 
             Rectangle energyRect = new Rectangle((int) personRectangles[slot].X + 520, (int) personRectangles[slot].Y + 10, 250, 50);
             DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, W: 100%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, H: {person.CurrentHealth}%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
             if(person.IsWorking || person.NightShift)
             {
@@ -475,4 +518,33 @@ public class GameScreen : Screen
     public Calendar MainCalendar{
         get { return _mainCalendar; }
     }
+
+    private void SpawnEnemies()
+    {
+        List<Enemy> enemiesrightNow = new List<Enemy>();
+        Enemy enemy1 = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
+        for(int i = 0; i < _mainCalendar.CurrentDay; i++){
+            enemiesrightNow.Add(enemy1.CloneEnemy());
+        }
+
+        foreach(Enemy enemiesRightNow in enemiesrightNow)
+        {
+            Enemy enemy = enemiesRightNow.CloneEnemy();
+            // enemy
+            enemy.SetRandomLocation();
+            _allObjects.Add(enemy);
+            break;
+        }
+    }
+
+    public void DestroyBuilding(Building building)
+    {
+        building.CanBeSeen = false;
+        ((Hut)building).ReleaseAllResidents();
+    }   
+
+    private void KillAllEnemies()
+    {
+        _allObjects.RemoveAll(obj => obj is Enemy);
+    }   
 }

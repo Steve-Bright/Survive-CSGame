@@ -54,12 +54,20 @@ public class Person : Entity
         _placeHut = hut;
     }
 
+    public void RemoveHut()
+    {
+        _placeHut = null;
+    }
+
     public void ConsumeFood(int foodNum)
     {
         Inventory foodInventory = RunTime.gameScreen.GetInventory(ResourceType.FOOD);
 
         if(foodInventory.TotalNum >= foodNum){
              _currentEnergy += foodNum * 10;
+            if(CurrentHealth < MaxHealth){
+                CurrentHealth += foodNum * 2;
+            }
             foodInventory.Decrease(foodNum);
             if (_currentEnergy > _maxEnergy)
             {
@@ -126,11 +134,25 @@ public class Person : Entity
 
     public void GetDamaged(int healthNum)
     {
+        CurrentHealth -= healthNum;
+        if(CurrentHealth <= 0)
+        {
+            _isFainted = true;
+            _isWalking = false;
+            _isWorking = false;
+            _nightShift = false;
+            _resourceArea = null;
+            _workPlaceAsWorkplace = null;
+            _defenseBuilding = null;
+            RunTime.gameScreen.AddMessage("" + Name + " has fainted!", AlertType.ERROR);
+        }
     }
 
     public override void Draw()
     {
-        if (!_isWalking)
+        if (!_isFainted)
+        {
+           if (!_isWalking)
         {
             if(!_isSleeping && !_isWorking && !_nightShift)
             {
@@ -143,10 +165,6 @@ public class Person : Entity
                 Sleep();
                 Work();
             }
-
-            // base.Draw();
-            // Sleep();
-            // Work();
 
         }
         else
@@ -202,6 +220,8 @@ public class Person : Entity
                 }
             }
             base.Draw();
+        }
+     
         }
     }
 
@@ -292,16 +312,6 @@ public class Person : Entity
             IsSelected = false;
             RunTime.detailsShown = false;
         }        
-    }
-
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string>
-        {
-            {"Health", $"{CurrentHealth}/{MaxHealth}"},
-            {"Energy", $"{CurrentEnergy}/{_maxEnergy}"},
-            {"Status", _isFainted ? "Fainted" : IsWorking ? "Working" : "Idle"},
-        };
     }
 
     private void DailyEnergyReduce()

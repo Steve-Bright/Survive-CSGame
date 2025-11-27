@@ -96,6 +96,9 @@ internal static class Program
             gameScreen.AddBaseObj(p);
         }
 
+        Enemy enemy = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
+        gameScreen.AddBaseObj(enemy);
+
         
         ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);
         ResourceArea animalArea  = new ResourceArea("Animal Area",  50, 800, 200, 200, RunTime.AnimalArea, ResourceType.MEAT);
@@ -121,6 +124,8 @@ internal static class Program
         Texture2D character_left = LoadTexture("./resources/assets/char_left.png");
         Texture2D character_right = LoadTexture("./resources/assets/char_right.png");
         Texture2D sunIcon = LoadTexture("./resources/assets/sun.png");
+        Texture2D snowyIcon = LoadTexture("./resources/assets/snowy.png");
+        Texture2D stormyIcon = LoadTexture("./resources/assets/storm.png");
         Texture2D foodIcon = LoadTexture("./resources/assets/food.png");
         Texture2D woodIcon = LoadTexture("./resources/assets/wood.png");
         Texture2D stoneIcon = LoadTexture("./resources/assets/stone.png");
@@ -140,6 +145,18 @@ internal static class Program
         Texture2D tickIcon = LoadTexture("./resources/assets/tick.png");
         Texture2D crossIcon = LoadTexture("./resources/assets/cross.png");
         Texture2D greenTickIcon = LoadTexture("./resources/assets/greentick.png");
+        Texture2D zombie_down = LoadTexture("./resources/assets/zombie_down.png");
+        Texture2D zombie_downAtk = LoadTexture("./resources/assets/zombie_downatk.png");
+        Texture2D zombie_downAtk2 = LoadTexture("./resources/assets/zombie_downatk2.png");
+        Texture2D zombie_up = LoadTexture("./resources/assets/zombie_up.png");
+        Texture2D zombie_upAtk = LoadTexture("./resources/assets/zombie_upatk.png");
+        Texture2D zombie_upAtk2 = LoadTexture("./resources/assets/zombie_upatk2.png");
+        Texture2D zombie_left = LoadTexture("./resources/assets/zombie_left.png");
+        Texture2D zombie_leftAtk = LoadTexture("./resources/assets/zombie_leftatk.png");
+        Texture2D zombie_leftAtk2 = LoadTexture("./resources/assets/zombie_leftatk2.png");
+        Texture2D zombie_right = LoadTexture("./resources/assets/zombie_right.png");
+        Texture2D zombie_rightAtk = LoadTexture("./resources/assets/zombie_rightatk.png");
+        Texture2D zombie_rightAtk2 = LoadTexture("./resources/assets/zombie_rightatk2.png");
         // Texture2D cannonStatic = LoadTexture("./resources/assets/cannonStatic.png");
 
         allTextures.Add(menuBg);
@@ -168,6 +185,20 @@ internal static class Program
         allTextures.Add(tickIcon);
         allTextures.Add(crossIcon);
         allTextures.Add(greenTickIcon);
+        allTextures.Add(snowyIcon);
+        allTextures.Add(stormyIcon);
+        allTextures.Add(zombie_down);
+        allTextures.Add(zombie_up);
+        allTextures.Add(zombie_left);
+        allTextures.Add(zombie_right);
+        allTextures.Add(zombie_downAtk);
+        allTextures.Add(zombie_downAtk2);
+        allTextures.Add(zombie_upAtk);
+        allTextures.Add(zombie_upAtk2);
+        allTextures.Add(zombie_leftAtk);
+        allTextures.Add(zombie_leftAtk2);
+        allTextures.Add(zombie_rightAtk);
+        allTextures.Add(zombie_rightAtk2);
         // allTextures.Add(cannonStatic);
 
 
@@ -197,6 +228,20 @@ internal static class Program
         RunTime.tickIcon = tickIcon;
         RunTime.crossIcon = crossIcon;
         RunTime.greenTickIcon = greenTickIcon;
+        RunTime.snowyIcon = snowyIcon;
+        RunTime.stormyIcon = stormyIcon;
+        RunTime.zombie_down = zombie_down;
+        RunTime.zombie_up = zombie_up;
+        RunTime.zombie_left = zombie_left;
+        RunTime.zombie_right = zombie_right;
+        RunTime.zombie_downAtk = zombie_downAtk;
+        RunTime.zombie_downAtk2 = zombie_downAtk2;
+        RunTime.zombie_upAtk = zombie_upAtk;
+        RunTime.zombie_upAtk2 = zombie_upAtk2;
+        RunTime.zombie_leftAtk = zombie_leftAtk;
+        RunTime.zombie_leftAtk2 = zombie_leftAtk2;
+        RunTime.zombie_rightAtk = zombie_rightAtk;
+        RunTime.zombie_rightAtk2 = zombie_rightAtk2;
         // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     

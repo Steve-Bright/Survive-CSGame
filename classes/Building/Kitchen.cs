@@ -64,11 +64,6 @@ public class Kitchen : Workplace
         // }
     }
     
-    // Abstract BaseObj/Entity Implementations
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Cooking Rate", _cookingRate.ToString()}, {"Workers", _currentWorkers.Count.ToString()} };
-    }
     
     
 

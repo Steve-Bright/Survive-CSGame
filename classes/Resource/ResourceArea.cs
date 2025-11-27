@@ -122,17 +122,6 @@ public class ResourceArea : BaseObj
     }
 
 
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string>
-        {
-            {"Resource", _resource.ToString()},
-            {"Accessible", _isAccessible.ToString()},
-            {"Workers", _currentWorkers.Count.ToString()},
-            {"Required", _requiredWorkers.ToString()}
-        };
-    }
-
     private void DisplayPeopleList()
     {
         int personLimitPerPage = 5;

@@ -62,15 +62,18 @@ public class Calendar
         _hourSystem = 6;
         _currentTime = 0f;
         _isDay = true;
-
+        ChangeWeather();
         Notify();
     }
 
     public void CheckWinLostCondition()
     {
-        if (_currentDay >= 7)
+        int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
+        if (_currentDay >= 10)
         {
             Console.WriteLine("Win condition reached!");
+        }else if(peopleAlive <= 0){
+            Console.WriteLine("Lost condition reached!");
         }
     }
 

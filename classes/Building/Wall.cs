@@ -25,10 +25,6 @@ public class Wall : Building
     }
     
     // Abstract BaseObj/Entity Implementations
-    public override Dictionary<string, string> ViewDetails()
-    {
-        return new Dictionary<string, string> { {"Durability", "test"} };
-    }
     
     public override void Draw()
     {
