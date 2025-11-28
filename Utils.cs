@@ -7,6 +7,9 @@ using System.Numerics;
 namespace Game;
 public static class Util
 {
+
+    private static int _currentPersonDisplayPage = 0;
+    private static bool _peopleListOpen = false;
     public static void ScaledDrawTexture(Texture2D texture, float x, float y, int expectedWidth)
     {
        int frameWidth = texture.Width;
@@ -87,6 +90,132 @@ public static class Util
         {
             buildButton();
         }  
+    }
+
+    public static void OpenPeopleList()
+    {
+        _currentPersonDisplayPage = 0;
+        _peopleListOpen = true;
+    }
+
+    public static bool PeopleListOpen
+    {
+        get { return _peopleListOpen; }
+    }
+
+    public static void PeopleList(string title, List<Person> persons, bool assignMode = false)
+    {
+        int personLimitPerPage = 5;
+        int currentPerson = 0;
+        int listWidth = 1100;
+        int listHeight = 600;
+        Rectangle peopleListRect = new Rectangle((GetScreenWidth()  - listWidth ) / 2, (GetScreenHeight() - listHeight) / 2, listWidth, listHeight);
+        DrawRectangleRec(peopleListRect,  new Color(200, 200, 200, 225));
+
+        Util.UpdateText(peopleListRect, $"\n{title}", (int) peopleListRect.X, (int) peopleListRect.Y + 20, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_TOP);
+
+        Rectangle closeBtnRect = new Rectangle(peopleListRect.X + peopleListRect.Width - 45, peopleListRect.Y, 45, 45);
+        DrawRectangleRec(closeBtnRect, new Color(255, 100, 100, 200));
+        Util.ScaledDrawTexture(RunTime.CloseIcon, closeBtnRect.X, closeBtnRect.Y, 45);
+
+        if(GetMousePosition().X > closeBtnRect.X && GetMousePosition().X < closeBtnRect.X + closeBtnRect.Width &&  GetMousePosition().Y > closeBtnRect.Y && GetMousePosition().Y < closeBtnRect.Y + closeBtnRect.Height && IsMouseButtonPressed(MouseButton.Left))
+        {
+            _currentPersonDisplayPage = 0;
+            _peopleListOpen = false;
+        }
+
+        Rectangle personOne = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 80, peopleListRect.Width - 90, 70);
+        DrawRectangleRec(personOne, new Color(217, 217, 219, 255));
+
+        Rectangle personTwo = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 170, peopleListRect.Width - 90, 70);
+        DrawRectangleRec(personTwo, new Color(217, 217, 219, 255));
+
+        Rectangle personThree = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 260, peopleListRect.Width - 90, 70);
+        DrawRectangleRec(personThree, new Color(217, 217, 219, 255));
+
+        Rectangle personFour = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 350, peopleListRect.Width - 90, 70);
+        DrawRectangleRec(personFour, new Color(217, 217, 219, 255));
+
+        Rectangle personFive = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 440, peopleListRect.Width - 90, 70);
+        DrawRectangleRec(personFive, new Color(217, 217, 219, 255));
+
+        Rectangle[] personRectangles = new Rectangle[] { personOne, personTwo, personThree, personFour, personFive };
+
+        // List<Person> persons = RunTime.gameScreen.GetPersonLists();
+
+        int personCountTotal = persons.Count;
+        int pageIndex = Math.Max(0, _currentPersonDisplayPage);
+        int startIndex = pageIndex * personLimitPerPage;
+
+        for (int slot = 0; slot < personLimitPerPage; slot++)
+        {
+            int personIndex = startIndex + slot;
+            if (personIndex >= personCountTotal) break;
+            Person person = persons[personIndex];
+            currentPerson++;
+            string sleepingStatus = person.IsSleeping ? "Sleeping" : "Awake";
+            string idleStatus ;
+            if(sleepingStatus == "Sleeping"){
+                idleStatus = "Sleeping";
+            } else {
+                idleStatus = (person.IsWorking || person.NightShift) ? "Working" : "Idle";
+            }
+
+            Util.ScaledDrawTexture(RunTime.PersonDown, personRectangles[slot].X + 10, personRectangles[slot].Y + 10, 50);
+
+            Rectangle personNameRect = new Rectangle((int) personRectangles[slot].X + 70, (int) personRectangles[slot].Y + 10, 200, 50);
+            DrawRectangleRec(personNameRect, new Color(255, 204, 106, 255));
+            Util.UpdateText(personNameRect, person.Name, (int) personRectangles[slot].X + 80, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+
+            Rectangle statusRect = new Rectangle((int) personRectangles[slot].X + 300, (int) personRectangles[slot].Y + 10, 200, 50);
+            DrawRectangleRec(statusRect, new Color(255, 204, 106, 255));
+            Util.UpdateText(statusRect, idleStatus, (int) personRectangles[slot].X + 310, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+
+            Rectangle energyRect = new Rectangle((int) personRectangles[slot].X + 520, (int) personRectangles[slot].Y + 10, 250, 50);
+            DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
+            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, H: {person.CurrentHealth}%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+
+            if(person.IsWorking || person.NightShift)
+            {
+                Rectangle cancelRect = new Rectangle((int) personRectangles[slot].X + 790, (int) personRectangles[slot].Y + 10, 200, 50);
+                DrawRectangleRec(cancelRect, new Color(255, 100, 100, 200));
+                Util.UpdateText(cancelRect, "Cancel", (int) personRectangles[slot].X + 790, (int)personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
+                if(GetMousePosition().X > cancelRect.X && GetMousePosition().X < cancelRect.X + cancelRect.Width &&  GetMousePosition().Y > cancelRect.Y && GetMousePosition().Y < cancelRect.Y + cancelRect.Height && IsMouseButtonPressed(MouseButton.Left))
+                {
+                    person.IsWorking = false;
+                    if(person.ResourceArea != null)
+                    {
+                        person.ResourceArea.RemoveWorker(person);
+                    }else if(person.WorkPlaceAsWorkplace != null)
+                    {
+                        person.WorkPlaceAsWorkplace.RemoveWorker(person);
+                    }
+                    person.QuitWork();
+                }
+            }
+        }
+
+
+        if ((pageIndex + 1) * personLimitPerPage < personCountTotal)
+        {
+            Rectangle nextBtn = new Rectangle(peopleListRect.X + peopleListRect.Width - 150, peopleListRect.Y + peopleListRect.Height - 60, 140, 50);
+            DrawRectangleRec(nextBtn, new Color(217, 217, 219, 255));
+            DrawRectangleLinesEx(nextBtn, 2, Color.Black);
+
+            Util.MakeButton(nextBtn, "Next", (int)(peopleListRect.X + peopleListRect.Width - 150), (int)(peopleListRect.Y + peopleListRect.Height - 60), 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
+                _currentPersonDisplayPage += 1;
+            });
+        }
+
+        if (pageIndex > 0)
+        {
+            Rectangle prevBtn = new Rectangle(peopleListRect.X + 10, peopleListRect.Y + peopleListRect.Height - 60, 140, 50);
+            DrawRectangleRec(prevBtn, new Color(217, 217, 219, 255));
+            DrawRectangleLinesEx(prevBtn, 2, Color.Black);
+            Util.MakeButton(prevBtn, "Prev", (int)prevBtn.X, (int)prevBtn.Y, 28, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
+                if (_currentPersonDisplayPage > 0) _currentPersonDisplayPage--;
+            });
+        }        
     }
 
 }

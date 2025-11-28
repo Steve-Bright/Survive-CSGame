@@ -9,6 +9,7 @@ public class GameScreen : Screen
     private List<Inventory> _allInventories;
     private bool _isClicked = false;
     private List<BaseObj> _allObjects;
+    private List<BaseObj> _pendingRemovals;
     private Calendar _mainCalendar;
     private AlertList _alertList;
     private int _currentPersonDisplayPage = 0;
@@ -18,9 +19,17 @@ public class GameScreen : Screen
     {
         _allInventories = new List<Inventory>();
         _allObjects = new List<BaseObj>();
+        _pendingRemovals = new List<BaseObj>();
         _mainCalendar = RunTime.currentCalendar;
         _mainCalendar.StartCalendar();
         _alertList = new AlertList();
+    }
+
+    public void QueueRemove(BaseObj obj)
+    {
+        if (obj == null) return;
+        if (!_pendingRemovals.Contains(obj))
+            _pendingRemovals.Add(obj);
     }
     public void AddBaseObj(BaseObj newObj)
     {
@@ -112,11 +121,22 @@ public class GameScreen : Screen
         _alertList.DisplayAllAlerts();
 
         // DisplayPeopleList();
-        if(_peopleListOpen)
+        if(Util.PeopleListOpen)
         {
             DisplayPeopleList();
         }
         AddIndicators();
+
+        // Flush any removals queued during this frame to avoid modifying the
+        // main objects list while it was being iterated.
+        if (_pendingRemovals.Count > 0)
+        {
+            foreach (var r in _pendingRemovals)
+            {
+                _allObjects.Remove(r);
+            }
+            _pendingRemovals.Clear();
+        }
     }
 
     public int GetPersonCount()
@@ -124,7 +144,7 @@ public class GameScreen : Screen
         int count = 0;
         foreach(BaseObj obj in _allObjects)
         {
-            if(obj is Person)
+            if(obj is Person && !((Person)obj).IsFainted)
             {
                 count ++;
             }
@@ -152,6 +172,17 @@ public class GameScreen : Screen
                 buildings.Add(b);
         }
         return buildings;
+    }
+
+    public List<Enemy> GetEnemyLists()
+    {
+        List<Enemy> enemies = new List<Enemy>();
+        foreach (BaseObj obj in _allObjects)
+        {
+            if (obj is Enemy e)
+                enemies.Add(e);
+        }
+        return enemies;
     }
 
     
@@ -284,9 +315,10 @@ public class GameScreen : Screen
 
         if(GetMousePosition().X > indicatorOne.X && GetMousePosition().X < indicatorOne.X + (indicatorOne.Width / 3) &&  GetMousePosition().Y > indicatorOne.Y && GetMousePosition().Y < (indicatorOne.Y + indicatorOne.Height) && IsMouseButtonPressed(MouseButton.Left))
         {
+            Util.OpenPeopleList();
             // open people list and start at first page (zero-based)
-            _currentPersonDisplayPage = 0;
-            _peopleListOpen = true;
+            // _currentPersonDisplayPage = 0;
+            // _peopleListOpen = true;
         }
 
         Texture2D[] weatherIcons = { RunTime.Sun, RunTime.snowyIcon, RunTime.stormyIcon };
@@ -386,117 +418,7 @@ public class GameScreen : Screen
 
     private void DisplayPeopleList()
     {
-        int personLimitPerPage = 5;
-        int currentPerson = 0;
-        int listWidth = 1100;
-        int listHeight = 600;
-        Rectangle peopleListRect = new Rectangle((GetScreenWidth()  - listWidth ) / 2, (GetScreenHeight() - listHeight) / 2, listWidth, listHeight);
-        DrawRectangleRec(peopleListRect,  new Color(200, 200, 200, 225));
-
-        Util.UpdateText(peopleListRect, "\nPeople List", (int) peopleListRect.X, (int) peopleListRect.Y + 20, 30, (int) TextAlign.TEXT_ALIGN_MIDDLE, (int) TextAlign.TEXT_ALIGN_TOP);
-
-        Rectangle closeBtnRect = new Rectangle(peopleListRect.X + peopleListRect.Width - 45, peopleListRect.Y, 45, 45);
-        DrawRectangleRec(closeBtnRect, new Color(255, 100, 100, 200));
-        Util.ScaledDrawTexture(RunTime.CloseIcon, closeBtnRect.X, closeBtnRect.Y, 45);
-
-        if(GetMousePosition().X > closeBtnRect.X && GetMousePosition().X < closeBtnRect.X + closeBtnRect.Width &&  GetMousePosition().Y > closeBtnRect.Y && GetMousePosition().Y < closeBtnRect.Y + closeBtnRect.Height && IsMouseButtonPressed(MouseButton.Left))
-        {
-            _currentPersonDisplayPage = 0;
-            _peopleListOpen = false;
-        }
-
-        Rectangle personOne = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 80, peopleListRect.Width - 90, 70);
-        DrawRectangleRec(personOne, new Color(217, 217, 219, 255));
-
-        Rectangle personTwo = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 170, peopleListRect.Width - 90, 70);
-        DrawRectangleRec(personTwo, new Color(217, 217, 219, 255));
-
-        Rectangle personThree = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 260, peopleListRect.Width - 90, 70);
-        DrawRectangleRec(personThree, new Color(217, 217, 219, 255));
-
-        Rectangle personFour = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 350, peopleListRect.Width - 90, 70);
-        DrawRectangleRec(personFour, new Color(217, 217, 219, 255));
-
-        Rectangle personFive = new Rectangle(peopleListRect.X + 50, peopleListRect.Y + 440, peopleListRect.Width - 90, 70);
-        DrawRectangleRec(personFive, new Color(217, 217, 219, 255));
-
-        Rectangle[] personRectangles = new Rectangle[] { personOne, personTwo, personThree, personFour, personFive };
-
-        List<Person> persons = GetPersonLists();
-
-        int personCountTotal = persons.Count;
-        int pageIndex = Math.Max(0, _currentPersonDisplayPage);
-        int startIndex = pageIndex * personLimitPerPage;
-
-        for (int slot = 0; slot < personLimitPerPage; slot++)
-        {
-            int personIndex = startIndex + slot;
-            if (personIndex >= personCountTotal) break;
-            Person person = persons[personIndex];
-            currentPerson++;
-            string sleepingStatus = person.IsSleeping ? "Sleeping" : "Awake";
-            string idleStatus ;
-            if(sleepingStatus == "Sleeping"){
-                idleStatus = "Sleeping";
-            } else {
-                idleStatus = (person.IsWorking || person.NightShift) ? "Working" : "Idle";
-            }
-
-            Util.ScaledDrawTexture(RunTime.PersonDown, personRectangles[slot].X + 10, personRectangles[slot].Y + 10, 50);
-
-            Rectangle personNameRect = new Rectangle((int) personRectangles[slot].X + 70, (int) personRectangles[slot].Y + 10, 200, 50);
-            DrawRectangleRec(personNameRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(personNameRect, person.Name, (int) personRectangles[slot].X + 80, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-            Rectangle statusRect = new Rectangle((int) personRectangles[slot].X + 300, (int) personRectangles[slot].Y + 10, 200, 50);
-            DrawRectangleRec(statusRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(statusRect, idleStatus, (int) personRectangles[slot].X + 310, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-            Rectangle energyRect = new Rectangle((int) personRectangles[slot].X + 520, (int) personRectangles[slot].Y + 10, 250, 50);
-            DrawRectangleRec(energyRect, new Color(255, 204, 106, 255));
-            Util.UpdateText(energyRect, $"E: {person.CurrentEnergy}%, H: {person.CurrentHealth}%", (int) personRectangles[slot].X + 560, (int) personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-
-            if(person.IsWorking || person.NightShift)
-            {
-                Rectangle cancelRect = new Rectangle((int) personRectangles[slot].X + 790, (int) personRectangles[slot].Y + 10, 200, 50);
-                DrawRectangleRec(cancelRect, new Color(255, 100, 100, 200));
-                Util.UpdateText(cancelRect, "Cancel", (int) personRectangles[slot].X + 790, (int)personRectangles[slot].Y + 20, 30, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
-                if(GetMousePosition().X > cancelRect.X && GetMousePosition().X < cancelRect.X + cancelRect.Width &&  GetMousePosition().Y > cancelRect.Y && GetMousePosition().Y < cancelRect.Y + cancelRect.Height && IsMouseButtonPressed(MouseButton.Left))
-                {
-                    person.IsWorking = false;
-                    if(person.ResourceArea != null)
-                    {
-                        person.ResourceArea.RemoveWorker(person);
-                    }else if(person.WorkPlaceAsWorkplace != null)
-                    {
-                        person.WorkPlaceAsWorkplace.RemoveWorker(person);
-                    }
-                    person.QuitWork();
-                }
-            }
-        }
-
-
-        if ((pageIndex + 1) * personLimitPerPage < personCountTotal)
-        {
-            Rectangle nextBtn = new Rectangle(peopleListRect.X + peopleListRect.Width - 150, peopleListRect.Y + peopleListRect.Height - 60, 140, 50);
-            DrawRectangleRec(nextBtn, new Color(217, 217, 219, 255));
-            DrawRectangleLinesEx(nextBtn, 2, Color.Black);
-
-            Util.MakeButton(nextBtn, "Next", (int)(peopleListRect.X + peopleListRect.Width - 150), (int)(peopleListRect.Y + peopleListRect.Height - 60), 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
-                _currentPersonDisplayPage += 1;
-            });
-        }
-
-        if (pageIndex > 0)
-        {
-            Rectangle prevBtn = new Rectangle(peopleListRect.X + 10, peopleListRect.Y + peopleListRect.Height - 60, 140, 50);
-            DrawRectangleRec(prevBtn, new Color(217, 217, 219, 255));
-            DrawRectangleLinesEx(prevBtn, 2, Color.Black);
-            Util.MakeButton(prevBtn, "Prev", (int)prevBtn.X, (int)prevBtn.Y, 28, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE, Color.Black, () => {
-                if (_currentPersonDisplayPage > 0) _currentPersonDisplayPage--;
-            });
-        }
+        Util.PeopleList("People List", GetPersonLists());
     }
 
     public int CurrentPersonDisplayPage
@@ -521,26 +443,41 @@ public class GameScreen : Screen
 
     private void SpawnEnemies()
     {
+        Console.WriteLine("Current day " + _mainCalendar.CurrentDay);
         List<Enemy> enemiesrightNow = new List<Enemy>();
         Enemy enemy1 = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
-        for(int i = 0; i < _mainCalendar.CurrentDay; i++){
-            enemiesrightNow.Add(enemy1.CloneEnemy());
+        for(int i = 0; i <= _mainCalendar.CurrentDay; i++){
+            Enemy clonedEnemy = enemy1.CloneEnemy();
+            clonedEnemy.SetRandomLocation();
+            enemiesrightNow.Add(clonedEnemy);
         }
+        Console.WriteLine("Enemies right now " + enemiesrightNow.Count);
 
         foreach(Enemy enemiesRightNow in enemiesrightNow)
-        {
-            Enemy enemy = enemiesRightNow.CloneEnemy();
-            // enemy
-            enemy.SetRandomLocation();
-            _allObjects.Add(enemy);
-            break;
+        {   
+            _allObjects.Add(enemiesRightNow);   
         }
     }
 
     public void DestroyBuilding(Building building)
     {
-        building.CanBeSeen = false;
-        ((Hut)building).ReleaseAllResidents();
+        // building.CanBeSeen = false;
+        
+        foreach(BaseObj obj in _allObjects)
+        {
+            if(building is Hut){
+                ((Hut)building).ReleaseAllResidents();
+            }
+
+            if(obj is Land)
+            {
+                if (((Land)obj).Building == building)
+                {
+                    ((Land)obj).RemoveBuilding();
+                }
+            }
+        }
+        QueueRemove(building);
     }   
 
     private void KillAllEnemies()

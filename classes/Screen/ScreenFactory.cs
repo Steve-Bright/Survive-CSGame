@@ -3,7 +3,7 @@ namespace Game;
 using Raylib_cs;
 using static Raylib_cs.Raylib;
 
-class ScreenFactory
+public class ScreenFactory
 {
     List<Screen> windows;
 
@@ -27,4 +27,5 @@ class ScreenFactory
             }
         }
     }
+
 }

@@ -28,7 +28,11 @@ public abstract class Defense : Building
     }
     
     // Abstract methods specific to Defense
-    public abstract void Attack();
+    public virtual void Attack()
+    {
+        
+    }
+
     public virtual void Assign(Person person){
         if (_currentWorkers.Count < _requiredWorkers){
             person.AssignNightShift(this);
@@ -39,9 +43,49 @@ public abstract class Defense : Building
     
     public override abstract void TakeDamage(int hitpoint);
 
+    public override void Draw()
+    {
+        Enemy nearestEnemy = DetectEnemy();
+        if (nearestEnemy != null){
+            Console.WriteLine("I will shoot you.");
+        }
+        base.Draw();
+    }
+
+    private Enemy? DetectEnemy()
+    {
+        Enemy? closest = null;
+        float rangeSq = (float)_range * (float)_range;
+
+        List<Enemy> enemies = RunTime.gameScreen.GetEnemyLists();
+        foreach (Enemy en in enemies)
+        {
+            float dx = en.X - this.X;
+            float dy = en.Y - this.Y;
+            float dsq = dx * dx + dy * dy;
+            if (dsq <= rangeSq)
+            {
+                if (closest == null)
+                {
+                    closest = en;
+                }
+                else
+                {
+                    float cdx = closest.X - this.X;
+                    float cdy = closest.Y - this.Y;
+                    float cdsq = cdx * cdx + cdy * cdy;
+                    if (dsq < cdsq)
+                        closest = en;
+                }
+            }
+        }
+
+        return closest;
+    }
+
     public override void DisplayDetails()
     {
-Indicator closeIndicator = new Indicator(GetScreenWidth()-45, GetScreenHeight()-290, 45, 45, 1);
+        Indicator closeIndicator = new Indicator(GetScreenWidth()-45, GetScreenHeight()-290, 45, 45, 1);
         closeIndicator.Draw();
         Util.ScaledDrawTexture(RunTime.CloseIcon, GetScreenWidth()-45, GetScreenHeight()-290, 45);
         Indicator bottomIndicator = new Indicator((GetScreenWidth() / 2) + 200, GetScreenHeight()-250, 800, 250, 3);

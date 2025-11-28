@@ -15,6 +15,11 @@ public class Land : BaseObj
         _building = null;
         _gameScreen = gameScreen;
     }
+
+    public void RemoveBuilding()
+    {
+        _building = null;
+    }
     
 
     public override void DisplayDetails()
@@ -178,5 +183,10 @@ public class Land : BaseObj
                 _shopOpen = false;
             }
         }
+    }
+
+    public Building? Building
+    {
+       get => _building;
     }
 }

@@ -6,7 +6,9 @@ namespace Game
 {
     public static class RunTime
     {
+        public static ScreenFactory screenFactory;
         public static Texture2D MainGameBg;
+        public static Texture2D conditionScreen;
         public static Texture2D PersonUp;
         public static Texture2D PersonDown;
         public static Texture2D PersonRight;
@@ -61,6 +63,7 @@ namespace Game
         public static Sound errorSound;
 
         public static GameScreen gameScreen;
+        public static bool isGameOver = true;
 
         //variable မသုံးတာက property ဆိုရင် အလွယ်တကူ set get လုပ်လို့တယ်။ 
         public static ScreenType CurrentWindow{

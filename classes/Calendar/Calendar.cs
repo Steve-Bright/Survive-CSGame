@@ -71,8 +71,11 @@ public class Calendar
         int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
         if (_currentDay >= 10)
         {
-            Console.WriteLine("Win condition reached!");
-        }else if(peopleAlive <= 0){
+            RunTime.isGameOver = true;
+            RunTime.CurrentWindow = ScreenType.ConditionScreen;
+        }else if(peopleAlive <= 0)
+        {
+            RunTime.CurrentWindow = ScreenType.ConditionScreen;
             Console.WriteLine("Lost condition reached!");
         }
     }

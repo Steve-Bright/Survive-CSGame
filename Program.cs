@@ -29,14 +29,18 @@ internal static class Program
         RunTime.currentCalendar = mainCalendar;
         MenuScreen menu = new MenuScreen(RunTime.MenuBg);
         GameScreen mainGame = new GameScreen(RunTime.GamescreenBg);
+        ConditionScreen conditionScreen = new ConditionScreen(RunTime.conditionScreen);
         RunTime.gameScreen = mainGame;
         CreateInitialEntites(mainGame);
 
         ScreenFactory screen = new ScreenFactory();
+        RunTime.screenFactory = screen;
         screen.AddScreen(menu);
         screen.AddScreen(mainGame);
+        screen.AddScreen(conditionScreen);
 
         RunTime.CurrentWindow = ScreenType.Menu;
+        // RunTime.CurrentWindow = ScreenType.Menu;
 
         SetWindowIcon(gameIcon);
 
@@ -119,6 +123,7 @@ internal static class Program
 
         Texture2D menuBg = LoadTexture("./resources/assets/menubg.png");
         Texture2D gameScreenBg = LoadTexture("./resources/assets/gameplaybg.jpg");
+        Texture2D conditionScreen = LoadTexture("./resources/assets/conditionscreen.png");
         Texture2D character_down = LoadTexture("./resources/assets/char_down.png");
         Texture2D character_up = LoadTexture("./resources/assets/char_up.png");
         Texture2D character_left = LoadTexture("./resources/assets/char_left.png");
@@ -199,6 +204,7 @@ internal static class Program
         allTextures.Add(zombie_leftAtk2);
         allTextures.Add(zombie_rightAtk);
         allTextures.Add(zombie_rightAtk2);
+        allTextures.Add(conditionScreen);
         // allTextures.Add(cannonStatic);
 
 
@@ -242,6 +248,7 @@ internal static class Program
         RunTime.zombie_leftAtk2 = zombie_leftAtk2;
         RunTime.zombie_rightAtk = zombie_rightAtk;
         RunTime.zombie_rightAtk2 = zombie_rightAtk2;
+        RunTime.conditionScreen = conditionScreen;
         // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     
