@@ -200,7 +200,7 @@ public class Clinic : Workplace
         Rectangle[] personRectangles = new Rectangle[] { personOne, personTwo, personThree, personFour, personFive };
 
         // List<ResourcePerson> resourcePersons = new List<ResourcePerson>();
-        List<Person> persons = RunTime.gameScreen.GetPersonLists().Where(p => p.CurrentHealth < p.MaxHealth).ToList();
+        List<Person> persons = RunTime.gameScreen.GetPersonLists().Where(p => p.CurrentHealth < p.MaxHealth && p.IsFainted == false).ToList();
         bool personExists = false;
         foreach (Person person in persons)
         {

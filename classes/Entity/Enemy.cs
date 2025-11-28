@@ -34,7 +34,7 @@ public class Enemy : Entity
     private float _attackFrameTime = 0.2f; // seconds per attack frame
     private float _attackDuration = 1.0f; // total animation duration
 
-    public Enemy(string name, float xPos, float yPos, int width, int height, int maxHealth, Texture2D enemyIcon, Calendar calendar)
+    public Enemy(string name, float xPos, float yPos, int width, int height, float maxHealth, Texture2D enemyIcon, Calendar calendar)
         : base(name, xPos, yPos, width, height, maxHealth, enemyIcon, calendar)
     {
         _attackRate = 1; 

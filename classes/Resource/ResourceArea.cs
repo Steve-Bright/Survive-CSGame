@@ -28,6 +28,12 @@ public class ResourceArea : BaseObj
         _resourcePersons = new List<ResourcePerson>();
     }
 
+    public override void Draw()
+    {
+        base.Draw();
+        _currentWorkers.RemoveAll(person => person.IsFainted);  
+    }
+
     public override void DisplayDetails()
     {
         string resourceAreaStatus = _isAccessible ? "Active" : "Inactive";

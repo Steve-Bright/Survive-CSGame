@@ -38,7 +38,7 @@ public class Person : Entity
         get => _currentEnergy; 
     }
     
-    public Person(string name, float xPos, float yPos, int width, int height, int maxHealth,Texture2D personIcon, Calendar calendar, List<Inventory> inventories )
+    public Person(string name, float xPos, float yPos, int width, int height, float maxHealth,Texture2D personIcon, Calendar calendar, List<Inventory> inventories )
         : base(name, xPos, yPos, width, height, maxHealth, personIcon, calendar)
     {
         _workRate = 1f;
@@ -113,6 +113,7 @@ public class Person : Entity
                     break;
                 case Clinic clinic:
                     // clinic.Heal();
+                    clinic.Heal();
                     break;
                 // Add more cases for other Workplace types as needed
                 default:
@@ -470,7 +471,9 @@ public class Person : Entity
 
     public void Heal(int healNum)
     {
-        CurrentHealth += healNum;
+        CurrentHealth += (float) healNum * 0.5f;
+        Console.WriteLine("Healing by: " + (float) Math.Round(healNum * 0.5f));
+        Console.WriteLine("heal : " + CurrentHealth);
         if(CurrentHealth > MaxHealth)
         {
             CurrentHealth = MaxHealth;

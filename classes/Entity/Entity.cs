@@ -5,13 +5,13 @@ namespace Game;
 // Entity no longer implements ISubscriber
 public abstract class Entity : BaseObj 
 {
-    private int _maxHealth;
+    private float _maxHealth;
     private Calendar _calendar;
     private float _currentHealth;
     private int _walkRate;
     private bool _isAccessible;
     
-    public int MaxHealth { get => _maxHealth; protected set => _maxHealth = value; }
+    public float MaxHealth { get => _maxHealth; protected set => _maxHealth = value; }
     public float CurrentHealth 
     { 
         get => _currentHealth; 
@@ -20,7 +20,7 @@ public abstract class Entity : BaseObj
     public int WalkRate { get => _walkRate; set => _walkRate = value; }
     public bool IsAccessible { get => _isAccessible; set => _isAccessible = value; }
     
-    public Entity(string name, float xPos, float yPos, int width, int height, int maxHealth, Texture2D entityIcon, Calendar calendar)
+    public Entity(string name, float xPos, float yPos, int width, int height, float maxHealth, Texture2D entityIcon, Calendar calendar)
         : base(name, xPos, yPos, width, height, entityIcon) 
     {
         _calendar = calendar;

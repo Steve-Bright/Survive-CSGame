@@ -55,6 +55,7 @@ public abstract class Defense : Building
     public override void Draw()
     {
         base.Draw();
+        _currentWorkers.RemoveAll(person => person.IsFainted);
     }
 
     protected Enemy? DetectEnemy()

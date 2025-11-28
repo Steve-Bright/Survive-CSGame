@@ -28,6 +28,12 @@ public abstract class Workplace : Building
         _currentFood = 0;
         _isOperating = false;
     }
+
+    public override void Draw()
+    {
+        base.Draw();
+        _currentWorkers.RemoveAll(person => person.IsFainted);
+    }   
     
     // Abstract methods specific to Workplace
     public abstract void Upgrade(Dictionary<ResourceType, int> consumables);
