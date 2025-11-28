@@ -26,7 +26,7 @@ public abstract class Entity : BaseObj
         _calendar = calendar;
         calendar.Subscribe(this);
         _maxHealth = maxHealth;
-        _currentHealth = maxHealth; 
+        _currentHealth = 90; 
         _walkRate = 600 / _calendar.DayCriteria; //swamhtet speed will be 2 if day criteria is 24. 25 if day criteria is 3000.
         _isAccessible = true;
     }

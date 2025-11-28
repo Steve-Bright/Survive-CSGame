@@ -12,6 +12,7 @@ public class Person : Entity
     private int _currentEnergy;
     private bool _isFainted;
     private bool _isWalking = false;
+    private bool _isHealing = false;
     private bool _isSleeping = false;
     private bool _isWorking;
     private bool _nightShift;
@@ -465,5 +466,27 @@ public class Person : Entity
     {
         get { return _nightShift; }
         set { _nightShift = value; }
+    }
+
+    public void Heal(int healNum)
+    {
+        CurrentHealth += healNum;
+        if(CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+    }
+
+    public void BecomePatient(){
+        _isHealing = true;
+    }
+
+    public void RecoverFromIllness(){
+        _isHealing = false;
+    }
+
+    public bool IsHealing
+    {
+        get { return _isHealing; }
     }
 }
