@@ -122,15 +122,12 @@ public class GameScreen : Screen
 
         _alertList.DisplayAllAlerts();
 
-        // DisplayPeopleList();
         if(Util.PeopleListOpen)
         {
-            DisplayPeopleList();
+            Util.PeopleList("People List", GetPersonLists());
         }
         AddIndicators();
 
-        // Flush any removals queued during this frame to avoid modifying the
-        // main objects list while it was being iterated.
         if (_pendingRemovals.Count > 0)
         {
             foreach (var r in _pendingRemovals)
@@ -159,7 +156,7 @@ public class GameScreen : Screen
         List<Person> persons = new List<Person>();
         foreach (BaseObj obj in _allObjects)
         {
-            if (obj is Person p)
+            if (obj is Person p && !p.IsFainted)
                 persons.Add(p);
         }
         return persons;
@@ -416,11 +413,6 @@ public class GameScreen : Screen
         }
 
         _alertList.AddAlert(new Alert(message, alertType));
-    }
-
-    private void DisplayPeopleList()
-    {
-        Util.PeopleList("People List", GetPersonLists());
     }
 
     public int CurrentPersonDisplayPage

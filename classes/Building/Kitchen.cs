@@ -101,10 +101,11 @@ public class Kitchen : Workplace
 
         Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-85, 265, 45 );
         DrawRectangleRec(buttonRect, Color.Red);
-        Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => _peopleListOpen = true);
-        if(_peopleListOpen == true)
+        Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => Util.OpenAssignList());
+        if(Util.AssignListOpen)
         {
-            DisplayPeopleList();
+            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentWorkers, _requiredWorkers, AssignWorker);
+            // DisplayPeopleList();
         }
         
         Util.UpdateText($"Raw Meat: {RunTime.gameScreen.GetMeatCount()}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-75, 28);

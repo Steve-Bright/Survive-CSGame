@@ -128,10 +128,10 @@ public abstract class Defense : Building
 
         Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-45, 265, 45 );
         DrawRectangleRec(buttonRect, Color.Red);
-        Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => _peopleListOpen = true);
-        if(_peopleListOpen == true)
+        Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => Util.OpenAssignList());
+        if(Util.AssignListOpen)
         {
-            DisplayPeopleList();
+            Util.AssignList(AssignType.Defense, this, "Assign Workers", _currentWorkers, _requiredWorkers, Assign);
         }
 
         RunTime.detailsShown = true;

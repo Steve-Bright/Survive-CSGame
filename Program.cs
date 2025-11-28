@@ -60,9 +60,9 @@ internal static class Program
 
     public static void CreateInitialEntites(GameScreen gameScreen){
         Inventory foodInventory = new Inventory(ResourceType.FOOD, 0);
-        Inventory woodInventory = new Inventory(ResourceType.WOOD, 1000);
-        Inventory stoneInventory = new Inventory(ResourceType.STONE, 1000);
-        Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);
+        Inventory woodInventory = new Inventory(ResourceType.WOOD, 4000);
+        Inventory stoneInventory = new Inventory(ResourceType.STONE, 4000);
+        Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 9000);
         gameScreen.AddInventory(foodInventory);
         gameScreen.AddInventory(woodInventory);
         gameScreen.AddInventory(stoneInventory);
@@ -86,16 +86,16 @@ internal static class Program
         Random rng = new Random();
         int entityWidth = 55; 
         int entityHeight = 55;
-        // string[] names = new[]
-        // {
-        //     "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
-        //     "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
-        // };
-
         string[] names = new[]
         {
-            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan"
+            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
+            "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
         };
+
+        // string[] names = new[]
+        // {
+        //     "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan"
+        // };
 
         foreach (var name in names)
         {
