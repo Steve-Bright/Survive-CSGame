@@ -7,19 +7,25 @@ public class WatchTower : Defense
         : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate, woodCost, stoneCost)
     {
     }
-    
-    public override void Attack()
-    {
-        if (_currentWorkers.Count > 0)
-        {
-            Console.WriteLine("WatchTower attacking...");
-        }
-    }
-    
+
+    // public override void Attack()
+    // {
+    //     if (_currentWorkers.Count > 0)
+    //     {
+    //         Console.WriteLine("WatchTower attacking...");
+    //     }
+    // }
+
     // public override void Assign(Person person)
     // {
     //     if (_currentWorkers.Count < _requiredWorkers) _currentWorkers.Add(person);
     // }
+
+    public override void Draw()
+    {
+        
+        base.Draw();
+    }
     
     public override void Remove(Person person)
     {

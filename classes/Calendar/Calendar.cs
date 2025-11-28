@@ -68,16 +68,21 @@ public class Calendar
 
     public void CheckWinLostCondition()
     {
-        int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
-        if (_currentDay >= 10)
-        {
-            RunTime.isGameOver = true;
-            RunTime.CurrentWindow = ScreenType.ConditionScreen;
-        }else if(peopleAlive <= 0)
-        {
-            RunTime.CurrentWindow = ScreenType.ConditionScreen;
-            Console.WriteLine("Lost condition reached!");
-        }
+        // int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
+        // if(peopleAlive <= 0)
+        // {
+        //     RunTime.isGameOver = false;
+        //     RunTime.CurrentWindow = ScreenType.ConditionScreen;
+        //     Console.WriteLine("Lost condition reached!");
+        // }
+        // else
+        // {
+        //     if (_currentDay >= 10)
+        //     {
+        //         RunTime.isGameOver = true;
+        //         RunTime.CurrentWindow = ScreenType.ConditionScreen;
+        //     }
+        // }
     }
 
     public void ToggleNight()

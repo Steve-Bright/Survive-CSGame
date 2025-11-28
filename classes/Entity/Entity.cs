@@ -7,12 +7,12 @@ public abstract class Entity : BaseObj
 {
     private int _maxHealth;
     private Calendar _calendar;
-    private int _currentHealth;
+    private float _currentHealth;
     private int _walkRate;
     private bool _isAccessible;
     
     public int MaxHealth { get => _maxHealth; protected set => _maxHealth = value; }
-    public int CurrentHealth 
+    public float CurrentHealth 
     { 
         get => _currentHealth; 
         set => _currentHealth = Math.Clamp(value, 0, _maxHealth); 

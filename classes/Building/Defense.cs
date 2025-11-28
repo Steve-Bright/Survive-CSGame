@@ -11,7 +11,14 @@ public abstract class Defense : Building
     protected int _hitRate;
     protected int _coolDownTime;
     private bool _peopleListOpen = false;
+    protected bool _isAttacking = false;
     private bool _randomAssign = false;
+    protected bool _enemyFound = false;
+    protected int _bulletX ;
+    protected int _bulletY;
+    protected float _attackTimer = 0f;
+
+    protected float _attackDuration = 1.0f; // Example duration for an attack cycle
 
     protected int _requiredWorkers;
     private List<ResourcePerson> _resourcePersons;
@@ -28,9 +35,10 @@ public abstract class Defense : Building
     }
     
     // Abstract methods specific to Defense
-    public virtual void Attack()
+    public virtual void Attack(BaseObj target)
     {
-        
+        _isAttacking = true;
+        _attackTimer = 0f;
     }
 
     public virtual void Assign(Person person){
@@ -45,24 +53,21 @@ public abstract class Defense : Building
 
     public override void Draw()
     {
-        Enemy nearestEnemy = DetectEnemy();
-        if (nearestEnemy != null){
-            Console.WriteLine("I will shoot you.");
-        }
         base.Draw();
     }
 
-    private Enemy? DetectEnemy()
+    protected Enemy? DetectEnemy()
     {
         Enemy? closest = null;
         float rangeSq = (float)_range * (float)_range;
 
-        List<Enemy> enemies = RunTime.gameScreen.GetEnemyLists();
+        List<Enemy> enemies = RunTime.gameScreen.GetEnemyLists().Where(e => !e.IsDead).ToList();
         foreach (Enemy en in enemies)
         {
             float dx = en.X - this.X;
             float dy = en.Y - this.Y;
             float dsq = dx * dx + dy * dy;
+            
             if (dsq <= rangeSq)
             {
                 if (closest == null)
@@ -78,6 +83,10 @@ public abstract class Defense : Building
                         closest = en;
                 }
             }
+        }
+
+        if(closest!= null){
+            _enemyFound = true;
         }
 
         return closest;
@@ -357,5 +366,10 @@ public abstract class Defense : Building
                 if (RunTime.gameScreen.CurrentPersonDisplayPage > 0) RunTime.gameScreen.CurrentPersonDisplayPage--;
             });
         }
+    }
+
+    protected void Shoot(Enemy target)
+    {
+        target.GetDamaged(1);
     }
 }

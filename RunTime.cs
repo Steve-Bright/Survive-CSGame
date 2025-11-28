@@ -51,6 +51,8 @@ namespace Game
         public static Texture2D zombie_leftAtk2;
         public static Texture2D zombie_rightAtk;
         public static Texture2D zombie_rightAtk2;
+        public static Texture2D bullet;
+        public static Texture2D cannonatk;
         
         // public static Texture2D cannonStatic;
         public static Calendar currentCalendar;

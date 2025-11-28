@@ -36,7 +36,7 @@ public class GameScreen : Screen
         _allObjects.Add(newObj);
     }
 
-    public void Build(Building building)
+    public bool Build(Building building)
     {
         int buildingCount = 0;
         for(int i = 0; i < _allObjects.Count; i++){
@@ -46,6 +46,7 @@ public class GameScreen : Screen
         }
         if(buildingCount >= building.CapacityLimit){
             AddMessage($"Cannot build more {building.Name}s. Limit reached.", AlertType.ERROR);
+            return false;
         }else{
             _allObjects.Add(building);
             foreach(Inventory inventory in _allInventories)
@@ -60,6 +61,7 @@ public class GameScreen : Screen
                 }
             }
             PlaySound(RunTime.buildSound);
+            return true;
         }
             
     }

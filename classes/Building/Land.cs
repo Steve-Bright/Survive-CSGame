@@ -149,34 +149,39 @@ public class Land : BaseObj
                 // check resources
                 if (woodInv.TotalNum < wCost || stoneInv.TotalNum < sCost)
                 {
+                    Console.WriteLine("Condition 1");
                     _gameScreen.AddMessage($"Not enough resources to build {labels[i]}!!!", AlertType.ERROR);
                 }
                 else
                 {
-                    // create building instances consistent with previous behavior
+                    Console.WriteLine("Conidtion 2");
+                    Building toBuild = null;
                     switch (labels[i])
                     {
                         case "HUT":
-                            _building = new Hut("Hut", X + 100 / 2, Y, 100, 100, RunTime.Hut);
+                            toBuild = new Hut("Hut", X + 100 / 2, Y, 100, 100, RunTime.Hut);
                             break;
                         case "CLINIC":
-                            _building = new Clinic("Clinic", X + 100 / 2 - 15, Y, 120, 120, RunTime.Clinic);
+                            toBuild = new Clinic("Clinic", X + 100 / 2 - 15, Y, 120, 120, RunTime.Clinic);
                             break;
                         case "KITCHEN":
-                            _building = new Kitchen("Kitchen", X + 100 / 2 - 10, Y, 120, 120, RunTime.Cookery);
+                            toBuild = new Kitchen("Kitchen", X + 100 / 2 - 10, Y, 120, 120, RunTime.Cookery);
                             break;
                         case "CANNON":
-                            _building = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 10, 5);
+                            toBuild = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 300, 5);
                             break;
-                        case "TOWER":
+                        default:
                             _building = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
                             break;
                     }
 
-                    if (_building != null)
+                    if (_building == null)
                     {
-                        _gameScreen.Build(_building);
-                        _gameScreen.AddMessage($"{labels[i]} built successfully!", AlertType.INFO);
+                        bool status = _gameScreen.Build(toBuild);
+                        if(status){
+                            _building = toBuild;
+                            _gameScreen.AddMessage($"{labels[i]} built successfully!", AlertType.INFO);
+                        }
                     }
                 }
 

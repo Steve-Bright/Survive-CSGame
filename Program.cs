@@ -86,10 +86,15 @@ internal static class Program
         Random rng = new Random();
         int entityWidth = 55; 
         int entityHeight = 55;
+        // string[] names = new[]
+        // {
+        //     "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
+        //     "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
+        // };
+
         string[] names = new[]
         {
-            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan",
-            "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
+            "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan"
         };
 
         foreach (var name in names)
@@ -162,6 +167,8 @@ internal static class Program
         Texture2D zombie_right = LoadTexture("./resources/assets/zombie_right.png");
         Texture2D zombie_rightAtk = LoadTexture("./resources/assets/zombie_rightatk.png");
         Texture2D zombie_rightAtk2 = LoadTexture("./resources/assets/zombie_rightatk2.png");
+        Texture2D bullet = LoadTexture("./resources/assets/bullet.png");
+        Texture2D cannonatk = LoadTexture("./resources/assets/cannon2atk.png");
         // Texture2D cannonStatic = LoadTexture("./resources/assets/cannonStatic.png");
 
         allTextures.Add(menuBg);
@@ -205,6 +212,8 @@ internal static class Program
         allTextures.Add(zombie_rightAtk);
         allTextures.Add(zombie_rightAtk2);
         allTextures.Add(conditionScreen);
+        allTextures.Add(bullet);
+        allTextures.Add(cannonatk);
         // allTextures.Add(cannonStatic);
 
 
@@ -249,6 +258,8 @@ internal static class Program
         RunTime.zombie_rightAtk = zombie_rightAtk;
         RunTime.zombie_rightAtk2 = zombie_rightAtk2;
         RunTime.conditionScreen = conditionScreen;
+        RunTime.bullet = bullet;
+        RunTime.cannonatk = cannonatk;
         // RunTime.cannonStatic = cannonStatic;
 
         return allTextures;     
