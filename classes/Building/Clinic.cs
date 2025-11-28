@@ -117,7 +117,7 @@ public class Clinic : Workplace
         Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => _peopleListOpen = true);
         if(_peopleListOpen == true)
         {
-            DisplayPeopleList();
+            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentWorkers, _requiredWorkers, AssignWorker);
         }
 
         Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-40, 28); 

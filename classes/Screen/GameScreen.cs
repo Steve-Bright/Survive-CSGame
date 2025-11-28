@@ -90,6 +90,9 @@ public class GameScreen : Screen
         foreach(BaseObj eachObj in _allObjects)
         {
             eachObj.Draw();
+            if(eachObj is WatchTower){
+                Console.WriteLine("Drawing watchtower");
+            }
         }
 
         BaseObj toShowDetails = null;

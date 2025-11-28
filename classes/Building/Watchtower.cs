@@ -23,7 +23,7 @@ public class WatchTower : Defense
 
     public override void Draw()
     {
-        
+        Console.WriteLine("Hi");
         base.Draw();
     }
     

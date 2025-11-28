@@ -149,12 +149,10 @@ public class Land : BaseObj
                 // check resources
                 if (woodInv.TotalNum < wCost || stoneInv.TotalNum < sCost)
                 {
-                    Console.WriteLine("Condition 1");
                     _gameScreen.AddMessage($"Not enough resources to build {labels[i]}!!!", AlertType.ERROR);
                 }
                 else
                 {
-                    Console.WriteLine("Conidtion 2");
                     Building toBuild = null;
                     switch (labels[i])
                     {
@@ -171,7 +169,7 @@ public class Land : BaseObj
                             toBuild = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 300, 5);
                             break;
                         default:
-                            _building = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
+                            toBuild = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
                             break;
                     }
 
