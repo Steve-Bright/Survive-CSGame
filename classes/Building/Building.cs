@@ -88,26 +88,12 @@ public abstract class Building : BaseObj
         photoIndicator.Draw();
 
         Util.ScaledDrawTexture(Icon, (GetScreenWidth() / 2) + 260, GetScreenHeight()-245, 150);
-        // Rectangle woodRect = new Rectangle(ltIndiW /2 + 50, 30, ltIndiH - 40 , 35 );
         Rectangle nameRect = new Rectangle((GetScreenWidth() / 2) + 202, GetScreenHeight()-40, 258 , 40 );
         DrawRectangleRec(nameRect, new Color(255, 204, 106));
         Util.UpdateText(nameRect, Name, (GetScreenWidth() / 2) + 270, GetScreenHeight()-40, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
 
-        // Util.UpdateText("Type: Building", (GetScreenWidth() / 2) + 480, GetScreenHeight()-200, 28);
-        // Util.UpdateText($"Health: {_currentHealth}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-200, 28);
         Util.UpdateText("Type: Building", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
         Util.UpdateText($"Health: {_currentHealth}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
-        // Util.UpdateText($"Health: {_currentHealth} ", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
-        // Util.UpdateText($"Current: Test", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
-        // Util.UpdateText($"Max People: {_requiredBuilder}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
-        // Util.UpdateText($"Current: {_listOfBuilders.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
-
-        // Util.UpdateText($"Max Energy: TEST", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
-        // Util.UpdateText($"Current: test", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
-        // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
-        // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28);
-        // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-40, 28);
-        // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-40, 28); 
 
         RunTime.detailsShown = true;
         if(GetMousePosition().X > GetScreenWidth()-50 && GetMousePosition().X < GetScreenWidth() &&  GetMousePosition().Y > GetScreenHeight()-290 && GetMousePosition().Y < GetScreenHeight()-240 && IsMouseButtonPressed(MouseButton.Left))

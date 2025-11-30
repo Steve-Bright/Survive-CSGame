@@ -108,8 +108,7 @@ public class GameScreen : Screen
         {
             foreach(BaseObj obj in _allObjects)
             {
-                Vector2 mousePos = GetMousePosition();
-                if(mousePos.X > obj.X && mousePos.X < obj.X + obj.Width &&  mousePos.Y > obj.Y && mousePos.Y < obj.Y + obj.Height && IsMouseButtonPressed(MouseButton.Right)  && !obj.IsSelected)
+                if(Util.IsMouseClickedOver(obj, MouseButton.Right) && !obj.IsSelected)
                 {
                     RunTime.detailsShown = true;
                     obj.IsSelected = true;
@@ -455,7 +454,6 @@ public class GameScreen : Screen
                 break;
         }
 
-        // avoid adding duplicate active alerts with the same message
         var existing = _alertList.GetAllAlerts();
         bool duplicate = existing.Any(a => a.Message == message && !a.IsExpired());
         if (!duplicate)

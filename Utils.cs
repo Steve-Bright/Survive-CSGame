@@ -20,6 +20,13 @@ public static class Util
     private static int _currentPersonDisplayPage = 0;
     private static bool _peopleListOpen = false;
     private static bool _assignListOpen = false;
+
+    public static bool IsMouseClickedOver(BaseObj obj, MouseButton button = MouseButton.Left)
+    {
+        Vector2 mousePos = GetMousePosition();
+        return mousePos.X > obj.X && mousePos.X < obj.X + obj.Width &&  mousePos.Y > obj.Y && mousePos.Y < obj.Y + obj.Height && IsMouseButtonPressed(button);
+    }
+
     public static void ScaledDrawTexture(Texture2D texture, float x, float y, int expectedWidth)
     {
        int frameWidth = texture.Width;

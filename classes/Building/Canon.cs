@@ -12,7 +12,6 @@ public class Cannon : Defense
 
     public override void Draw()
     {
-        // Console.WriteLine("Current worker count: " + _currentWorkers.Count);
         if(!RunTime.gameScreen.MainCalendar.IsDay){
             if(_currentWorkers.Count > 0){
             Enemy? nearestEnemy = DetectEnemy();
@@ -21,7 +20,6 @@ public class Cannon : Defense
                     Attack(nearestEnemy);
                 }else{
                     Shoot(nearestEnemy);
-                    Console.WriteLine("Cannon width " + Width + " X position " + X);
                     Vector2 weaponPos = new Vector2(X + ( Width / 2 ), Y + 20);
                     Vector2 enemyPos = new Vector2(nearestEnemy.X + (nearestEnemy.Width / 2), nearestEnemy.Y + (nearestEnemy.Height / 2));
                     DrawLineEx(weaponPos, enemyPos, 10, new Color(0, 87, 173));
@@ -46,18 +44,6 @@ public class Cannon : Defense
         base.Draw();
     }
 
-    // public override void Attack(BaseObj target)
-    // {
-    //     if (_currentWorkers.Count > 0)
-    //     {
-    //         Console.WriteLine("Cannon firing a heavy projectile.");
-    //     }
-    // }
-    
-    // public override void Assign(Person person)
-    // {
-    //     if (_currentWorkers.Count < _requiredWorkers) _currentWorkers.Add(person);
-    // }
     
     public override void Remove(Person person)
     {
