@@ -7,7 +7,6 @@ namespace Game;
 
 internal static class Program
 {
-    // STAThread is required if you deploy using NativeAOT on Windows - See https://github.com/raylib-cs/raylib-cs/issues/301
     [System.STAThread]
     public static void Main()
     {
@@ -59,10 +58,10 @@ internal static class Program
     }
 
     public static void CreateInitialEntites(GameScreen gameScreen){
-        Inventory foodInventory = new Inventory(ResourceType.FOOD, 0);
-        Inventory woodInventory = new Inventory(ResourceType.WOOD, 4000);
-        Inventory stoneInventory = new Inventory(ResourceType.STONE, 4000);
-        Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 9000);
+        Inventory foodInventory = new Inventory(ResourceType.FOOD, 10);
+        Inventory woodInventory = new Inventory(ResourceType.WOOD, 9000);
+        Inventory stoneInventory = new Inventory(ResourceType.STONE, 9000);
+        Inventory rawMeatInventory = new Inventory(ResourceType.MEAT, 10);
         gameScreen.AddInventory(foodInventory);
         gameScreen.AddInventory(woodInventory);
         gameScreen.AddInventory(stoneInventory);
@@ -105,8 +104,8 @@ internal static class Program
             gameScreen.AddBaseObj(p);
         }
 
-        Enemy enemy = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
-        gameScreen.AddBaseObj(enemy);
+        // Enemy enemy = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
+        // gameScreen.AddBaseObj(enemy);
 
         
         ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);

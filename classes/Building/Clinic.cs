@@ -11,7 +11,7 @@ public class Clinic : Workplace
     public List<Person> CurrentPatients => _currentPatients;
     public int MaxPatients => _maxPatients;
 
-    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon, int woodCost = 150, int stoneCost = 100)
+    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon, int woodCost = (int) LandCosts.ClinicWoodCost, int stoneCost = (int) LandCosts.ClinicStoneCost)
         : base(name, xPos, yPos, width, height, clinicIcon, woodCost, stoneCost)
     {
         _maxPatients = 5;
@@ -74,6 +74,16 @@ public class Clinic : Workplace
     public void Release(Person person)
     {
         _currentPatients.Remove(person);
+    }
+
+    public void ReleaseAllPeople(){
+        foreach(Person person in _currentWorkers){
+            person.IsWorking = false;
+            person.RemoveWorkPlaceAsWorkplace();
+
+        }
+        _currentWorkers.Clear();
+        _currentPatients.Clear();
     }
 
     public override void TakeDamage(int hitpoint)

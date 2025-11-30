@@ -5,7 +5,7 @@ using System;
 public class Inventory
 {
     private ResourceType _type;
-    private int _totalNum;
+    private float _totalNum;
 
     public Inventory(ResourceType type, int initialNum)
     {
@@ -30,7 +30,7 @@ public class Inventory
         }
     }
 
-    public int TotalNum
+    public float TotalNum
     {
         set => _totalNum = value;
         get => _totalNum;

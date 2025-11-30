@@ -7,6 +7,7 @@ namespace Game;
 public class GameScreen : Screen
 {
     private List<Inventory> _allInventories;
+    private bool _endANightEarly = false;
     private bool _isClicked = false;
     private List<BaseObj> _allObjects;
     private List<BaseObj> _pendingRemovals;
@@ -90,9 +91,6 @@ public class GameScreen : Screen
         foreach(BaseObj eachObj in _allObjects)
         {
             eachObj.Draw();
-            if(eachObj is WatchTower){
-                Console.WriteLine("Drawing watchtower");
-            }
         }
 
         BaseObj toShowDetails = null;
@@ -125,7 +123,39 @@ public class GameScreen : Screen
 
         _alertList.DisplayAllAlerts();
 
-        if(Util.PeopleListOpen)
+        // Check enemy status early in the frame so EndADayEarly() is set
+        // before UpdateTime()/AddIndicators() runs later in this frame.
+        int enemyCount = GetEnemyCount();
+        // Console.WriteLine("Enemy count " + enemyCount);
+        int outOfAreaEnemyCount = 0;
+        int deadEnemies = 0;
+        if (enemyCount > 0)
+        {
+
+            // Console.WriteLine("Checking enemy status...");
+            foreach (Enemy enemy in GetEnemyLists())
+            {
+                int reduce = enemy.Width + 80;
+                if (enemy.X + reduce < 0 || enemy.X - reduce > GetScreenWidth() || enemy.Y + reduce < 0 || enemy.Y - reduce > GetScreenHeight())
+                {
+                    Console.WriteLine("Enemy X position " + enemy.X + " Y position " + enemy.Y);
+                    outOfAreaEnemyCount++;
+                }
+                if (enemy.IsDead)
+                {
+                    deadEnemies++;
+                }
+            }
+
+            if (outOfAreaEnemyCount == enemyCount || deadEnemies == enemyCount || deadEnemies + outOfAreaEnemyCount == enemyCount)
+            {
+                Console.WriteLine("Out of Area enemy count " + outOfAreaEnemyCount);
+                Console.WriteLine("Dead enemy count " + deadEnemies);
+                EndADayEarly();
+            }
+        }
+
+        if (Util.PeopleListOpen)
         {
             Util.PeopleList("People List", GetPersonLists());
         }
@@ -196,7 +226,7 @@ public class GameScreen : Screen
         {
             if(inventory.Type == ResourceType.FOOD)
             {
-                foodCount = inventory.TotalNum;
+                foodCount = (int)inventory.TotalNum;
                 break;
             }
         }
@@ -210,7 +240,7 @@ public class GameScreen : Screen
         {
             if(inventory.Type == ResourceType.WOOD)
             {
-                woodCount = inventory.TotalNum;
+                woodCount = (int)inventory.TotalNum;
                 break;
             }
         }
@@ -224,7 +254,7 @@ public class GameScreen : Screen
         {
             if(inventory.Type == ResourceType.STONE)
             {
-                stoneCount = inventory.TotalNum;
+                stoneCount = (int)inventory.TotalNum;
                 break;
             }
         }
@@ -238,7 +268,7 @@ public class GameScreen : Screen
         {
             if(inventory.Type == ResourceType.MEAT)
             {
-                meatCount = inventory.TotalNum;
+                meatCount = (int)inventory.TotalNum;
                 break;
             }
         }
@@ -386,10 +416,19 @@ public class GameScreen : Screen
                 _mainCalendar.ToggleNight();
                 SpawnEnemies();
             }
-            else if(roundedTime >= _mainCalendar.NightCriteria){
+            else if(roundedTime >= _mainCalendar.NightCriteria || _endANightEarly){
+                Console.WriteLine("Rounded Time " + roundedTime);
+                Console.WriteLine("Night criteria " + _mainCalendar.NightCriteria);
+                Console.WriteLine("Before   " + _endANightEarly);
+                if (_endANightEarly && _mainCalendar.HourSystem <= 22)
+                {
+                    _mainCalendar.PassAnotherDay();
+                }
                 _mainCalendar.EndADay();
                 _mainCalendar.CheckWinLostCondition();
-                KillAllEnemies();
+                 KillAllEnemies();
+                _endANightEarly = false;     
+                Console.WriteLine("Hello " + _endANightEarly);
             }
         }
         Util.UpdateText(formatRect, $"{_mainCalendar.HourSystem}:00", clockX, clockY, 50, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE);
@@ -403,6 +442,7 @@ public class GameScreen : Screen
 
     public void AddMessage(string message, AlertType alertType)
     {
+        
         switch(alertType){
             case AlertType.ERROR:
                 PlaySound(RunTime.errorSound);
@@ -415,7 +455,13 @@ public class GameScreen : Screen
                 break;
         }
 
-        _alertList.AddAlert(new Alert(message, alertType));
+        // avoid adding duplicate active alerts with the same message
+        var existing = _alertList.GetAllAlerts();
+        bool duplicate = existing.Any(a => a.Message == message && !a.IsExpired());
+        if (!duplicate)
+        {
+            _alertList.AddAlert(new Alert(message, alertType));
+        }
     }
 
     public int CurrentPersonDisplayPage
@@ -440,7 +486,6 @@ public class GameScreen : Screen
 
     private void SpawnEnemies()
     {
-        Console.WriteLine("Current day " + _mainCalendar.CurrentDay);
         List<Enemy> enemiesrightNow = new List<Enemy>();
         Enemy enemy1 = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
         for(int i = 0; i <= _mainCalendar.CurrentDay; i++){
@@ -465,6 +510,15 @@ public class GameScreen : Screen
             if(building is Hut){
                 ((Hut)building).ReleaseAllResidents();
             }
+            else if(building is Kitchen){
+                ((Kitchen)building).ReleaseAllResidents();
+            }
+            else if(building is Clinic){
+                ((Clinic)building).ReleaseAllPeople();
+            }
+            else if(building is Cannon){
+                ((Cannon)building).ReleaseAllResidents();
+            }
 
             if(obj is Land)
             {
@@ -481,4 +535,9 @@ public class GameScreen : Screen
     {
         _allObjects.RemoveAll(obj => obj is Enemy);
     }   
+
+    private void EndADayEarly()
+    {
+        _endANightEarly = true;
+    }
 }

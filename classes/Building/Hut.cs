@@ -14,12 +14,12 @@ public class Hut : Building
     public int MaxPersonCount => _maxPerson;
     public List<Person> AllPeople => _currentPeople;
 
-    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int woodCost = 50, int stoneCost = 30, int capacityLimit = 6)
+    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int woodCost = (int) LandCosts.HutWoodCost, int stoneCost = (int) LandCosts.HutStoneCost, int capacityLimit = 6)
         : base(name, xPos, yPos, width, height, hutIcon, woodCost, stoneCost, capacityLimit)
     {
         _resourcePersons = new List<ResourcePerson>();
         // _hutId = 1;
-        _maxPerson = 10;
+        _maxPerson = 5;
         _currentPeople = new List<Person>();
     }
     
@@ -58,8 +58,12 @@ public class Hut : Building
         //     Unload();
         // }
     }
-    
-    
+
+    public override void Draw()
+    {
+        base.Draw();
+        _currentPeople.RemoveAll(person => person.IsFainted);
+    }
     
     public override void Clone() { }
 

@@ -59,6 +59,8 @@ public class Alert
         
     }
 
+    public string Message => _message;
+
     public bool IsExpired()
     {
         return (GetTime() - _createdAt) >= _durationSeconds;

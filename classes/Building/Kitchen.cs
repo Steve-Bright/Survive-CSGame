@@ -6,7 +6,7 @@ public class Kitchen : Workplace
 {
     private int _cookingRate;
 
-    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon, int woodCost = 120, int stoneCost = 0)
+    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon, int woodCost = (int) LandCosts.KitchenWoodCost, int stoneCost = (int) LandCosts.KitchenStoneCost)
         : base(name, xPos, yPos, width, height, kitchenIcon, woodCost, stoneCost)
     {
         _cookingRate = 1; // e.g., 1 unit per cycle
@@ -36,6 +36,14 @@ public class Kitchen : Workplace
             person.RemoveWorkPlaceAsWorkplace();
             _currentWorkers.Remove(person);
         }
+    }
+
+    public void ReleaseAllResidents(){
+        foreach(Person person in _currentWorkers){
+            person.IsWorking = false;
+            person.RemoveWorkPlaceAsWorkplace();
+        }
+        _currentWorkers.Clear();
     }
 
     public void Cook(Inventory inv)

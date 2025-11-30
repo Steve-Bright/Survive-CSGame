@@ -5,7 +5,7 @@ using static Raylib_cs.Raylib;
 namespace Game;
 public class Cannon : Defense
 {
-    public Cannon(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate, int woodCost = 0, int stoneCost = 150)
+    public Cannon(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int maxPerson, float critChance, int range, int hitRate, int woodCost = (int) LandCosts.CanonWoodCost, int stoneCost = (int) LandCosts.CanonStoneCost)
         : base(name, xPos, yPos, width, height,  buildingIcon,  maxPerson, critChance, range, hitRate, woodCost, stoneCost)
     {
     }
@@ -16,7 +16,6 @@ public class Cannon : Defense
         if(!RunTime.gameScreen.MainCalendar.IsDay){
             if(_currentWorkers.Count > 0){
             Enemy? nearestEnemy = DetectEnemy();
-            Console.WriteLine("Nearest Enemy " + nearestEnemy);
             if (_enemyFound && nearestEnemy != null){
                 if(!_isAttacking){
                     Attack(nearestEnemy);
@@ -29,7 +28,6 @@ public class Cannon : Defense
                     if(nearestEnemy.IsDead){   
                         nearestEnemy = null;
                         _enemyFound = false;
-                        Console.WriteLine("Enemy has been killed. " + nearestEnemy); 
                         _isAttacking = false;
                     }
                     Icon = RunTime.cannonatk;
@@ -72,7 +70,14 @@ public class Cannon : Defense
         // if (_currentDurability <= 0) Unload();
     }
 
-    
+    public void ReleaseAllResidents(){
+        foreach(Person person in _currentWorkers){
+            person.IsWorking = false;
+            person.NightShift = false;
+            person.RemoveWorkPlaceAsWorkplace();
+        }
+        _currentWorkers.Clear();
+    }
     
     public override void Clone() { }
 }

@@ -458,15 +458,23 @@ public static class Util
                 }
                 else
                 {
-                    List<Person> idlePersons = _resourcePersons.Where(rp => !rp.Person.IsWorking).Select(rp => rp.Person).ToList();
+                    List<Person> idlePersons = _resourcePersons.Where(rp => !rp.Person.IsWorking && !rp.Person.NightShift).Select(rp => rp.Person).ToList();
                     Random rand = new Random();
                     idlePersons = idlePersons.OrderBy(x => rand.Next()).ToList(); 
 
                     for (int i = 0; i < Math.Min(workersNeeded, idlePersons.Count); i++)
                     {
+                        PlaySound(RunTime.infoSound);
                         AssignFunction(idlePersons[i]);
+                        RunTime.gameScreen.AddMessage($"{idlePersons[i].Name} is assigned.", AlertType.INFO);
                         idlePersons[i].SetDestination(assignObj);
                     }
+
+                    if(idlePersons.Count < workersNeeded)
+                    {
+                        RunTime.gameScreen.AddMessage("Workers are busy!", AlertType.WARNING);
+                    }
+
                     _resourcePersons.Clear();
                     _assignListOpen = false;
                 }

@@ -7,7 +7,7 @@ namespace Game;
 public class ResourceArea : BaseObj
 {
     
-    private int _capacity;
+    private float _capacity;
     private ResourceType _resource;
     private List<ResourcePerson> _resourcePersons;
     private bool _isAccessible;
@@ -111,10 +111,11 @@ public class ResourceArea : BaseObj
 
     public void Extract(Inventory inv)
     {
+        float extractRate = 300 / RunTime.currentCalendar.DayCriteria;
         if(_capacity > 0)
         {
-            inv.Increase(1);
-            _capacity -= 1;
+            inv.Increase(extractRate);
+            _capacity -= extractRate;
         }
         else
         {

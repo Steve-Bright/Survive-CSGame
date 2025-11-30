@@ -19,7 +19,7 @@ internal enum Side{
 
 public class Enemy : Entity
 {
-    private bool _hasDied = false;
+    private bool _hasDied;
     private int _attackRate;
     private EnemyType _enemyType;
     private Side _spawnSide;
@@ -37,6 +37,7 @@ public class Enemy : Entity
     public Enemy(string name, float xPos, float yPos, int width, int height, float maxHealth, Texture2D enemyIcon, Calendar calendar)
         : base(name, xPos, yPos, width, height, maxHealth, enemyIcon, calendar)
     {
+        _hasDied = false;
         _attackRate = 1; 
         _enemyType = EnemyType.Zombie;
         _spawnRate = 1f; 
@@ -46,8 +47,8 @@ public class Enemy : Entity
     public void Attack(BaseObj target)
     {
 
-        Console.WriteLine("Target x and y position: " + target.X + ", " + target.Y);
-        Console.WriteLine("Enemy position : " + X + ", " + Y);
+        // Console.WriteLine("Target x and y position: " + target.X + ", " + target.Y);
+        // Console.WriteLine("Enemy position : " + X + ", " + Y);
         // Start attack animation (non-blocking). Damage/effects to be applied later.
         _isAttacking = true;
         _attackTimer = 0f;
@@ -109,7 +110,7 @@ public class Enemy : Entity
                     base.Draw();
 
                 }else{
-                    int chaseSpeed = 2;
+                    int chaseSpeed = Math.Min(2, WalkRate);
 
                     if (MathF.Abs(dx) > MathF.Abs(dy))
                     {
@@ -158,7 +159,6 @@ public class Enemy : Entity
                 int speed = 1;
                 int thrW = Math.Max(1, screenW / 5);
                 int thrH = Math.Max(1, screenH / 3);
-                        
 
                 switch (_spawnSide)
                 {
@@ -380,15 +380,30 @@ public class Enemy : Entity
 
     public void Die()
     {
-        Console.WriteLine("Enemy  has died.");
         _hasDied = true;
-        // Console.WriteLine($"Enemy {_enemyType} has died.");
-        // Unload();
     }
 
 
     public override void Update(Calendar calendar)
     {
+        int mainWalkRate = 600 / calendar.DayCriteria;
+        switch (calendar.CurrentWeather)
+        {
+            case Weather.Sunny:
+                WalkRate = mainWalkRate * 1;
+                break;
+            case Weather.Stormy:
+                _detectionRadius = 200;
+                WalkRate = (int) Math.Round(mainWalkRate * 0.8f);
+                break;
+            case Weather.Snowy:
+                _detectionRadius = 200;
+                WalkRate = (int) Math.Round(mainWalkRate * 0.5f);
+                break;
+            default: 
+                WalkRate = mainWalkRate * 1;
+                break;
+        }
     }
 
     public override void Clone()
@@ -402,6 +417,8 @@ public class Enemy : Entity
 
     public override void DisplayDetails(){
 
+        if (!_hasDied)
+        {
             Indicator closeIndicator = new Indicator(GetScreenWidth()-45, GetScreenHeight()-290, 45, 45, 1);
             closeIndicator.Draw();
             Util.ScaledDrawTexture(RunTime.CloseIcon, GetScreenWidth()-45, GetScreenHeight()-290, 45);
@@ -421,7 +438,7 @@ public class Enemy : Entity
 
             Util.UpdateText("Type: Enemy", (GetScreenWidth() / 2) + 480, GetScreenHeight()-240, 28);
             Util.UpdateText("Status: Active", (GetScreenWidth() / 2) + 740, GetScreenHeight()-240, 28);
-            Util.UpdateText($"Health: {CurrentHealth}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-200, 28);
+            Util.UpdateText($"Health: {Math.Round(CurrentHealth)}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-200, 28);
             Util.UpdateText("Effect: None", (GetScreenWidth() / 2) + 740, GetScreenHeight()-200, 28);
             Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
             Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
@@ -439,6 +456,8 @@ public class Enemy : Entity
                 IsSelected = false;
                 RunTime.detailsShown = false;
             }
+        }
+            
     }
 
     public bool IsDead

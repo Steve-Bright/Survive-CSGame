@@ -65,10 +65,7 @@ public class Person : Entity
         Inventory foodInventory = RunTime.gameScreen.GetInventory(ResourceType.FOOD);
 
         if(foodInventory.TotalNum >= foodNum){
-             _currentEnergy += foodNum * 10;
-            if(CurrentHealth < MaxHealth){
-                CurrentHealth += foodNum * 2;
-            }
+             _currentEnergy += foodNum * 15;
             foodInventory.Decrease(foodNum);
             if (_currentEnergy > _maxEnergy)
             {
@@ -335,6 +332,31 @@ public class Person : Entity
 
     public override void Update(Calendar calendar)
     {
+        int mainWalkRate = 600 / calendar.DayCriteria;
+        switch (calendar.CurrentWeather)
+        {
+            case Weather.Sunny:
+                WalkRate = mainWalkRate * 1;
+                break;
+            case Weather.Stormy:
+                if(CurrentEnergy > 50)
+                {
+                    _currentEnergy -= 10;
+                }
+                WalkRate = (int) Math.Round(mainWalkRate * 0.7f);
+                break;
+            case Weather.Snowy:
+                if(CurrentEnergy > 50)
+                {
+                    _currentEnergy -= 20;
+                }
+                WalkRate = (int) Math.Round(mainWalkRate * 0.5f);
+                break;
+            default: 
+                WalkRate = mainWalkRate * 1;
+                break;
+        }
+
         if(calendar.IsDay){
             DailyEnergyReduce();
              ConsumeFood(1);

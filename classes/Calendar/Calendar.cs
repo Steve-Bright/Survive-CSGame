@@ -26,8 +26,8 @@ public class Calendar
     public Calendar()
     {
         //swamhtet this is to changed later into 300 second for day and 600 seconds for night.
-        _dayCriteria = 24;
-        _nightCriteria = 48;
+        _dayCriteria = 90;
+        _nightCriteria = 180;
         _subscribers = new List<Entity>();
         _currentWeather = Weather.Sunny;
     }
@@ -68,21 +68,21 @@ public class Calendar
 
     public void CheckWinLostCondition()
     {
-        // int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
-        // if(peopleAlive <= 0)
-        // {
-        //     RunTime.isGameOver = false;
-        //     RunTime.CurrentWindow = ScreenType.ConditionScreen;
-        //     Console.WriteLine("Lost condition reached!");
-        // }
-        // else
-        // {
-        //     if (_currentDay >= 10)
-        //     {
-        //         RunTime.isGameOver = true;
-        //         RunTime.CurrentWindow = ScreenType.ConditionScreen;
-        //     }
-        // }
+        int peopleAlive = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted).Count;
+        if(peopleAlive <= 0)
+        {
+            RunTime.isGameOver = false;
+            RunTime.CurrentWindow = ScreenType.ConditionScreen;
+            Console.WriteLine("Lost condition reached!");
+        }
+        else
+        {
+            if (_currentDay >= 5)
+            {
+                RunTime.isGameOver = true;
+                RunTime.CurrentWindow = ScreenType.ConditionScreen;
+            }
+        }
     }
 
     public void ToggleNight()
@@ -95,6 +95,10 @@ public class Calendar
         _currentDay++;
         _hourSystem = 0;
 
+    }
+
+    public void PassAnotherDay(){
+        _currentDay++;
     }
 
     public void Subscribe(Entity entity)

@@ -93,10 +93,12 @@ public class Land : BaseObj
         }
 
         // Replace manual building blocks with a loop-driven layout
-        string[] labels = new string[] { "HUT", "CLINIC", "KITCHEN", "CANNON", "TOWER" };
-        Texture2D[] icons = new Texture2D[] { RunTime.Hut, RunTime.Clinic, RunTime.Cookery, RunTime.Cannon, RunTime.Tower };
-        int[] woodCosts = new int[] { 50, 150, 120, 0, 150 };
-        int[] stoneCosts = new int[] { 30, 100, 0, 150, 250 };
+        // string[] labels = new string[] { "HUT", "CLINIC", "KITCHEN", "CANNON" };
+        BuildingType[] labels = new BuildingType[] { BuildingType.Hut, BuildingType.Clinic, BuildingType.Kitchen, BuildingType.Cannon };
+        float[] xPos = new float[] { X + 100 / 2,  X + 100 / 2 - 15,  X + 100 / 2 - 10,  X + 40};
+        Texture2D[] icons = new Texture2D[] { RunTime.Hut, RunTime.Clinic, RunTime.Cookery, RunTime.Cannon};
+        int[] woodCosts = new int[] { (int) LandCosts.HutWoodCost, (int) LandCosts.ClinicWoodCost, (int) LandCosts.KitchenWoodCost, (int) LandCosts.CanonWoodCost };
+        int[] stoneCosts = new int[] { (int) LandCosts.HutStoneCost, (int) LandCosts.ClinicStoneCost, (int) LandCosts.KitchenStoneCost, (int) LandCosts.CanonStoneCost };
 
         int cols = 3;
         int optionW = 300;
@@ -119,7 +121,7 @@ public class Land : BaseObj
 
             Rectangle optNameRect = new Rectangle(optRect.X + 150, optRect.Y + 80 - 30, 150, 30);
             DrawRectangleRec(optNameRect, new Color(255, 204, 106, 0));
-            Util.UpdateText(optNameRect, labels[i], (int)optRect.X + 150, (int)optRect.Y + 80, 25, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE);
+            Util.UpdateText(optNameRect, labels[i].ToString(), (int)optRect.X + 150, (int)optRect.Y + 80, 25, (int)TextAlign.TEXT_ALIGN_CENTRE, (int)TextAlign.TEXT_ALIGN_MIDDLE);
 
             int wCost = woodCosts[i];
             int sCost = stoneCosts[i];
@@ -130,17 +132,17 @@ public class Land : BaseObj
             if (wCost > 0)
             {
                 Util.ScaledDrawTexture(RunTime.Wood, iconX, iconWoodY, 50);
-                Rectangle woodNumRect = new Rectangle(optRect.X + 210, optRect.Y + 110, 50, 35);
+                Rectangle woodNumRect = new Rectangle(optRect.X + 230, optRect.Y + 110, 50, 35);
                 DrawRectangleRec(woodNumRect, new Color(255, 204, 106, 0));
-                Util.UpdateText(woodNumRect, wCost.ToString(), (int)optRect.X + 210, (int)optRect.Y + 110, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
+                Util.UpdateText(woodNumRect, wCost.ToString(), (int)optRect.X + 230, (int)optRect.Y + 110, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
             }
 
             if (sCost > 0)
             {
                 Util.ScaledDrawTexture(RunTime.Stone, iconX, iconStoneY, 50);
-                Rectangle stoneNumRect = new Rectangle(optRect.X + 210, optRect.Y + 150, 50, 35);
+                Rectangle stoneNumRect = new Rectangle(optRect.X + 230, optRect.Y + 150, 50, 35);
                 DrawRectangleRec(stoneNumRect, new Color(255, 204, 106, 0));
-                Util.UpdateText(stoneNumRect, sCost.ToString(), (int)optRect.X + 210, (int)optRect.Y + 145, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
+                Util.UpdateText(stoneNumRect, sCost.ToString(), (int)optRect.X + 230, (int)optRect.Y + 145, 25, (int)TextAlign.TEXT_ALIGN_RIGHT, (int)TextAlign.TEXT_ALIGN_MIDDLE);
             }
 
             // Click handling
@@ -153,25 +155,8 @@ public class Land : BaseObj
                 }
                 else
                 {
-                    Building toBuild = null;
-                    switch (labels[i])
-                    {
-                        case "HUT":
-                            toBuild = new Hut("Hut", X + 100 / 2, Y, 100, 100, RunTime.Hut);
-                            break;
-                        case "CLINIC":
-                            toBuild = new Clinic("Clinic", X + 100 / 2 - 15, Y, 120, 120, RunTime.Clinic);
-                            break;
-                        case "KITCHEN":
-                            toBuild = new Kitchen("Kitchen", X + 100 / 2 - 10, Y, 120, 120, RunTime.Cookery);
-                            break;
-                        case "CANNON":
-                            toBuild = new Cannon("Cannon", X + 40, Y, 100, 100, RunTime.Cannon, 1, 10, 300, 5);
-                            break;
-                        default:
-                            toBuild = new WatchTower("Tower", X + 50, Y, 100, 100, RunTime.Tower, 1, 15, 10, 5);
-                            break;
-                    }
+                    BuildingFactory factory = new BuildingFactory();
+                    Building toBuild = factory.CreateBuilding(labels[i], xPos[i], Y);
 
                     if (_building == null)
                     {
