@@ -355,7 +355,7 @@ public class GameScreen : Screen
         Texture2D[] weatherIcons = { RunTime.Sun, RunTime.snowyIcon, RunTime.stormyIcon };
         Texture2D currentWeatherIcon;
         switch(_mainCalendar.CurrentWeather){
-            case Weather.Sunny:
+            case Weather.Normal:
                 currentWeatherIcon = weatherIcons[0];
                 break;
             case Weather.Snowy:

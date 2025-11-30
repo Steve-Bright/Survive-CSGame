@@ -15,24 +15,16 @@ public class Calendar
 
     private readonly List<Entity> _subscribers;
 
-    public float CurrentTime {
-        get => _currentTime;
-        set => _currentTime = value;
-    }
-    public int CurrentDay => _currentDay;
-    public bool isDay => _isDay;
-    public Weather CurrentWeather => _currentWeather;
-
     public Calendar()
     {
         //swamhtet this is to changed later into 300 second for day and 600 seconds for night.
         _dayCriteria = 90;
         _nightCriteria = 180;
         _subscribers = new List<Entity>();
-        _currentWeather = Weather.Sunny;
+        _currentWeather = Weather.Normal;
     }
 
-    public void StartCalendar(Weather startingWeather = Weather.Sunny)
+    public void StartCalendar(Weather startingWeather = Weather.Normal)
     {
         _previousRoundedTimeResult = 0;
         _hourSystem = 6;
@@ -40,11 +32,6 @@ public class Calendar
         _currentDay = 1;
         _isDay = true;
         _currentWeather = startingWeather;
-    }
-
-    public void EndCalendar()
-    {
-        Console.WriteLine("Calendar stopped.");
     }
 
     public void ChangeWeather()
@@ -119,22 +106,14 @@ public class Calendar
             entity.Update(this);
     }
 
-    public void Update(float deltaTime)
-    {
-        // _currentTime += deltaTime;
-
-        // if (_currentTime >= 24f)
-        //     EndADay();
-
-        // if (_currentTime >= 18f && _isDay)
-        //     ToggleDayNight();
-
-        // if (_currentTime >= 6f && !_isDay)
-        //     ToggleDayNight();
+    public int DayCriteria {
+        get => _dayCriteria;
     }
 
-    public int DayCriteria => _dayCriteria;
-    public int NightCriteria => _nightCriteria;
+    public int NightCriteria
+    {
+        get => _nightCriteria;
+    }
     public int HourSystem
     {
         get => _hourSystem;
@@ -151,5 +130,23 @@ public class Calendar
     {
         get => _isDay;
         set => _isDay = value;
+    }
+
+    public float CurrentTime {
+        get => _currentTime;
+        set => _currentTime = value;
+    }
+
+     public int CurrentDay
+    {
+        get => _currentDay;
+    }
+
+    public bool isDay
+    {
+        get => _isDay;
+    }
+    public Weather CurrentWeather{
+        get => _currentWeather;
     }
 }

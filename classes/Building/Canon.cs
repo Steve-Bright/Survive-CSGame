@@ -65,5 +65,4 @@ public class Cannon : Defense
         _currentWorkers.Clear();
     }
     
-    public override void Clone() { }
 }

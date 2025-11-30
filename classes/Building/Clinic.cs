@@ -96,10 +96,9 @@ public class Clinic : Workplace
         // }
     }
 
-    // Abstract BaseObj/Entity Implementations
     
     
-    public override void Clone() { }
+    
 
     public override void DisplayDetails()
     {

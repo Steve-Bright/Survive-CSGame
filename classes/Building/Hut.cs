@@ -4,14 +4,12 @@ namespace Game;
 
 public class Hut : Building
 {
-    private int _hutId;
     private bool _randomAssign = false;
     private int _maxPerson;
     private bool _peopleListOpen = false;
     private List<ResourcePerson> _resourcePersons;
     private List<Person> _currentPeople;
 
-    public int MaxPersonCount => _maxPerson;
     public List<Person> AllPeople => _currentPeople;
 
     public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int woodCost = (int) LandCosts.HutWoodCost, int stoneCost = (int) LandCosts.HutStoneCost, int capacityLimit = 6)
@@ -34,6 +32,8 @@ public class Hut : Building
             RunTime.gameScreen.AddMessage("House is full!", AlertType.ERROR);
         }
     }
+
+    public int MaxPersonCount => _maxPerson;
     
     public void Remove(Person person)
     {
@@ -65,7 +65,7 @@ public class Hut : Building
         _currentPeople.RemoveAll(person => person.IsFainted);
     }
     
-    public override void Clone() { }
+    
 
     public override void DisplayDetails()
     {

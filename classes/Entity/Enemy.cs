@@ -366,7 +366,7 @@ public class Enemy : Entity
         int mainWalkRate = 600 / calendar.DayCriteria;
         switch (calendar.CurrentWeather)
         {
-            case Weather.Sunny:
+            case Weather.Normal:
                 WalkRate = mainWalkRate * 1;
                 break;
             case Weather.Stormy:

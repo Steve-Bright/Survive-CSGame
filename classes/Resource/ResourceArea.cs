@@ -13,8 +13,6 @@ public class ResourceArea : BaseObj
     private bool _isAccessible;
     private int _requiredWorkers;
     private List<Person> _currentWorkers;
-    private bool _peopleListOpen = false;
-    private bool _randomAssign = true;
 
     // + ResourceArea(name: string, xPos: float, yPos: float, width: int, height: int, type: ResourceType)
     public ResourceArea(string name, float xPos, float yPos, int width, int height, Texture2D resourceAreaIcon,  ResourceType type)

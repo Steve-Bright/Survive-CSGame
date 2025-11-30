@@ -75,7 +75,7 @@ public class Kitchen : Workplace
     
     
 
-    public override void Clone() { }
+    
 
     public override void DisplayDetails()
     {

@@ -2,7 +2,7 @@ namespace Game;
 
 public enum Weather
 {
-    Sunny,
+    Normal,
     Snowy,
     Stormy
 }
