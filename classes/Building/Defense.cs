@@ -44,7 +44,7 @@ public abstract class Defense : Building
     public virtual void Assign(Person person){
         if (_currentWorkers.Count < _requiredWorkers){
             PlaySound(RunTime.infoSound);
-            person.AssignNightShift(this);
+            person.AssignWork(this);
             _currentWorkers.Add(person);
         }
     }
