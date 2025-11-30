@@ -279,7 +279,7 @@ public class Enemy : Entity
     public void DetectSurroundings()
     {
         List<Person> people = RunTime.gameScreen.GetPersonLists().FindAll(p => !p.IsFainted && p.PlaceHut == null);
-        List<Building> buildings = RunTime.gameScreen.GetBuildingLists().FindAll(b => b.CanBeSeen);
+        List<Building> buildings = RunTime.gameScreen.GetBuildingLists();
         float bestSq = _detectionRadius * _detectionRadius;
         bool personFound = false;
         BaseObj? found = null;

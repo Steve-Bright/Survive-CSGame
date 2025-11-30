@@ -41,7 +41,7 @@ public class GameScreen : Screen
     {
         int buildingCount = 0;
         for(int i = 0; i < _allObjects.Count; i++){
-            if(_allObjects[i] is Building && _allObjects[i].Name == building.Name && _allObjects[i].CanBeSeen){
+            if(_allObjects[i] is Building && _allObjects[i].Name == building.Name){
                 buildingCount ++;
             }
         }
@@ -501,7 +501,6 @@ public class GameScreen : Screen
 
     public void DestroyBuilding(Building building)
     {
-        // building.CanBeSeen = false;
         
         foreach(BaseObj obj in _allObjects)
         {

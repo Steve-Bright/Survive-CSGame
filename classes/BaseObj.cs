@@ -12,7 +12,6 @@ public abstract class BaseObj
     private int _height;
     private Texture2D _icon;
     private bool _isSelected;
-    private bool _canBeSeen = true;
 
     public float X 
     { 
@@ -58,10 +57,7 @@ public abstract class BaseObj
 
     public virtual void Draw()
     {
-        if(_canBeSeen)
-        {
-            Util.ScaledDrawTexture(_icon, _x, _y, _width);
-        }
+        Util.ScaledDrawTexture(_icon, _x, _y, _width);
     }
 
     public bool IsSelected
@@ -74,11 +70,5 @@ public abstract class BaseObj
     {
         get { return _name; }
     }   
-
-    public bool CanBeSeen
-    {
-        get { return _canBeSeen; }
-        set { _canBeSeen = value; }
-    }
 
 }
