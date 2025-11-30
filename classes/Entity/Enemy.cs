@@ -4,11 +4,6 @@ using Raylib_cs;
 using System.Numerics;
 namespace Game;
 
-public enum EnemyType 
-{
-    Snake,
-    Zombie
-}
 
 internal enum Side{
     Left,
@@ -20,11 +15,7 @@ internal enum Side{
 public class Enemy : Entity
 {
     private bool _hasDied;
-    private int _attackRate;
-    private EnemyType _enemyType;
     private Side _spawnSide;
-    private float _spawnRate;
-    private static readonly Random _rand = new Random();
     private float _detectionRadius = 300;
     private BaseObj? _detectedTarget = null;
     private bool _isChasing = false;
@@ -38,18 +29,12 @@ public class Enemy : Entity
         : base(name, xPos, yPos, width, height, maxHealth, enemyIcon, calendar)
     {
         _hasDied = false;
-        _attackRate = 1; 
-        _enemyType = EnemyType.Zombie;
-        _spawnRate = 1f; 
         _spawnSide = Side.Left;
     }
 
     public void Attack(BaseObj target)
     {
 
-        // Console.WriteLine("Target x and y position: " + target.X + ", " + target.Y);
-        // Console.WriteLine("Enemy position : " + X + ", " + Y);
-        // Start attack animation (non-blocking). Damage/effects to be applied later.
         _isAttacking = true;
         _attackTimer = 0f;
     }
@@ -325,15 +310,6 @@ public class Enemy : Entity
         }
     }
 
-    public void Deploy()
-    {
-        Console.WriteLine($"Enemy ({_enemyType}) deployed.");
-    }
-
-    public void Walk(BaseObj destination)
-    {
-    }
-
     public void GetDamaged(int healthNum)
     {
         CurrentHealth -= (healthNum/3f);
@@ -345,6 +321,7 @@ public class Enemy : Entity
 
     public void SetRandomLocation()
     {
+        Random _rand = new Random();
         // Spawn the enemy just outside one of the four screen edges so it
         // naturally walks into the visible play area. Use a shared Random
         // instance to avoid identical seeding when called frequently.
@@ -406,11 +383,7 @@ public class Enemy : Entity
         }
     }
 
-    public override void Clone()
-    {
-    }
-
-    public Enemy CloneEnemy()
+    public Enemy Clone()
     {
         return new Enemy(Name, X, Y, Width, Height, MaxHealth, Icon, RunTime.currentCalendar);
     }

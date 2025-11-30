@@ -487,7 +487,7 @@ public class GameScreen : Screen
         List<Enemy> enemiesrightNow = new List<Enemy>();
         Enemy enemy1 = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
         for(int i = 0; i <= _mainCalendar.CurrentDay; i++){
-            Enemy clonedEnemy = enemy1.CloneEnemy();
+            Enemy clonedEnemy = enemy1.Clone();
             clonedEnemy.SetRandomLocation();
             enemiesrightNow.Add(clonedEnemy);
         }

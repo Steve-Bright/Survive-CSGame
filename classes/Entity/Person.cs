@@ -224,28 +224,6 @@ public class Person : Entity
         }
     }
 
-    // public override void Draw()
-    // {
-    //     int frameWidth = Icon.Width;
-    //     int frameHeight = Icon.Height;
-    //     int expectedWidth = 100;
-
-    //     //srcRectangle
-    //     Rectangle sourceRec = new Rectangle( 0, 0, (float)frameWidth, (float)frameHeight );
-    //     float scale = (float)expectedWidth / frameWidth;
-    //     // Expected Rectangle
-    //     Rectangle destRec = new Rectangle( X, Y, frameWidth * scale,  frameHeight * scale);
-
-    //      // Origin of the texture (rotation/scale point), it's relative to destination rectangle size
-    //     Vector2 origin = new Vector2(0);
-    //     DrawTexturePro(Icon, sourceRec, destRec, origin, 0, Color.White);  
-
-    //     // DrawTexture(Icon, (int)X, (int)Y, Color.White);
-    //     // Color personColor = _isFainted ? Color.GRAY : Color.BLUE;
-    //     // Raylib.DrawRectangle((int)X, (int)Y, Width, Height, personColor);
-    //     // Raylib.DrawText("PERSON", (int)X + 5, (int)Y + 5, 10, Color.WHITE);
-    // }
-
     public void SetDestination(BaseObj destination)
     {
         _destination = destination;
@@ -387,10 +365,6 @@ public class Person : Entity
         set { _isFainted = value; }
     }
 
-    public override void Clone()
-    {
-    }
-
     public ResourceArea? ResourceArea
     {
         get { return _resourceArea; }
@@ -406,46 +380,61 @@ public class Person : Entity
         get { return _placeHut; }
     }
 
-    public void AssignWork(ResourceArea resourceArea)
-    {
-        _isWorking = true;
-        if(_workPlaceAsWorkplace != null){
-            _workPlaceAsWorkplace.RemoveWorker(this);
-            _workPlaceAsWorkplace = null;
+    public void AssignWork(BaseObj target){
+        QuitWork();
+        if(target is Defense){
+            _nightShift = true;
+            _defenseBuilding = (Defense)target;
+        }else{
+            _isWorking = true;
+            if(target is ResourceArea){
+                _resourceArea = (ResourceArea)target;
+            }else if(target is Workplace){
+                _workPlaceAsWorkplace = (Workplace)target;
+            }
         }
-        if(_defenseBuilding != null){
-            _defenseBuilding.Remove(this);
-            _defenseBuilding = null;
-        }
-        _resourceArea = resourceArea;
-    }   
-
-    public void AssignWork(Workplace workplace)
-    {
-        _isWorking = true;
-        if(_resourceArea != null){
-            _resourceArea = null;
-        }
-        if(_defenseBuilding != null){
-            _defenseBuilding.Remove(this);
-            _defenseBuilding = null;
-        }
-        _workPlaceAsWorkplace = workplace;
     }
 
-    public void AssignNightShift(Defense defenseBuilding)
-    {
-        _nightShift = true;
-        if(_resourceArea != null){
-            _resourceArea.RemoveWorker(this);
-            _resourceArea = null;
-        }
-        if(_workPlaceAsWorkplace != null){
-            _workPlaceAsWorkplace.RemoveWorker(this);
-            _workPlaceAsWorkplace = null;
-        }
-        _defenseBuilding = defenseBuilding;
-    }
+    // public void AssignWork(ResourceArea resourceArea)
+    // {
+    //     _isWorking = true;
+    //     if(_workPlaceAsWorkplace != null){
+    //         _workPlaceAsWorkplace.RemoveWorker(this);
+    //         _workPlaceAsWorkplace = null;
+    //     }
+    //     if(_defenseBuilding != null){
+    //         _defenseBuilding.Remove(this);
+    //         _defenseBuilding = null;
+    //     }
+    //     _resourceArea = resourceArea;
+    // }   
+
+    // public void AssignWork(Workplace workplace)
+    // {
+    //     _isWorking = true;
+    //     if(_resourceArea != null){
+    //         _resourceArea = null;
+    //     }
+    //     if(_defenseBuilding != null){
+    //         _defenseBuilding.Remove(this);
+    //         _defenseBuilding = null;
+    //     }
+    //     _workPlaceAsWorkplace = workplace;
+    // }
+
+    // public void AssignNightShift(Defense defenseBuilding)
+    // {
+    //     _nightShift = true;
+    //     if(_resourceArea != null){
+    //         _resourceArea.RemoveWorker(this);
+    //         _resourceArea = null;
+    //     }
+    //     if(_workPlaceAsWorkplace != null){
+    //         _workPlaceAsWorkplace.RemoveWorker(this);
+    //         _workPlaceAsWorkplace = null;
+    //     }
+    //     _defenseBuilding = defenseBuilding;
+    // }
 
     public void QuitWork(){
         _isWorking = false;

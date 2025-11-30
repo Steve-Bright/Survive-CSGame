@@ -91,10 +91,6 @@ internal static class Program
             "Judy","Mallory","Niaj","Olivia","Peggy","Rupert","Sybil","Trent","Uma","Victor", "Zac"
         };
 
-        // string[] names = new[]
-        // {
-        //     "Alice","Bob","Carol","Dave","Eve","Frank","Grace","Heidi","Ivan"
-        // };
 
         foreach (var name in names)
         {
@@ -104,8 +100,6 @@ internal static class Program
             gameScreen.AddBaseObj(p);
         }
 
-        // Enemy enemy = new Enemy("Zombie 1", 0, 0, 55, 55, 100, RunTime.zombie_down, RunTime.currentCalendar);
-        // gameScreen.AddBaseObj(enemy);
 
         
         ResourceArea forest = new ResourceArea("Forest 1",  0, 150, 200, 200, RunTime.Forest, ResourceType.WOOD);
