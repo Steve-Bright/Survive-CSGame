@@ -12,13 +12,6 @@ public class Kitchen : Workplace
         _cookingRate = 1; // e.g., 1 unit per cycle
     }
 
-    public override void Upgrade(Dictionary<ResourceType, int> consumables)
-    {
-        // Logic to consume resources and improve cookingRate or durability
-        Console.WriteLine("Kitchen upgraded.");
-        _cookingRate++;
-    }
-
 
     public override void RemoveWorker(Person person)
     {
@@ -28,14 +21,6 @@ public class Kitchen : Workplace
             person.RemoveWorkPlaceAsWorkplace();
             _currentPeople.Remove(person);
         }
-    }
-
-    public void ReleaseAllResidents(){
-        foreach(Person person in _currentPeople){
-            person.IsWorking = false;
-            person.RemoveWorkPlaceAsWorkplace();
-        }
-        _currentPeople.Clear();
     }
 
     public void Cook(Inventory inv)
@@ -53,17 +38,6 @@ public class Kitchen : Workplace
             }
         }
     }
-
-    public override void TakeDamage(int hitpoint)
-    {
-        // _currentDurability -= hitpoint;
-        // if (_currentDurability <= 0)
-        // {
-        //     Console.WriteLine("Kitchen destroyed.");
-        //     Unload();
-        // }
-    }
-    
     
     
 

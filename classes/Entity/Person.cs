@@ -395,47 +395,6 @@ public class Person : Entity
         }
     }
 
-    // public void AssignWork(ResourceArea resourceArea)
-    // {
-    //     _isWorking = true;
-    //     if(_workPlaceAsWorkplace != null){
-    //         _workPlaceAsWorkplace.RemoveWorker(this);
-    //         _workPlaceAsWorkplace = null;
-    //     }
-    //     if(_defenseBuilding != null){
-    //         _defenseBuilding.Remove(this);
-    //         _defenseBuilding = null;
-    //     }
-    //     _resourceArea = resourceArea;
-    // }   
-
-    // public void AssignWork(Workplace workplace)
-    // {
-    //     _isWorking = true;
-    //     if(_resourceArea != null){
-    //         _resourceArea = null;
-    //     }
-    //     if(_defenseBuilding != null){
-    //         _defenseBuilding.Remove(this);
-    //         _defenseBuilding = null;
-    //     }
-    //     _workPlaceAsWorkplace = workplace;
-    // }
-
-    // public void AssignNightShift(Defense defenseBuilding)
-    // {
-    //     _nightShift = true;
-    //     if(_resourceArea != null){
-    //         _resourceArea.RemoveWorker(this);
-    //         _resourceArea = null;
-    //     }
-    //     if(_workPlaceAsWorkplace != null){
-    //         _workPlaceAsWorkplace.RemoveWorker(this);
-    //         _workPlaceAsWorkplace = null;
-    //     }
-    //     _defenseBuilding = defenseBuilding;
-    // }
-
     public void QuitWork(){
         _isWorking = false;
         _nightShift = false;

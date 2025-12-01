@@ -36,7 +36,7 @@ public class Hut : Building
         _currentPeople.Remove(person);
     }
 
-    public void ReleaseAllResidents()
+    public override void ReleaseAllPeople()
     {
         foreach (Person person in _currentPeople)
         {
@@ -44,16 +44,7 @@ public class Hut : Building
         }
         _currentPeople.Clear();
     }
-    
-    public override void TakeDamage(int hitpoint)
-    {
-        // _currentDurability -= hitpoint;
-        // if (_currentDurability <= 0)
-        // {
-        //     Console.WriteLine("Hut destroyed.");
-        //     Unload();
-        // }
-    }
+
 
     public override void Draw()
     {

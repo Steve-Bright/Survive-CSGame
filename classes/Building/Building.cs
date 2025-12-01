@@ -33,12 +33,10 @@ public abstract class Building : BaseObj
         _maxPeople = maxPeople;
     }
 
-
-    public abstract void TakeDamage(int hitpoint);
-
     public int WoodCost => _woodCost;
     public int StoneCost => _stoneCost;
 
+    public abstract void ReleaseAllPeople();
 
     public int CapacityLimit{
         get => _capacityLimit;

@@ -49,14 +49,8 @@ public class Cannon : Defense
     {
         _currentPeople.Remove(person);
     }
-    
-    public override void TakeDamage(int hitpoint)
-    {
-        // _currentDurability -= hitpoint;
-        // if (_currentDurability <= 0) Unload();
-    }
 
-    public void ReleaseAllResidents(){
+    public override void ReleaseAllPeople(){
         foreach(Person person in _currentPeople){
             person.IsWorking = false;
             person.NightShift = false;

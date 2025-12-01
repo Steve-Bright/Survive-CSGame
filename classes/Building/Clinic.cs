@@ -19,13 +19,6 @@ public class Clinic : Workplace
         _healingRate = 1;
     }
 
-    public override void Upgrade(Dictionary<ResourceType, int> consumables)
-    {
-        // Logic to consume resources and improve maxPatients or healingRate
-        Console.WriteLine("Clinic upgraded.");
-        _maxPatients += 2;
-    }
-
 
     public override void RemoveWorker(Person person)
     {
@@ -69,28 +62,9 @@ public class Clinic : Workplace
     }
 
     public void ReleaseAllPeople(){
-        foreach(Person person in _currentPeople){
-            person.IsWorking = false;
-            person.RemoveWorkPlaceAsWorkplace();
-
-        }
-        _currentPeople.Clear();
+        base.ReleaseAllPeople();
         _currentPatients.Clear();
     }
-
-    public override void TakeDamage(int hitpoint)
-    {
-        // _currentDurability -= hitpoint;
-        // if (_currentDurability <= 0)
-        // {
-        //     Console.WriteLine("Clinic destroyed.");
-        //     Unload();
-        // }
-    }
-
-    
-    
-    
 
     public override void DisplayDetails()
     {

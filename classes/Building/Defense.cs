@@ -21,7 +21,6 @@ public abstract class Defense : Building
         _resourcePersons = new List<ResourcePerson>();
     }
     
-    // Abstract methods specific to Defense
     public virtual void Attack(BaseObj target)
     {
         _isAttacking = true;
@@ -36,8 +35,6 @@ public abstract class Defense : Building
         }
     }
     public abstract void Remove(Person person);
-    
-    public override abstract void TakeDamage(int hitpoint);
 
     public override void Draw()
     {

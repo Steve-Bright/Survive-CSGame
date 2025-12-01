@@ -27,8 +27,6 @@ public abstract class Workplace : Building
         _currentPeople.RemoveAll(person => person.IsFainted);
     }   
     
-    // Abstract methods specific to Workplace
-    public abstract void Upgrade(Dictionary<ResourceType, int> consumables);
     
     public virtual void AssignWorker(Person person)
     {
@@ -43,8 +41,14 @@ public abstract class Workplace : Building
 
     public abstract void RemoveWorker(Person person);
 
-    // TakeDamage is inherited from Building and must be implemented by concrete classes.
-    public override abstract void TakeDamage(int hitpoint);
+    public override void ReleaseAllPeople(){
+        foreach(Person person in _currentPeople){
+            person.IsWorking = false;
+            person.RemoveWorkPlaceAsWorkplace();
+
+        }
+        _currentPeople.Clear();
+    }
 
     public bool IsOperating
     {

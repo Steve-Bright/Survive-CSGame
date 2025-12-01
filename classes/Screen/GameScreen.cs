@@ -504,23 +504,11 @@ public class GameScreen : Screen
         
         foreach(BaseObj obj in _allObjects)
         {
-            if(building is Hut){
-                ((Hut)building).ReleaseAllResidents();
-            }
-            else if(building is Kitchen){
-                ((Kitchen)building).ReleaseAllResidents();
-            }
-            else if(building is Clinic){
-                ((Clinic)building).ReleaseAllPeople();
-            }
-            else if(building is Cannon){
-                ((Cannon)building).ReleaseAllResidents();
-            }
-
             if(obj is Land)
             {
                 if (((Land)obj).Building == building)
                 {
+                    building.ReleaseAllPeople();
                     ((Land)obj).RemoveBuilding();
                 }
             }
