@@ -5,32 +5,19 @@ using static Raylib_cs.Raylib;
 namespace Game;
 public abstract class Defense : Building
 {
-    protected List<Person> _currentWorkers;
-    protected float _critChance;
     protected int _range;
-    protected int _hitRate;
-    protected int _coolDownTime;
-    private bool _peopleListOpen = false;
     protected bool _isAttacking = false;
-    private bool _randomAssign = false;
     protected bool _enemyFound = false;
-    protected int _bulletX ;
-    protected int _bulletY;
     protected float _attackTimer = 0f;
 
     protected float _attackDuration = 1.0f; // Example duration for an attack cycle
 
-    protected int _requiredWorkers;
     private List<ResourcePerson> _resourcePersons;
 
-    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon,  int maxPerson, float critChance, int range, int hitRate, int woodCost = 60, int stoneCost = 60, int capacityLimit = 4)
-        : base(name, xPos, yPos, width, height,  buildingIcon, woodCost, stoneCost, capacityLimit)
+    public Defense(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int range, int woodCost, int stoneCost, int capacityLimit = 6)
+        : base(name, xPos, yPos, width, height,  buildingIcon, woodCost, stoneCost, capacityLimit, 1)
     {
-        _requiredWorkers = maxPerson;
-        _currentWorkers = new List<Person>();
-        _critChance = critChance;
         _range = range;
-        _hitRate = hitRate;
         _resourcePersons = new List<ResourcePerson>();
     }
     
@@ -42,10 +29,10 @@ public abstract class Defense : Building
     }
 
     public virtual void Assign(Person person){
-        if (_currentWorkers.Count < _requiredWorkers){
+        if (_currentPeople.Count < _maxPeople){
             PlaySound(RunTime.infoSound);
             person.AssignWork(this);
-            _currentWorkers.Add(person);
+            _currentPeople.Add(person);
         }
     }
     public abstract void Remove(Person person);
@@ -55,7 +42,7 @@ public abstract class Defense : Building
     public override void Draw()
     {
         base.Draw();
-        _currentWorkers.RemoveAll(person => person.IsFainted);
+        _currentPeople.RemoveAll(person => person.IsFainted);
     }
 
     protected Enemy? DetectEnemy()
@@ -116,13 +103,13 @@ public abstract class Defense : Building
         Util.UpdateText($"Health: {CurrentHealth}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-200, 28);
         // Util.UpdateText("Type: Building", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
         Util.UpdateText($"Range: {_range} ", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
-        Util.UpdateText($"Hit Rate: {_hitRate}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
+        // Util.UpdateText($"Hit Rate: {_hitRate}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
         // Util.UpdateText($"Current: Test", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
-        Util.UpdateText($"Crit Chance: {_critChance}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
-        Util.UpdateText($"Cooldown: {_coolDownTime}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
+        // Util.UpdateText($"Crit Chance: {_critChance}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
+        // Util.UpdateText($"Cooldown: {_coolDownTime}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
 
-        Util.UpdateText($"Max Person: {_requiredWorkers}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
-        Util.UpdateText($"Current: {_currentWorkers.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
+        Util.UpdateText($"Max Person: {_maxPeople}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
+        Util.UpdateText($"Current: {_currentPeople.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-40, 28);
@@ -133,7 +120,7 @@ public abstract class Defense : Building
         Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => Util.OpenAssignList());
         if(Util.AssignListOpen)
         {
-            Util.AssignList(AssignType.Defense, this, "Assign Workers", _currentWorkers, _requiredWorkers, Assign);
+            Util.AssignList(AssignType.Defense, this, "Assign Workers", _currentPeople, _maxPeople, Assign);
         }
 
         RunTime.detailsShown = true;

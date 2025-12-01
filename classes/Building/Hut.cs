@@ -5,25 +5,22 @@ namespace Game;
 public class Hut : Building
 {
     private bool _randomAssign = false;
-    private int _maxPerson;
+    // private int _maxPerson;
     private bool _peopleListOpen = false;
     private List<ResourcePerson> _resourcePersons;
-    private List<Person> _currentPeople;
 
-    public List<Person> AllPeople => _currentPeople;
 
-    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int woodCost = (int) LandCosts.HutWoodCost, int stoneCost = (int) LandCosts.HutStoneCost, int capacityLimit = 6)
-        : base(name, xPos, yPos, width, height, hutIcon, woodCost, stoneCost, capacityLimit)
+    public Hut(string name, float xPos, float yPos, int width, int height, Texture2D hutIcon, int capacityLimit = 6)
+        : base(name, xPos, yPos, width, height, hutIcon, (int) LandCosts.HutWoodCost, (int) LandCosts.HutStoneCost, capacityLimit, 5)
     {
         _resourcePersons = new List<ResourcePerson>();
         // _hutId = 1;
-        _maxPerson = 5;
-        _currentPeople = new List<Person>();
+        // _maxPerson = 5;
     }
     
     public void Assign(Person person)
     {
-        if (_currentPeople.Count < _maxPerson)
+        if (_currentPeople.Count < _maxPeople)
         {
             RunTime.gameScreen.AddMessage($"{person.Name} is assigned to {Name}", AlertType.INFO);
             _currentPeople.Add(person);
@@ -33,7 +30,6 @@ public class Hut : Building
         }
     }
 
-    public int MaxPersonCount => _maxPerson;
     
     public void Remove(Person person)
     {
@@ -88,7 +84,7 @@ public class Hut : Building
 
         Util.UpdateText("Type: Building", (GetScreenWidth() / 2) + 480, GetScreenHeight()-200, 28);
         Util.UpdateText($"Health: {CurrentHealth}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-200, 28);
-        Util.UpdateText($"Max People: {_maxPerson}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
+        Util.UpdateText($"Max People: {_maxPeople}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
         Util.UpdateText($"Current: {_currentPeople.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
 
         Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-125, 265, 45 );
@@ -248,13 +244,13 @@ public class Hut : Building
 
         if(GetMousePosition().X > confirmRect.X && GetMousePosition().X < confirmRect.X + confirmRect.Width &&  GetMousePosition().Y > confirmRect.Y && GetMousePosition().Y < confirmRect.Y + confirmRect.Height && IsMouseButtonPressed(MouseButton.Left))
         {
-            if(_currentPeople.Count == _maxPerson)
+            if(_currentPeople.Count == _maxPeople)
             {
                 _peopleListOpen = false;
                 RunTime.gameScreen.AddMessage("Workers is already full.", AlertType.ERROR);
-            }else if(_currentPeople.Count < _maxPerson)
+            }else if(_currentPeople.Count < _maxPeople)
             {
-                int workersNeeded = _maxPerson - _currentPeople.Count;
+                int workersNeeded = _maxPeople - _currentPeople.Count;
                 if (!_randomAssign)
                 {
                     int workersSelected = _resourcePersons.Where(rp => rp.IsSelected).Count();

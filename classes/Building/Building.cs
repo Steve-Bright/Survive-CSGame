@@ -9,9 +9,10 @@ public abstract class Building : BaseObj
     private int _woodCost;
     private int _stoneCost;
     private int _currentHealth;
-    private int _requiredBuilder;
-    private List<Person> _listOfBuilders;
     private int _maxHealth;
+
+    protected List<Person> _currentPeople;
+    protected int _maxPeople;
 
     public int CurrentHealth 
     { 
@@ -20,16 +21,16 @@ public abstract class Building : BaseObj
     }
 
 
-    public Building(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int woodCost, int stoneCost, int capacityLimit = 0)
+    public Building(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int woodCost, int stoneCost, int capacityLimit = 0, int maxPeople = 1)
         : base(name, xPos, yPos, width, height, buildingIcon)
     {
+        _currentPeople = new List<Person>();
         _maxHealth = 100;
         _currentHealth = 100;
-        _requiredBuilder = 1;
-        _listOfBuilders = new List<Person>();
         _woodCost = woodCost;
         _stoneCost = stoneCost;
         _capacityLimit = capacityLimit;
+        _maxPeople = maxPeople;
     }
 
 

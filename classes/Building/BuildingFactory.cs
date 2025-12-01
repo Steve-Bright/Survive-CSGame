@@ -17,7 +17,7 @@ public class BuildingFactory
                 // new Hut("Hut", X + 100 / 2, Y, 100, 100, RunTime.Hut);
                 return new Hut("Hut", xPos, yPos, 100, 100, RunTime.Hut);
             case BuildingType.Cannon:
-                return new Cannon("Cannon", xPos, yPos, 100, 100, RunTime.Cannon, 1, 10, 300, 5);
+                return new Cannon("Cannon", xPos, yPos, 100, 100, RunTime.Cannon, 300);
             case BuildingType.Clinic:
                 return new Clinic("Clinic", xPos, yPos, 120, 120, RunTime.Clinic);
             default:

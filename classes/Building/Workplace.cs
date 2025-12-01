@@ -8,23 +8,15 @@ public abstract class Workplace : Building
     protected bool _peopleListOpen = false;
     protected List<ResourcePerson> _resourcePersons;
     protected bool _randomAssign;
-    protected int _requiredWorkers;
-    protected List<Person> _currentWorkers;
-    protected int _requiredFood;
     protected int _currentFood;
     private bool _isOperating;
 
-    public List<Person> CurrentWorkers => _currentWorkers;
-    public int MaxWorkers => _requiredWorkers;
 
     // Constructor chains up to Building, setting default Workplace properties
     public Workplace(string name, float xPos, float yPos, int width, int height, Texture2D buildingIcon, int woodCost , int stoneCost, int capacityLimit = 2)
         : base(name, xPos, yPos, width, height, buildingIcon, woodCost, stoneCost, capacityLimit)
     {
         _resourcePersons = new List<ResourcePerson>();
-        _requiredWorkers = 1;
-        _currentWorkers = new List<Person>();
-        _requiredFood = 1;
         _currentFood = 0;
         _isOperating = false;
     }
@@ -32,7 +24,7 @@ public abstract class Workplace : Building
     public override void Draw()
     {
         base.Draw();
-        _currentWorkers.RemoveAll(person => person.IsFainted);
+        _currentPeople.RemoveAll(person => person.IsFainted);
     }   
     
     // Abstract methods specific to Workplace
@@ -40,11 +32,12 @@ public abstract class Workplace : Building
     
     public virtual void AssignWorker(Person person)
     {
-        if (_currentWorkers.Count < MaxWorkers)
+        Console.WriteLine("Current people count : " + _currentPeople.Count);
+        if (_currentPeople.Count < _maxPeople)
         {
             PlaySound(RunTime.infoSound);
             person.AssignWork(this);
-            _currentWorkers.Add(person);
+            _currentPeople.Add(person);
         }
     }
 

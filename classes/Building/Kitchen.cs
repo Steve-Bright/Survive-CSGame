@@ -6,8 +6,8 @@ public class Kitchen : Workplace
 {
     private int _cookingRate;
 
-    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon, int woodCost = (int) LandCosts.KitchenWoodCost, int stoneCost = (int) LandCosts.KitchenStoneCost)
-        : base(name, xPos, yPos, width, height, kitchenIcon, woodCost, stoneCost)
+    public Kitchen(string name, float xPos, float yPos, int width, int height, Texture2D kitchenIcon)
+        : base(name, xPos, yPos, width, height, kitchenIcon, (int) LandCosts.KitchenWoodCost, (int) LandCosts.KitchenStoneCost)
     {
         _cookingRate = 1; // e.g., 1 unit per cycle
     }
@@ -19,42 +19,34 @@ public class Kitchen : Workplace
         _cookingRate++;
     }
 
-    // public override void AssignWorker(Person person)
-    // {
-    //     if (_currentWorkers.Count < MaxWorkers)
-    //     {
-    //         person.AssignWork(this);
-    //         _currentWorkers.Add(person);
-    //     }
-    // }
 
     public override void RemoveWorker(Person person)
     {
-        if(_currentWorkers.Contains(person))
+        if(_currentPeople.Contains(person))
         {
             person.IsWorking = false;
             person.RemoveWorkPlaceAsWorkplace();
-            _currentWorkers.Remove(person);
+            _currentPeople.Remove(person);
         }
     }
 
     public void ReleaseAllResidents(){
-        foreach(Person person in _currentWorkers){
+        foreach(Person person in _currentPeople){
             person.IsWorking = false;
             person.RemoveWorkPlaceAsWorkplace();
         }
-        _currentWorkers.Clear();
+        _currentPeople.Clear();
     }
 
     public void Cook(Inventory inv)
     {
-        if( _currentWorkers.Count > 0)
+        if( _currentPeople.Count > 0)
         {
             if(RunTime.gameScreen.GetMeatCount() <= 0)
             {
                 RunTime.gameScreen.AddMessage("Not enough raw meat to cook.", AlertType.ERROR);
-                _currentWorkers.Where(worker => worker.IsWorking).ToList().ForEach(worker => {worker.IsWorking = false; worker.RemoveWorkPlaceAsWorkplace();});
-                _currentWorkers.Clear();
+                _currentPeople.Where(worker => worker.IsWorking).ToList().ForEach(worker => {worker.IsWorking = false; worker.RemoveWorkPlaceAsWorkplace();});
+                _currentPeople.Clear();
             }else{
                 inv.Increase(1);
                 RunTime.gameScreen.GetInventory(ResourceType.MEAT).Decrease(1);
@@ -103,8 +95,8 @@ public class Kitchen : Workplace
         Util.UpdateText($"Cook Rate: {_cookingRate}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
         // Util.UpdateText($"Health: {_currentHealth} ", (GetScreenWidth() / 2) + 480, GetScreenHeight()-160, 28);
         // Util.UpdateText($"Current: Test", (GetScreenWidth() / 2) + 740, GetScreenHeight()-160, 28);
-        Util.UpdateText($"Max Workers: {MaxWorkers}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
-        Util.UpdateText($"Current: {CurrentWorkers.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
+        Util.UpdateText($"Max Workers: {_maxPeople}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
+        Util.UpdateText($"Current: {_currentPeople.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
 
 
         Rectangle buttonRect = new Rectangle((GetScreenWidth() / 2) + 460, GetScreenHeight()-85, 265, 45 );
@@ -112,7 +104,7 @@ public class Kitchen : Workplace
         Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => Util.OpenAssignList());
         if(Util.AssignListOpen)
         {
-            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentWorkers, _requiredWorkers, AssignWorker);
+            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentPeople, _maxPeople, AssignWorker);
             // DisplayPeopleList();
         }
         

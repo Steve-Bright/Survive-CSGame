@@ -11,8 +11,8 @@ public class Clinic : Workplace
     public List<Person> CurrentPatients => _currentPatients;
     public int MaxPatients => _maxPatients;
 
-    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon, int woodCost = (int) LandCosts.ClinicWoodCost, int stoneCost = (int) LandCosts.ClinicStoneCost)
-        : base(name, xPos, yPos, width, height, clinicIcon, woodCost, stoneCost)
+    public Clinic(string name, float xPos, float yPos, int width, int height, Texture2D clinicIcon)
+        : base(name, xPos, yPos, width, height, clinicIcon, (int) LandCosts.ClinicWoodCost,(int) LandCosts.ClinicStoneCost)
     {
         _maxPatients = 5;
         _currentPatients = new List<Person>();
@@ -26,19 +26,11 @@ public class Clinic : Workplace
         _maxPatients += 2;
     }
 
-    // public override void AssignWorker(Person person)
-    // {
-    //     // Assigning a worker (doctor/nurse)
-    //     if (_currentWorkers.Count < MaxWorkers)
-    //     {
-    //         _currentWorkers.Add(person);
-    //     }
-    // }
 
     public override void RemoveWorker(Person person)
     {
         // Firing a worker
-        _currentWorkers.Remove(person);
+        _currentPeople.Remove(person);
     }
     
     public void Admit(Person person)
@@ -52,7 +44,7 @@ public class Clinic : Workplace
     
     public void Heal()
     {
-        if (_currentWorkers.Count > 0 && _currentPatients.Count > 0)
+        if (_currentPeople.Count > 0 && _currentPatients.Count > 0)
         {
             // Logic to apply healing based on _healingRate and workers
             foreach(Person person in _currentPatients)
@@ -77,12 +69,12 @@ public class Clinic : Workplace
     }
 
     public void ReleaseAllPeople(){
-        foreach(Person person in _currentWorkers){
+        foreach(Person person in _currentPeople){
             person.IsWorking = false;
             person.RemoveWorkPlaceAsWorkplace();
 
         }
-        _currentWorkers.Clear();
+        _currentPeople.Clear();
         _currentPatients.Clear();
     }
 
@@ -129,8 +121,8 @@ public class Clinic : Workplace
         Util.UpdateText($"Max Patients: {_maxPatients}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-120, 28);
         Util.UpdateText($"Current: {_currentPatients.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-120, 28);
 
-        Util.UpdateText($"Max Workers: {MaxWorkers}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
-        Util.UpdateText($"Current: {CurrentWorkers.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
+        Util.UpdateText($"Max Workers: {_maxPeople}", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
+        Util.UpdateText($"Current: {_currentPeople.Count}", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28); 
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-80, 28);
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 480, GetScreenHeight()-40, 28);
@@ -140,7 +132,7 @@ public class Clinic : Workplace
         Util.MakeButton(buttonRect, "Assign",(GetScreenWidth() / 2) + 480, GetScreenHeight()-85, 28, (int) TextAlign.TEXT_ALIGN_CENTRE, (int) TextAlign.TEXT_ALIGN_MIDDLE, Color.Gold, () => Util.OpenAssignList());
         if(Util.AssignListOpen)
         {
-            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentWorkers, _requiredWorkers, AssignWorker);
+            Util.AssignList(AssignType.WorkPlace, this, "Assign Workers", _currentPeople, _maxPeople, AssignWorker);
         }
 
         // Util.UpdateText("-", (GetScreenWidth() / 2) + 740, GetScreenHeight()-40, 28); 
@@ -158,7 +150,7 @@ public class Clinic : Workplace
 
         
         if(_admitPatientBtn){
-            if(_currentWorkers.Count > 0){
+            if(_currentPeople.Count > 0){
                 DisplayPatientList();
             }else{
                 RunTime.gameScreen.AddMessage("Need Workers", AlertType.WARNING);
