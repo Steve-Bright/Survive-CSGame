@@ -74,6 +74,7 @@ public class Calendar
 
     public void ToggleNight()
     {
+        RunTime.gameScreen.AddMessage("Enemies are coming out!", AlertType.WARNING);
         _isDay = false;
         Notify();
     }

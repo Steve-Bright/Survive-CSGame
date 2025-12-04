@@ -491,7 +491,6 @@ public class GameScreen : Screen
             clonedEnemy.SetRandomLocation();
             enemiesrightNow.Add(clonedEnemy);
         }
-        Console.WriteLine("Enemies right now " + enemiesrightNow.Count);
 
         foreach(Enemy enemiesRightNow in enemiesrightNow)
         {   
